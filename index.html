@@ -3,36 +3,663 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>はじめてのClaude Code</title>
+  <title>神奈川ITエンジニア転職ラボ</title>
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary: #1a56db;
+      --primary-dark: #1341b0;
+      --accent: #06b6d4;
+      --dark: #0f172a;
+      --gray: #64748b;
+      --light: #f8fafc;
+      --white: #ffffff;
+      --border: #e2e8f0;
+    }
+
     body {
-      font-family: sans-serif;
+      font-family: 'Hiragino Sans', 'Noto Sans JP', 'Yu Gothic', sans-serif;
+      color: var(--dark);
+      background: var(--white);
+      line-height: 1.7;
+    }
+
+    /* ===== HEADER / NAV ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .logo span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--gray);
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .nav-cta {
+      background: var(--primary) !important;
+      color: var(--white) !important;
+      border-radius: 8px;
+    }
+
+    .nav-cta:hover {
+      background: var(--primary-dark) !important;
+    }
+
+    /* hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--dark);
+      border-radius: 2px;
+      transition: 0.3s;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 60%, #0369a1 100%);
+      color: var(--white);
+      padding: 5rem 1.5rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(6,182,212,0.15) 0%, transparent 60%);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(6,182,212,0.2);
+      border: 1px solid rgba(6,182,212,0.4);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.3rem 1rem;
+      border-radius: 99px;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.8rem, 5vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    .hero .catchcopy {
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 2.5rem;
+      position: relative;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--white);
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.2s;
+      box-shadow: 0 4px 20px rgba(6,182,212,0.4);
+    }
+
+    .btn-primary:hover {
+      background: #0891b2;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(6,182,212,0.5);
+    }
+
+    .btn-outline {
+      border: 2px solid rgba(255,255,255,0.3);
+      color: var(--white);
+      padding: 0.85rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.6);
+    }
+
+    /* ===== STATS BAR ===== */
+    .stats-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem;
       display: flex;
       justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background-color: #f0f4f8;
+      gap: 3rem;
+      flex-wrap: wrap;
     }
-    .container {
+
+    .stat-item {
       text-align: center;
-      background: white;
-      padding: 2rem 3rem;
+    }
+
+    .stat-num {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: var(--primary);
+      letter-spacing: -0.03em;
+    }
+
+    .stat-num span {
+      font-size: 1rem;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--gray);
+      margin-top: 0.1rem;
+    }
+
+    /* ===== SECTION COMMON ===== */
+    section {
+      padding: 5rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-desc {
+      color: var(--gray);
+      font-size: 0.95rem;
+      margin-bottom: 3rem;
+    }
+
+    /* ===== MENU CARDS ===== */
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .menu-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s;
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      border: 2px solid transparent;
+      transition: 0.25s;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+    }
+
+    .menu-card:hover::after {
+      border-color: var(--primary);
+    }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .icon-blue  { background: #eff6ff; }
+    .icon-cyan  { background: #ecfeff; }
+    .icon-green { background: #f0fdf4; }
+
+    .menu-card h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+    }
+
+    .menu-card p {
+      font-size: 0.88rem;
+      color: var(--gray);
+      line-height: 1.6;
+    }
+
+    .card-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* ===== FEATURES ===== */
+    .features {
+      background: var(--light);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-item {
+      background: var(--white);
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 1.5rem;
+      text-align: center;
+      border: 1px solid var(--border);
     }
-    h1 {
-      color: #2d3748;
+
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
     }
-    p {
-      color: #718096;
+
+    .feature-item h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-item p {
+      font-size: 0.82rem;
+      color: var(--gray);
+    }
+
+    /* ===== PICKUP ===== */
+    .pickup-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    .pickup-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.2s;
+    }
+
+    .pickup-item:hover {
+      border-color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .pickup-tag {
+      flex-shrink: 0;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.25rem 0.7rem;
+      border-radius: 99px;
+      background: #eff6ff;
+      color: var(--primary);
+    }
+
+    .pickup-text {
+      font-size: 0.9rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .pickup-arrow {
+      color: var(--gray);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ===== CTA ===== */
+    .cta-section {
+      background: linear-gradient(135deg, var(--primary) 0%, #0369a1 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 5rem 1.5rem;
+    }
+
+    .cta-section h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+
+    .cta-section p {
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 2rem;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.5);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      font-size: 0.82rem;
+    }
+
+    footer a {
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      margin: 0 0.75rem;
+    }
+
+    footer a:hover { color: var(--white); }
+
+    .footer-links {
+      margin-bottom: 1rem;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .stats-inner { gap: 1.5rem; }
+
+      section { padding: 3.5rem 1.25rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero { padding: 3.5rem 1.25rem 3rem; }
+      .stat-num { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>はじめてのClaude Code</h1>
-    <p>Claude Codeで作成した最初のページです。</p>
+
+<!-- ===== HEADER ===== -->
+<header>
+  <nav>
+    <a href="#" class="logo">神奈川IT<span>転職ラボ</span></a>
+    <ul class="nav-links">
+      <li><a href="#remote">リモートワーク実態</a></li>
+      <li><a href="#salary">年収相場</a></li>
+      <li><a href="#companies">おすすめ企業</a></li>
+      <li><a href="#cta" class="nav-cta">無料相談</a></li>
+    </ul>
+    <button class="hamburger" aria-label="メニュー">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-badge">🗾 神奈川エリア特化 転職情報メディア</div>
+  <h1>神奈川ITエンジニア<br><em>転職ラボ</em></h1>
+  <p class="catchcopy">現役転職エージェントが教えるリアルな転職情報</p>
+  <div class="hero-buttons">
+    <a href="#menu" class="btn-primary">情報を探す →</a>
+    <a href="#cta" class="btn-outline">無料転職相談</a>
   </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-num">2,400<span>件+</span></div>
+      <div class="stat-label">神奈川の求人掲載数</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">68<span>%</span></div>
+      <div class="stat-label">リモートワーク対応率</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">750<span>万円</span></div>
+      <div class="stat-label">転職後平均年収</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">92<span>日</span></div>
+      <div class="stat-label">平均転職完了期間</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MENU CARDS ===== -->
+<section id="menu">
+  <div class="container">
+    <span class="section-label">Contents</span>
+    <h2 class="section-title">転職に必要な情報が揃う</h2>
+    <p class="section-desc">神奈川のITエンジニア転職に特化した、現役エージェントによるリアルな情報をお届けします。</p>
+
+    <div class="menu-grid">
+      <a href="#remote" class="menu-card" id="remote">
+        <div class="card-icon icon-cyan">💻</div>
+        <h3>リモートワーク実態</h3>
+        <p>神奈川・横浜エリアのIT企業のリモートワーク導入状況を企業ごとに徹底調査。フルリモート・ハイブリッドの実態をお届けします。</p>
+        <span class="card-arrow">詳しく見る →</span>
+      </a>
+
+      <a href="#salary" class="menu-card" id="salary">
+        <div class="card-icon icon-blue">💰</div>
+        <h3>年収相場</h3>
+        <p>職種・経験年数・スキル別の神奈川エリア年収データを公開。東京との比較や、転職での年収アップ交渉のポイントも解説。</p>
+        <span class="card-arrow">詳しく見る →</span>
+      </a>
+
+      <a href="#companies" class="menu-card" id="companies">
+        <div class="card-icon icon-green">🏢</div>
+        <h3>おすすめ企業</h3>
+        <p>横浜・川崎・相模原エリアのITエンジニアにおすすめの企業をエージェント目線でご紹介。働き方・待遇・文化まで詳しく解説。</p>
+        <span class="card-arrow">詳しく見る →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="features">
+  <div class="container">
+    <span class="section-label">Why Us</span>
+    <h2 class="section-title">このサイトが選ばれる理由</h2>
+    <p class="section-desc">転職エージェントだからわかる、リアルで役立つ情報だけを発信しています。</p>
+
+    <div class="features-grid">
+      <div class="feature-item">
+        <div class="feature-icon">🎯</div>
+        <h4>神奈川エリア特化</h4>
+        <p>横浜・川崎・相模原を中心とした地域密着情報で、通勤・生活も含めてサポート</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">👔</div>
+        <h4>現役エージェント監修</h4>
+        <p>実際に企業と交渉するエージェントが、採用側のリアルな声をお届け</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <h4>最新データ更新</h4>
+        <p>年収・求人情報は定期的に更新。古い情報で判断ミスをしないための最新データ</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🆓</div>
+        <h4>完全無料で相談可能</h4>
+        <p>転職相談・求人紹介・年収交渉まで、エンジニアの転職支援は完全無料</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PICKUP ===== -->
+<section>
+  <div class="container">
+    <span class="section-label">Pickup</span>
+    <h2 class="section-title">注目の転職情報</h2>
+    <p class="section-desc">今週のおすすめコンテンツをピックアップしました。</p>
+
+    <div class="pickup-list">
+      <a href="#" class="pickup-item">
+        <span class="pickup-tag">年収</span>
+        <span class="pickup-text">横浜のバックエンドエンジニア年収ランキング2024</span>
+        <span class="pickup-arrow">›</span>
+      </a>
+      <a href="#" class="pickup-item">
+        <span class="pickup-tag">リモート</span>
+        <span class="pickup-text">フルリモート可！神奈川発スタートアップ10社まとめ</span>
+        <span class="pickup-arrow">›</span>
+      </a>
+      <a href="#" class="pickup-item">
+        <span class="pickup-tag">企業</span>
+        <span class="pickup-text">川崎のSaaS企業で働くエンジニアのリアルな声</span>
+        <span class="pickup-arrow">›</span>
+      </a>
+      <a href="#" class="pickup-item">
+        <span class="pickup-tag">転職</span>
+        <span class="pickup-text">30代エンジニアが転職で年収100万円アップした方法</span>
+        <span class="pickup-arrow">›</span>
+      </a>
+      <a href="#" class="pickup-item">
+        <span class="pickup-tag">スキル</span>
+        <span class="pickup-text">神奈川で需要急増中！2024年注目のITスキルTOP5</span>
+        <span class="pickup-arrow">›</span>
+      </a>
+      <a href="#" class="pickup-item">
+        <span class="pickup-tag">企業</span>
+        <span class="pickup-text">相模原・厚木エリアのメーカー系IT職の実態を調査</span>
+        <span class="pickup-arrow">›</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section" id="cta">
+  <div class="container">
+    <h2>あなたの転職、一緒に成功させましょう</h2>
+    <p>現役エージェントへの無料相談で、神奈川エリアの非公開求人もご紹介できます。</p>
+    <a href="#" class="btn-primary" style="display:inline-block;">無料で転職相談する →</a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-links">
+    <a href="#">プライバシーポリシー</a>
+    <a href="#">利用規約</a>
+    <a href="#">お問い合わせ</a>
+    <a href="#">運営者情報</a>
+  </div>
+  <p>© 2024 神奈川ITエンジニア転職ラボ. All rights reserved.</p>
+</footer>
+
 </body>
 </html>
