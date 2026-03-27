@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="神奈川エリアのITエンジニア採用をお考えの企業様へ。求人掲載・採用支援サービスのご案内。横浜・川崎・相模原の優秀なエンジニアを採用できます。">
+  <meta property="og:title" content="企業の方へ・求人掲載 | 神奈川ITエンジニア転職ラボ">
+  <meta property="og:description" content="神奈川エリアの優秀なITエンジニアを採用しませんか？求人掲載・採用支援サービスのご案内。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/for-companies.html">
+  <meta property="og:site_name" content="神奈川ITエンジニア転職ラボ">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/for-companies.html">
+  <title>企業の方へ・求人掲載のご案内 | 神奈川ITエンジニア転職ラボ</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .plan-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      text-align: center;
+      position: relative;
+      transition: var(--transition);
+    }
+    .plan-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
+    .plan-card.featured { border-color: var(--primary); }
+    .plan-badge {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      color: #fff;
+      font-size: .75rem;
+      font-weight: 800;
+      padding: .3rem 1.2rem;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+    .plan-price { font-size: 2.4rem; font-weight: 900; color: var(--primary); letter-spacing: -.03em; line-height: 1; margin: 1rem 0 .4rem; }
+    .plan-price sub { font-size: 1rem; font-weight: 700; }
+    .plan-price span { font-size: 1rem; font-weight: 400; color: var(--gray); }
+    .plan-features { text-align: left; margin: 1.5rem 0; display: flex; flex-direction: column; gap: .6rem; }
+    .plan-feature { display: flex; align-items: center; gap: .5rem; font-size: .88rem; }
+    .plan-feature .ok { color: var(--success); font-size: 1rem; }
+    .plan-feature .no { color: var(--gray-light); font-size: 1rem; }
+    .form-wrap { background: var(--light); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 2.5rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+    .form-full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: .45rem; }
+    .form-group label { font-size: .85rem; font-weight: 700; color: var(--dark-3); }
+    .form-group label .req { color: var(--danger); margin-left: .25rem; }
+    .form-control { padding: .75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: .92rem; font-family: var(--font); color: var(--dark); background: var(--white); transition: border-color var(--transition); }
+    .form-control:focus { outline: none; border-color: var(--primary); }
+    textarea.form-control { resize: vertical; min-height: 120px; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+  </style>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="index.html">ホーム</a><span>›</span><span>企業の方へ</span>
+    </nav>
+    <div class="badge-hero">🏢 For Companies</div>
+    <h1>神奈川の優秀な<br>ITエンジニアを採用する</h1>
+    <p>横浜・川崎・相模原エリアのITエンジニア採用を専門エージェントがサポート。<br>求人掲載から採用成功まで一貫してご支援します。</p>
+    <div class="hero-btns" style="margin-top:2rem;">
+      <a href="#form" class="btn btn-accent btn-lg">採用について相談する（無料）</a>
+      <a href="#plans" class="btn btn-white btn-lg">料金プランを見る</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div style="background:var(--light);border-bottom:1px solid var(--border);">
+  <div class="container" style="padding:1.75rem 1.5rem;display:flex;justify-content:center;gap:3rem;flex-wrap:wrap;">
+    <div class="stat-box" style="border:none;background:none;text-align:center;"><div class="num">2,400<sub>件+</sub></div><div class="label">登録エンジニア候補数</div></div>
+    <div class="stat-box" style="border:none;background:none;text-align:center;"><div class="num">92<sub>日</sub></div><div class="label">平均採用完了期間</div></div>
+    <div class="stat-box" style="border:none;background:none;text-align:center;"><div class="num">89<sub>%</sub></div><div class="label">採用企業の継続利用率</div></div>
+    <div class="stat-box" style="border:none;background:none;text-align:center;"><div class="num">10<sub>年+</sub></div><div class="label">神奈川エリア専門実績</div></div>
+  </div>
+</div>
+
+<!-- WHY -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Why Us</span>
+    <h2 class="section-title">神奈川ITエンジニア転職ラボを選ぶ理由</h2>
+    <p class="section-desc">神奈川エリアに特化した専門エージェントだからこそできる採用支援です。</p>
+    <div class="grid-3">
+      <div class="card anim-up">
+        <div class="card-icon icon-blue">🎯</div>
+        <h3>神奈川エリア特化の候補者プール</h3>
+        <p class="text-sm text-gray" style="margin-top:.5rem;">横浜・川崎・相模原在住または勤務を希望するエンジニアに特化。通勤・生活環境まで考慮したマッチングで、入社後の定着率が高いのが特徴です。</p>
+      </div>
+      <div class="card anim-up delay-1">
+        <div class="card-icon icon-cyan">🔍</div>
+        <h3>潜在層へのアプローチ</h3>
+        <p class="text-sm text-gray" style="margin-top:.5rem;">転職サイトに登録していない「転職潜在層」のエンジニアにも独自ルートでアプローチ。一般公募では出会えない優秀な人材をご紹介できます。</p>
+      </div>
+      <div class="card anim-up delay-2">
+        <div class="card-icon icon-green">💬</div>
+        <h3>技術理解のある専門エージェント</h3>
+        <p class="text-sm text-gray" style="margin-top:.5rem;">ITエンジニアの技術スタック・キャリアを深く理解したエージェントが対応。「Go経験3年以上・AWSアーキテクト」など細かい要件にも正確に対応します。</p>
+      </div>
+      <div class="card anim-up">
+        <div class="card-icon icon-yellow">📊</div>
+        <h3>採用市場データの共有</h3>
+        <p class="text-sm text-gray" style="margin-top:.5rem;">神奈川エリアの最新年収相場・求職者動向・競合他社の採用状況をレポートでご提供。データに基づいた採用戦略の立案をサポートします。</p>
+      </div>
+      <div class="card anim-up delay-1">
+        <div class="card-icon icon-blue">🤝</div>
+        <h3>完全成功報酬型（採用課金）</h3>
+        <p class="text-sm text-gray" style="margin-top:.5rem;">採用が成功した場合のみ費用が発生。求人掲載・候補者紹介・面接調整まで、採用成功まで費用は一切かかりません。</p>
+      </div>
+      <div class="card anim-up delay-2">
+        <div class="card-icon icon-cyan">🔄</div>
+        <h3>内定後フォローで定着率向上</h3>
+        <p class="text-sm text-gray" style="margin-top:.5rem;">内定承諾後も入社日まで候補者のフォローを継続。入社直前の辞退リスクを低減し、スムーズな入社をサポートします。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="section bg-light" style="padding-top:4rem;padding-bottom:4rem;" id="plans">
+  <div class="container">
+    <span class="section-label">Plans</span>
+    <h2 class="section-title">料金プラン</h2>
+    <p class="section-desc">採用規模・ニーズに合わせてお選びください。まずは無料相談からどうぞ。</p>
+
+    <div class="grid-3" style="margin-top:2rem;">
+      <div class="plan-card anim-up">
+        <div class="text-xs text-gray font-bold" style="letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">スタンダード</div>
+        <h3>成功報酬型</h3>
+        <div class="plan-price">理論年収<br><sub style="font-size:1.5rem;">の</sub> 30〜35<sub>%</sub></div>
+        <p class="text-xs text-gray">採用成功時のみ課金</p>
+        <div class="plan-features">
+          <div class="plan-feature"><span class="ok">✓</span> 求人票作成サポート</div>
+          <div class="plan-feature"><span class="ok">✓</span> 候補者スクリーニング</div>
+          <div class="plan-feature"><span class="ok">✓</span> 面接日程調整</div>
+          <div class="plan-feature"><span class="ok">✓</span> 年収条件の交渉代行</div>
+          <div class="plan-feature"><span class="ok">✓</span> 内定後フォロー</div>
+          <div class="plan-feature"><span class="no">－</span> 採用コンサルティング</div>
+          <div class="plan-feature"><span class="no">－</span> 市場データレポート</div>
+        </div>
+        <a href="#form" class="btn btn-outline btn-block">相談する</a>
+      </div>
+
+      <div class="plan-card featured anim-up delay-1">
+        <div class="plan-badge">最もご利用が多いプラン</div>
+        <div class="text-xs font-bold" style="letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;color:var(--primary);">プレミアム</div>
+        <h3>採用コンサル型</h3>
+        <div class="plan-price">理論年収<br><sub style="font-size:1.5rem;">の</sub> 35<sub>%</sub></div>
+        <p class="text-xs text-gray">採用成功時のみ課金</p>
+        <div class="plan-features">
+          <div class="plan-feature"><span class="ok">✓</span> 求人票作成サポート</div>
+          <div class="plan-feature"><span class="ok">✓</span> 候補者スクリーニング</div>
+          <div class="plan-feature"><span class="ok">✓</span> 面接日程調整</div>
+          <div class="plan-feature"><span class="ok">✓</span> 年収条件の交渉代行</div>
+          <div class="plan-feature"><span class="ok">✓</span> 内定後フォロー</div>
+          <div class="plan-feature"><span class="ok">✓</span> 採用コンサルティング</div>
+          <div class="plan-feature"><span class="ok">✓</span> 市場データレポート</div>
+        </div>
+        <a href="#form" class="btn btn-primary btn-block">相談する</a>
+      </div>
+
+      <div class="plan-card anim-up delay-2">
+        <div class="text-xs text-gray font-bold" style="letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem;">エンタープライズ</div>
+        <h3>RPO型採用支援</h3>
+        <div class="plan-price" style="font-size:1.8rem;">要<sub>お見積</sub></div>
+        <p class="text-xs text-gray">月額固定＋成功報酬</p>
+        <div class="plan-features">
+          <div class="plan-feature"><span class="ok">✓</span> 上記すべてを含む</div>
+          <div class="plan-feature"><span class="ok">✓</span> 専任チームアサイン</div>
+          <div class="plan-feature"><span class="ok">✓</span> 採用ブランディング支援</div>
+          <div class="plan-feature"><span class="ok">✓</span> 採用ページ制作</div>
+          <div class="plan-feature"><span class="ok">✓</span> 複数ポジション同時対応</div>
+          <div class="plan-feature"><span class="ok">✓</span> SLA対応</div>
+          <div class="plan-feature"><span class="ok">✓</span> 月次採用レポート提供</div>
+        </div>
+        <a href="#form" class="btn btn-outline btn-block">お問い合わせ</a>
+      </div>
+    </div>
+
+    <div class="notice notice-blue mt-3 anim-up">
+      <span class="notice-icon">ℹ️</span>
+      <div>掲載・相談は無料です。採用成功時のみ費用が発生します。まずはお気軽にご相談ください。返金保証制度（入社後3ヶ月以内の退職時）も設けています。</div>
+    </div>
+  </div>
+</section>
+
+<!-- RECRUITING FORM -->
+<section class="section" id="form">
+  <div class="container container-sm">
+    <span class="section-label">Contact</span>
+    <h2 class="section-title">採用・求人掲載のご相談</h2>
+    <p class="section-desc">フォームにご記入いただくと、担当者より1営業日以内にご連絡いたします。</p>
+
+    <div class="form-wrap anim-up">
+      <form action="https://formspree.io/f/YOUR_COMPANY_FORM_ID" method="POST">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>会社名<span class="req">*</span></label>
+            <input type="text" name="company_name" class="form-control" placeholder="株式会社〇〇" required>
+          </div>
+          <div class="form-group">
+            <label>担当者名<span class="req">*</span></label>
+            <input type="text" name="contact_name" class="form-control" placeholder="山田 太郎" required>
+          </div>
+          <div class="form-group">
+            <label>メールアドレス<span class="req">*</span></label>
+            <input type="email" name="email" class="form-control" placeholder="hr@example.com" required>
+          </div>
+          <div class="form-group">
+            <label>電話番号</label>
+            <input type="tel" name="phone" class="form-control" placeholder="045-000-0000">
+          </div>
+          <div class="form-group">
+            <label>会社所在地（エリア）<span class="req">*</span></label>
+            <div class="select-wrap">
+              <select name="area" class="form-control" required>
+                <option value="">選択してください</option>
+                <option>横浜市</option>
+                <option>川崎市</option>
+                <option>相模原市</option>
+                <option>厚木・海老名エリア</option>
+                <option>その他神奈川</option>
+                <option>東京都内（リモート採用）</option>
+                <option>その他</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>採用予定人数</label>
+            <div class="select-wrap">
+              <select name="headcount" class="form-control">
+                <option value="">選択してください</option>
+                <option>1名</option>
+                <option>2〜3名</option>
+                <option>4〜5名</option>
+                <option>6名以上</option>
+                <option>未定（まず相談したい）</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group form-full">
+            <label>採用したい職種（複数可）</label>
+            <input type="text" name="roles" class="form-control" placeholder="例：バックエンドエンジニア（Go）、インフラエンジニア（AWS）">
+          </div>
+          <div class="form-group form-full">
+            <label>ご相談内容・採用背景</label>
+            <textarea name="message" class="form-control" placeholder="採用の背景、求めるスキル・経験、待遇など、なんでもお気軽にご記入ください。"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block mt-3">
+          採用相談を申し込む（無料）→
+        </button>
+        <p class="text-xs text-gray text-center mt-2">1営業日以内にご連絡いたします。</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section" id="cta">
+  <div class="container">
+    <h2>まずは無料でご相談ください</h2>
+    <p>採用要件の整理から始めます。採用成功まで費用は一切かかりません。<br>神奈川エリアのITエンジニア採用はお任せください。</p>
+    <div class="cta-buttons">
+      <a href="#form" class="btn btn-white btn-lg">採用相談をする（無料）→</a>
+      <a href="jobs.html" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.4);">求人一覧を見る</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="js/main.js"></script>
+</body>
+</html>
