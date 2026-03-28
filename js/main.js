@@ -8,20 +8,38 @@ const HEADER_HTML = `
   <nav class="nav-inner">
     <a href="/claude-code-practice/" class="site-logo">神奈川IT<span>転職ラボ</span></a>
     <ul class="nav-links">
-      <li><a href="/claude-code-practice/remote-work.html">リモートワーク実態</a></li>
-      <li><a href="/claude-code-practice/salary.html">年収相場</a></li>
-      <li><a href="/claude-code-practice/companies.html">おすすめ企業</a></li>
-      <li><a href="#cta" class="btn-nav">無料相談</a></li>
+      <li><a href="/claude-code-practice/jobs.html">求人一覧</a></li>
+      <li class="nav-dropdown">
+        <a href="/claude-code-practice/salary.html">情報 ▾</a>
+        <ul class="dropdown-menu">
+          <li><a href="/claude-code-practice/salary.html">💰 年収相場</a></li>
+          <li><a href="/claude-code-practice/companies.html">🏢 おすすめ企業</a></li>
+          <li><a href="/claude-code-practice/remote-work.html">💻 リモートワーク実態</a></li>
+        </ul>
+      </li>
+      <li class="nav-dropdown">
+        <a href="/claude-code-practice/career-change-guide.html">ガイド ▾</a>
+        <ul class="dropdown-menu">
+          <li><a href="/claude-code-practice/career-change-guide.html">📘 転職完全ガイド</a></li>
+          <li><a href="/claude-code-practice/skill-guide.html">🛠️ スキルガイド</a></li>
+          <li><a href="/claude-code-practice/success-stories.html">🏆 成功事例</a></li>
+        </ul>
+      </li>
+      <li><a href="/claude-code-practice/contact.html" class="btn-nav">無料相談</a></li>
     </ul>
     <button class="hamburger" aria-label="メニューを開く" id="hamburgerBtn">
       <span></span><span></span><span></span>
     </button>
   </nav>
   <nav class="mobile-nav" id="mobileNav">
-    <a href="/claude-code-practice/remote-work.html">💻 リモートワーク実態</a>
+    <a href="/claude-code-practice/jobs.html">📋 求人一覧</a>
     <a href="/claude-code-practice/salary.html">💰 年収相場</a>
     <a href="/claude-code-practice/companies.html">🏢 おすすめ企業</a>
-    <a href="#cta" class="btn-nav-mobile">無料転職相談（無料）</a>
+    <a href="/claude-code-practice/remote-work.html">💻 リモートワーク実態</a>
+    <a href="/claude-code-practice/career-change-guide.html">📘 転職完全ガイド</a>
+    <a href="/claude-code-practice/skill-guide.html">🛠️ スキルガイド</a>
+    <a href="/claude-code-practice/success-stories.html">🏆 成功事例</a>
+    <a href="/claude-code-practice/contact.html" class="btn-nav-mobile">無料転職相談（無料）</a>
   </nav>
 </header>`;
 
@@ -34,35 +52,47 @@ const FOOTER_HTML = `
       <p>現役転職エージェントが発信する<br>神奈川エリア特化のITエンジニア向け転職情報メディアです。</p>
     </div>
     <div class="footer-col">
-      <h4>コンテンツ</h4>
+      <h4>求人・情報</h4>
       <ul>
-        <li><a href="/claude-code-practice/remote-work.html">リモートワーク実態</a></li>
+        <li><a href="/claude-code-practice/jobs.html">求人一覧</a></li>
         <li><a href="/claude-code-practice/salary.html">年収相場</a></li>
         <li><a href="/claude-code-practice/companies.html">おすすめ企業</a></li>
+        <li><a href="/claude-code-practice/remote-work.html">リモートワーク実態</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>転職ガイド</h4>
+      <ul>
+        <li><a href="/claude-code-practice/career-change-guide.html">転職完全ガイド</a></li>
+        <li><a href="/claude-code-practice/skill-guide.html">スキルガイド</a></li>
+        <li><a href="/claude-code-practice/success-stories.html">転職成功事例</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>エリア情報</h4>
       <ul>
-        <li><a href="#">横浜エリア</a></li>
-        <li><a href="#">川崎エリア</a></li>
-        <li><a href="#">相模原エリア</a></li>
-        <li><a href="#">厚木・海老名エリア</a></li>
+        <li><a href="/claude-code-practice/area-yokohama.html">横浜エリア</a></li>
+        <li><a href="/claude-code-practice/area-kawasaki.html">川崎エリア</a></li>
+        <li><a href="/claude-code-practice/area-sagamihara.html">相模原エリア</a></li>
+        <li><a href="/claude-code-practice/area-atsugi.html">厚木エリア</a></li>
+        <li><a href="/claude-code-practice/area-fujisawa.html">藤沢エリア</a></li>
+        <li><a href="/claude-code-practice/area-ebina.html">海老名エリア</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>サポート</h4>
       <ul>
-        <li><a href="#">無料転職相談</a></li>
-        <li><a href="#">プライバシーポリシー</a></li>
-        <li><a href="#">利用規約</a></li>
-        <li><a href="#">運営者情報</a></li>
-        <li><a href="#">お問い合わせ</a></li>
+        <li><a href="/claude-code-practice/contact.html">無料転職相談</a></li>
+        <li><a href="/claude-code-practice/for-companies.html">企業の方へ</a></li>
+        <li><a href="/claude-code-practice/about.html">運営者情報</a></li>
+        <li><a href="/claude-code-practice/faq.html">よくある質問</a></li>
+        <li><a href="/claude-code-practice/privacy.html">プライバシーポリシー</a></li>
+        <li><a href="/claude-code-practice/terms.html">利用規約</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>© 2024 神奈川ITエンジニア転職ラボ. All rights reserved.</span>
+    <span>© 2026 神奈川ITエンジニア転職ラボ. All rights reserved.</span>
     <span>当サイトの情報は転職エージェントによる調査に基づきます。</span>
   </div>
 </footer>`;
