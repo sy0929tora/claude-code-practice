@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ITエンジニア面接対策完全ガイド2026。頻出質問と回答例・コーディングテスト対策・逆質問集まで神奈川エリア特化で解説。">
+  <meta name="keywords" content="IT,エンジニア,面接,対策,頻出質問,コーディングテスト,逆質問,転職,神奈川">
+  <meta property="og:title" content="ITエンジニア面接対策完全ガイド｜頻出質問と回答例【2026年版】">
+  <meta property="og:description" content="IT面接の頻出質問・NG回答/OK回答の比較・コーディングテスト対策・逆質問例まで網羅した完全ガイド。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/interview-guide.html">
+  <meta property="og:site_name" content="神奈川ITエンジニア転職ラボ">
+  <meta property="og:locale" content="ja_JP">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/interview-guide.html">
+  <title>ITエンジニア面接対策完全ガイド｜頻出質問と回答例【2026年版】</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "ITエンジニア面接対策完全ガイド 2026",
+    "description": "IT面接の頻出質問・回答例・コーディングテスト対策・逆質問例まで網羅した完全ガイド。",
+    "url": "https://sy0929tora.github.io/claude-code-practice/interview-guide.html",
+    "inLanguage": "ja",
+    "datePublished": "2026-03-28",
+    "dateModified": "2026-03-28",
+    "publisher": { "@type": "Organization", "name": "神奈川ITエンジニア転職ラボ", "url": "https://sy0929tora.github.io/claude-code-practice/" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://sy0929tora.github.io/claude-code-practice/"},
+      {"@type": "ListItem", "position": 2, "name": "面接対策ガイド", "item": "https://sy0929tora.github.io/claude-code-practice/interview-guide.html"}
+    ]
+  }
+  </script>
+  <style>
+    .qa-block { margin-bottom: 2rem; }
+    .qa-question {
+      background: var(--primary);
+      color: #fff;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius) var(--radius) 0 0;
+      font-weight: 700;
+      font-size: .95rem;
+    }
+    .qa-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
+    @media(max-width:600px) { .qa-answers { grid-template-columns: 1fr; } }
+    .qa-ng { background: #fff8f8; padding: 1rem; }
+    .qa-ok { background: #f0fdf4; padding: 1rem; }
+    .qa-label { font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: .5rem; }
+    .qa-label.ng { color: var(--danger); }
+    .qa-label.ok { color: var(--success); }
+    .qa-text { font-size: .88rem; line-height: 1.75; color: var(--dark-3); }
+    .qa-tip { margin-top: .75rem; padding: .6rem .9rem; background: var(--primary-light); border-radius: var(--radius-sm); font-size: .8rem; color: var(--primary-dark); }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--primary); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1rem; flex-shrink: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<!-- ===== HERO ===== -->
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="index.html">ホーム</a><span>›</span><span>面接対策ガイド</span>
+    </nav>
+    <div class="badge-hero">🎯 Interview Guide</div>
+    <h1>ITエンジニア<br>面接対策完全ガイド <span style="font-size:.65em;opacity:.85;">2026</span></h1>
+    <p>頻出質問・NG/OK回答例・コーディングテスト対策・逆質問集まで網羅。内定率を大幅に上げる実践ガイドです。</p>
+    <div style="display:flex;gap:2rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;">
+      <div style="text-align:center;"><div style="font-size:2rem;font-weight:800;">90%</div><div style="font-size:.85rem;opacity:.8;">頻出質問カバー率</div></div>
+      <div style="text-align:center;"><div style="font-size:2rem;font-weight:800;">平均3社</div><div style="font-size:.85rem;opacity:.8;">内定獲得実績</div></div>
+      <div style="text-align:center;"><div style="font-size:2rem;font-weight:800;">+40%</div><div style="font-size:.85rem;opacity:.8;">対策後の内定率向上</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW ===== -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Interview Flow</span>
+    <h2 class="section-title">IT企業の面接の流れ</h2>
+    <div class="grid-2" style="margin-top:2rem;">
+      <div class="card" style="display:flex;gap:1rem;">
+        <div class="step-num">1</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.4rem;">書類選考 / コーディングテスト</h3>
+          <p class="text-gray text-sm">多くのIT企業で一次選考としてオンラインコーディングテスト（LeetCode形式・AtCoder形式）を実施。1〜2週間以内に結果が出ることが多い。</p>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:1rem;">
+        <div class="step-num" style="background:var(--accent);">2</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.4rem;">一次面接 / 技術面接</h3>
+          <p class="text-gray text-sm">現場エンジニア（テックリードやシニアエンジニア）が担当。技術的な経験・スキル・設計力を深掘り。コードレビューや設計問題を出題するケースも。</p>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:1rem;">
+        <div class="step-num" style="background:var(--success);">3</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.4rem;">二次面接 / 人事・マネージャー面接</h3>
+          <p class="text-gray text-sm">人事担当・採用マネージャーが担当。転職理由・カルチャーフィット・キャリアビジョンを確認。ここで「なぜ弊社か」の説得力が問われる。</p>
+        </div>
+      </div>
+      <div class="card" style="display:flex;gap:1rem;">
+        <div class="step-num" style="background:#7c3aed;">4</div>
+        <div>
+          <h3 style="font-size:1rem;margin-bottom:.4rem;">最終面接 / 役員面接・条件交渉</h3>
+          <p class="text-gray text-sm">CTO・VP・事業部長などが担当。長期的なビジョンや会社への貢献可能性を確認。内定後に年収交渉を行うケースが多い（エージェント代行が効果的）。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Q&A ===== -->
+<section class="section bg-light">
+  <div class="container">
+    <span class="section-label">HR Interview</span>
+    <h2 class="section-title">頻出質問と回答例（人事面接）</h2>
+    <p class="section-desc">NG例とOK例を比較して、採用担当者に好印象を与える回答を学びましょう。</p>
+
+    <div style="margin-top:2rem;">
+
+      <div class="qa-block">
+        <div class="qa-question">Q1. 自己紹介をしてください（1分でお願いします）</div>
+        <div class="qa-answers">
+          <div class="qa-ng">
+            <div class="qa-label ng">❌ NG例</div>
+            <div class="qa-text">「○○と申します。前職では5年間システム開発をしておりまして、最近はAWSとかReactとかを使っていました。趣味はゲームです。よろしくお願いします。」</div>
+          </div>
+          <div class="qa-ok">
+            <div class="qa-label ok">✅ OK例</div>
+            <div class="qa-text">「○○と申します。5年間バックエンド開発を担当し、直近2年はGoとKubernetesを使ったマイクロサービス設計を主導しました。特に決済APIの処理速度を3倍に改善した経験を活かし、貴社の○○プロダクトに貢献したいと考えております。」</div>
+            <div class="qa-tip">💡 実績・スキル・志望動機を1分で伝える3部構成で。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-question">Q2. 転職理由を教えてください</div>
+        <div class="qa-answers">
+          <div class="qa-ng">
+            <div class="qa-label ng">❌ NG例</div>
+            <div class="qa-text">「残業が多くて、上司との関係も悪くて、給料も上がらないので転職を考えました。もっと楽な環境で働きたいです。」</div>
+          </div>
+          <div class="qa-ok">
+            <div class="qa-label ok">✅ OK例</div>
+            <div class="qa-text">「現職でSIerとして大規模プロジェクトの経験を積みましたが、よりスピード感のある自社開発環境でユーザーに直接価値を届ける開発がしたいと思い転職を決意しました。貴社はGoとマイクロサービスで急成長中であり、私のスキルを最大限活かせると確信しています。」</div>
+            <div class="qa-tip">💡 ネガティブな理由は避け「何を実現したいか」を中心に。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-question">Q3. 5年後のキャリアビジョンを教えてください</div>
+        <div class="qa-answers">
+          <div class="qa-ng">
+            <div class="qa-label ng">❌ NG例</div>
+            <div class="qa-text">「特に決めていないですが、とりあえず技術を磨いていきたいと思っています。あとは状況次第ですかね。」</div>
+          </div>
+          <div class="qa-ok">
+            <div class="qa-label ok">✅ OK例</div>
+            <div class="qa-text">「3年以内にテックリードとして技術方針の決定に関わり、5年後にはエンジニアリングマネージャーとしてチームの成長を牽引したいと考えています。そのために今回の転職では、自社プロダクトの開発に深く関わりアーキテクチャ設計の経験を積みたいと考えています。」</div>
+            <div class="qa-tip">💡 具体的な役職・時軸・今回の転職との繋がりを示す。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-question">Q4. 弊社を志望した理由を教えてください</div>
+        <div class="qa-answers">
+          <div class="qa-ng">
+            <div class="qa-label ng">❌ NG例</div>
+            <div class="qa-text">「御社の名前をよく聞くので興味を持ちました。給与が高いと聞きましたし、リモートワークができるのも魅力です。」</div>
+          </div>
+          <div class="qa-ok">
+            <div class="qa-label ok">✅ OK例</div>
+            <div class="qa-text">「貴社の○○プロダクトは月間○万ユーザーを抱え、Goを全面採用したアーキテクチャに移行中という点で強く惹かれました。またエンジニアブログで読んだ○○さんの設計記事の思想に共感し、そのようなエンジニア文化の中で成長したいと考えました。」</div>
+            <div class="qa-tip">💡 企業研究の深さを示す。技術ブログ・採用ページ・Qiitaを事前に読む。</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qa-block">
+        <div class="qa-question">Q5. あなたの強みと弱みを教えてください</div>
+        <div class="qa-answers">
+          <div class="qa-ng">
+            <div class="qa-label ng">❌ NG例</div>
+            <div class="qa-text">「強みは真面目なことです。弱みは完璧主義なところですが、それも長所と言えるかもしれません（笑）。」</div>
+          </div>
+          <div class="qa-ok">
+            <div class="qa-label ok">✅ OK例</div>
+            <div class="qa-text">「強みはパフォーマンス改善への執着心です。前職でAPIのボトルネック分析を自主的に行い、スループットを40%改善しました。弱みは完璧を求めすぎてリリースが遅れることがあった点で、現在はDoD（完了の定義）を事前に明確化することで改善しています。」</div>
+            <div class="qa-tip">💡 弱みは「過去形＋改善策」で答えると成長意欲が伝わる。</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== TECH INTERVIEW ===== -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Technical Interview</span>
+    <h2 class="section-title">技術面接の頻出テーマ</h2>
+    <div class="grid-3" style="margin-top:2rem;">
+      <div class="card">
+        <div class="card-icon icon-blue">🧮</div>
+        <h3 style="font-size:.95rem;">アルゴリズム・データ構造</h3>
+        <p class="text-gray text-sm">配列・ハッシュマップ・二分探索・DFS/BFS・動的計画法が頻出。LeetCodeでMediumレベルを20問以上解いておくと安心。</p>
+        <div style="margin-top:.75rem;padding:.6rem .8rem;background:var(--light);border-radius:var(--radius-sm);font-size:.8rem;">準備目安：2〜4週間</div>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-cyan">🏗️</div>
+        <h3 style="font-size:.95rem;">システム設計（LLD/HLD）</h3>
+        <p class="text-gray text-sm">「URLショートナーを設計してください」「Twitterのようなシステムを設計してください」など。スケーラビリティ・DB設計・キャッシュ戦略を話せるようにする。</p>
+        <div style="margin-top:.75rem;padding:.6rem .8rem;background:var(--light);border-radius:var(--radius-sm);font-size:.8rem;">準備目安：3〜6週間</div>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-green">🔍</div>
+        <h3 style="font-size:.95rem;">コードレビュー問題</h3>
+        <p class="text-gray text-sm">既存コードの問題点を指摘するパターン。パフォーマンス問題・セキュリティホール・可読性・SOLID原則違反などを指摘できるとプラス評価。</p>
+        <div style="margin-top:.75rem;padding:.6rem .8rem;background:var(--light);border-radius:var(--radius-sm);font-size:.8rem;">準備目安：1〜2週間</div>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-orange">🚨</div>
+        <h3 style="font-size:.95rem;">障害対応・デバッグ経験</h3>
+        <p class="text-gray text-sm">「本番障害を経験したことはありますか？どう対処しましたか？」STAR法（状況→課題→行動→結果）で具体的に答えられるエピソードを2〜3件用意。</p>
+        <div style="margin-top:.75rem;padding:.6rem .8rem;background:var(--light);border-radius:var(--radius-sm);font-size:.8rem;">準備目安：エピソード整理のみ</div>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-blue">☁️</div>
+        <h3 style="font-size:.95rem;">クラウド・インフラ知識</h3>
+        <p class="text-gray text-sm">AWS/GCPの基本サービス（EC2, S3, RDS, Lambda）の説明・比較ができるか確認。IaC（Terraform）やコンテナ（Docker/Kubernetes）も頻出。</p>
+        <div style="margin-top:.75rem;padding:.6rem .8rem;background:var(--light);border-radius:var(--radius-sm);font-size:.8rem;">準備目安：1〜3週間</div>
+      </div>
+      <div class="card">
+        <div class="card-icon icon-cyan">⚡</div>
+        <h3 style="font-size:.95rem;">最近の技術トレンド</h3>
+        <p class="text-gray text-sm">LLM・RAG・エッジコンピューティング・WebAssemblyなど2026年の注目技術への見解を問われることが増加。自分の考えを持っておくこと。</p>
+        <div style="margin-top:.75rem;padding:.6rem .8rem;background:var(--light);border-radius:var(--radius-sm);font-size:.8rem;">準備目安：継続的なインプット</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CODING TEST ===== -->
+<section class="section bg-light">
+  <div class="container">
+    <span class="section-label">Coding Test</span>
+    <h2 class="section-title">コーディングテスト対策</h2>
+    <div class="grid-2" style="margin-top:2rem;">
+      <div class="card">
+        <h3 style="font-size:1rem;margin-bottom:.75rem;">📊 出題傾向と対策プラットフォーム</h3>
+        <div style="display:flex;flex-direction:column;gap:.6rem;">
+          <div style="padding:.75rem;background:var(--light);border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;">
+            <div><strong>LeetCode</strong><span class="text-gray text-sm" style="margin-left:.5rem;">英語・外資系に必須</span></div>
+            <span class="tag">Medium中心</span>
+          </div>
+          <div style="padding:.75rem;background:var(--light);border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;">
+            <div><strong>AtCoder</strong><span class="text-gray text-sm" style="margin-left:.5rem;">国内企業・新卒</span></div>
+            <span class="tag">ABC D問題</span>
+          </div>
+          <div style="padding:.75rem;background:var(--light);border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;">
+            <div><strong>HackerRank</strong><span class="text-gray text-sm" style="margin-left:.5rem;">SIer・大手</span></div>
+            <span class="tag">中級レベル</span>
+          </div>
+          <div style="padding:.75rem;background:var(--light);border-radius:var(--radius);display:flex;justify-content:space-between;align-items:center;">
+            <div><strong>GitHub Portfolio</strong><span class="text-gray text-sm" style="margin-left:.5rem;">コード品質の証明</span></div>
+            <span class="tag">必須整備</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3 style="font-size:1rem;margin-bottom:.75rem;">⏱️ 時間配分と解けない時の対処</h3>
+        <div style="display:flex;flex-direction:column;gap:.75rem;">
+          <div style="padding:.75rem;background:var(--primary-light);border-radius:var(--radius);border-left:3px solid var(--primary);">
+            <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;">最初の5分：問題の把握</div>
+            <div class="text-gray text-sm">入出力例を全て読み、エッジケースを確認。「わかりました、最初にエッジケースを確認させてください」と宣言する。</div>
+          </div>
+          <div style="padding:.75rem;background:var(--accent-light);border-radius:var(--radius);border-left:3px solid var(--accent);">
+            <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;">次の10分：ブルートフォース解法</div>
+            <div class="text-gray text-sm">まず正解するコードを書く。最適化は後回し。「まずO(n²)の解法を実装し、その後最適化します」と声に出す。</div>
+          </div>
+          <div style="padding:.75rem;background:var(--success-light);border-radius:var(--radius);border-left:3px solid var(--success);">
+            <div style="font-weight:700;font-size:.9rem;margin-bottom:.3rem;">解けない場合</div>
+            <div class="text-gray text-sm">「解法が思い浮かびません。ヒントをいただけますか？」と正直に伝えるのがベスト。沈黙は最悪なので思考過程を声に出し続ける。</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== REVERSE Q ===== -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">Reverse Questions</span>
+    <h2 class="section-title">逆質問の例（好印象を与える10問）</h2>
+    <p class="section-desc">「特にありません」は絶対NG。事前に3〜5問は準備しておきましょう。</p>
+    <div class="grid-2" style="margin-top:2rem;">
+      <div class="card" style="border-left:3px solid var(--primary);">
+        <h3 style="font-size:.9rem;color:var(--primary);margin-bottom:.3rem;">技術・開発環境について</h3>
+        <ul style="font-size:.88rem;color:var(--dark-3);line-height:2;list-style:none;padding:0;">
+          <li>→ 「現在の技術スタックの中で、今後置き換えを検討しているものはありますか？」</li>
+          <li>→ 「コードレビューのプロセスとデプロイの頻度を教えていただけますか？」</li>
+          <li>→ 「技術的負債への取り組み方針を教えてください。」</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:3px solid var(--accent);">
+        <h3 style="font-size:.9rem;color:var(--accent-dark, #0e7490);margin-bottom:.3rem;">チーム・文化について</h3>
+        <ul style="font-size:.88rem;color:var(--dark-3);line-height:2;list-style:none;padding:0;">
+          <li>→ 「チームの意思決定プロセスはどのように行われていますか？」</li>
+          <li>→ 「エンジニアが技術的な提案をする機会はありますか？」</li>
+          <li>→ 「チームで最近達成したことで嬉しかったことを教えてください。」</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:3px solid var(--success);">
+        <h3 style="font-size:.9rem;color:var(--success);margin-bottom:.3rem;">成長・キャリアについて</h3>
+        <ul style="font-size:.88rem;color:var(--dark-3);line-height:2;list-style:none;padding:0;">
+          <li>→ 「エンジニアが技術力を高めるための支援制度（書籍代・カンファレンス参加など）はありますか？」</li>
+          <li>→ 「テックリードやマネージャーへのキャリアパスはどのように整備されていますか？」</li>
+        </ul>
+      </div>
+      <div class="card" style="border-left:3px solid var(--warning);">
+        <h3 style="font-size:.9rem;color:#92400e;margin-bottom:.3rem;">入社後について</h3>
+        <ul style="font-size:.88rem;color:var(--dark-3);line-height:2;list-style:none;padding:0;">
+          <li>→ 「入社後の最初の3ヶ月でどのような貢献が期待されますか？」</li>
+          <li>→ 「この役職で成功するエンジニアに共通する特徴を教えてください。」</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== NG BEHAVIORS ===== -->
+<section class="section bg-light">
+  <div class="container">
+    <span class="section-label">Watch Out</span>
+    <h2 class="section-title">面接でやってはいけないNG行動</h2>
+    <div class="grid-2" style="margin-top:2rem;">
+      <div class="card" style="border-left:4px solid var(--danger);">
+        <h3 style="font-size:.95rem;color:var(--danger);margin-bottom:.5rem;">❌ 前職の悪口を言う</h3>
+        <p class="text-gray text-sm">「前の会社はレガシーコードばかりで、上司も技術がわかっていない人でした」→ 採用担当者はあなたが将来自社の悪口を言うかもしれないと懸念する。</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--danger);">
+        <h3 style="font-size:.95rem;color:var(--danger);margin-bottom:.5rem;">❌ 沈黙が続く</h3>
+        <p class="text-gray text-sm">技術的な質問で考え込んで無言になる。「少し考えさせてください」と断りを入れた上で、考えていることを声に出し続けるのがベスト。</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--danger);">
+        <h3 style="font-size:.95rem;color:var(--danger);margin-bottom:.5rem;">❌ 企業研究が浅い</h3>
+        <p class="text-gray text-sm">「御社のサービスについて教えてもらえますか？」は論外。公式サイト・採用ページ・エンジニアブログは最低限読んでおくこと。</p>
+      </div>
+      <div class="card" style="border-left:4px solid var(--danger);">
+        <h3 style="font-size:.95rem;color:var(--danger);margin-bottom:.5rem;">❌ 給与・福利厚生を最初に聞く</h3>
+        <p class="text-gray text-sm">一次・二次面接で真っ先に「給与はいくらですか？」「残業はありますか？」と聞くのはマイナス印象。条件確認はエージェント経由か最終面接後が適切。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section-cta">
+  <div class="container" style="text-align:center;">
+    <h2>面接対策も無料でサポートします</h2>
+    <p>エージェントが模擬面接・フィードバック・企業別対策を無料で提供します。<br>神奈川エリアの非公開求人もご紹介できます。</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn btn-white btn-lg">無料転職相談をする →</a>
+      <a href="career-change-guide.html" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.4);">転職ガイドを読む</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="js/main.js"></script>
+</body>
+</html>
