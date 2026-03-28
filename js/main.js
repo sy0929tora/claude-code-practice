@@ -21,8 +21,11 @@ const HEADER_HTML = `
         <a href="/claude-code-practice/career-change-guide.html">ガイド ▾</a>
         <ul class="dropdown-menu">
           <li><a href="/claude-code-practice/career-change-guide.html">📘 転職完全ガイド</a></li>
+          <li><a href="/claude-code-practice/interview-guide.html">🎯 面接対策</a></li>
           <li><a href="/claude-code-practice/skill-guide.html">🛠️ スキルガイド</a></li>
-          <li><a href="/claude-code-practice/success-stories.html">🏆 成功事例</a></li>
+          <li><a href="/claude-code-practice/engineer-types.html">💼 職種別ガイド</a></li>
+          <li><a href="/claude-code-practice/rankings.html">🏆 企業ランキング</a></li>
+          <li><a href="/claude-code-practice/success-stories.html">✨ 成功事例</a></li>
         </ul>
       </li>
       <li><a href="/claude-code-practice/contact.html" class="btn-nav">無料相談</a></li>
@@ -37,8 +40,11 @@ const HEADER_HTML = `
     <a href="/claude-code-practice/companies.html">🏢 おすすめ企業</a>
     <a href="/claude-code-practice/remote-work.html">💻 リモートワーク実態</a>
     <a href="/claude-code-practice/career-change-guide.html">📘 転職完全ガイド</a>
+    <a href="/claude-code-practice/interview-guide.html">🎯 面接対策ガイド</a>
     <a href="/claude-code-practice/skill-guide.html">🛠️ スキルガイド</a>
-    <a href="/claude-code-practice/success-stories.html">🏆 成功事例</a>
+    <a href="/claude-code-practice/engineer-types.html">💼 職種別ガイド</a>
+    <a href="/claude-code-practice/rankings.html">🏆 企業ランキング</a>
+    <a href="/claude-code-practice/success-stories.html">✨ 成功事例</a>
     <a href="/claude-code-practice/contact.html" class="btn-nav-mobile">無料転職相談（無料）</a>
   </nav>
 </header>`;
@@ -64,7 +70,10 @@ const FOOTER_HTML = `
       <h4>転職ガイド</h4>
       <ul>
         <li><a href="/claude-code-practice/career-change-guide.html">転職完全ガイド</a></li>
+        <li><a href="/claude-code-practice/interview-guide.html">面接対策ガイド</a></li>
         <li><a href="/claude-code-practice/skill-guide.html">スキルガイド</a></li>
+        <li><a href="/claude-code-practice/engineer-types.html">職種別ガイド</a></li>
+        <li><a href="/claude-code-practice/rankings.html">企業ランキング</a></li>
         <li><a href="/claude-code-practice/success-stories.html">転職成功事例</a></li>
       </ul>
     </div>
@@ -77,6 +86,7 @@ const FOOTER_HTML = `
         <li><a href="/claude-code-practice/area-atsugi.html">厚木エリア</a></li>
         <li><a href="/claude-code-practice/area-fujisawa.html">藤沢エリア</a></li>
         <li><a href="/claude-code-practice/area-ebina.html">海老名エリア</a></li>
+        <li><a href="/claude-code-practice/area-yokosuka.html">横須賀エリア</a></li>
       </ul>
     </div>
     <div class="footer-col">
