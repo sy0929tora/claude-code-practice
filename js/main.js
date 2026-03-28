@@ -117,6 +117,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initFadeUp();
   initFilterBar();
+  initScrollTop();
+  initReadingProgress();
 });
 
 function injectHeader() {
@@ -286,3 +288,28 @@ window.calcSalary = function() {
     el.classList.add('show');
   }
 };
+
+/* ---------- Scroll-to-top ---------- */
+function initScrollTop() {
+  const btn = document.createElement('button');
+  btn.id = 'scroll-top';
+  btn.setAttribute('aria-label', 'ページトップへ');
+  btn.innerHTML = '↑';
+  document.body.appendChild(btn);
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+}
+
+/* ---------- Reading progress bar ---------- */
+function initReadingProgress() {
+  const bar = document.createElement('div');
+  bar.id = 'reading-progress';
+  document.body.appendChild(bar);
+  window.addEventListener('scroll', () => {
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docH > 0 ? (window.scrollY / docH) * 100 : 0;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+}
