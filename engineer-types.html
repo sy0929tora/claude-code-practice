@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="神奈川ITエンジニア職種別転職ガイド。フロントエンド・バックエンド・インフラ・PM・データエンジニアなど職種ごとの求人・年収・必要スキルを解説。">
+  <meta name="keywords" content="神奈川,IT,エンジニア,職種,転職,フロントエンド,バックエンド,インフラ,PM,データサイエンティスト">
+  <meta property="og:title" content="神奈川ITエンジニア 職種別転職ガイド｜求人・年収・スキル">
+  <meta property="og:description" content="職種別の神奈川IT求人数・年収帯・必要スキルを一覧化。あなたの職種に合った転職情報をチェック。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/engineer-types.html">
+  <meta property="og:site_name" content="神奈川ITエンジニア転職ラボ">
+  <meta property="og:locale" content="ja_JP">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/engineer-types.html">
+  <title>神奈川ITエンジニア 職種別転職ガイド｜求人・年収・スキル</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://sy0929tora.github.io/claude-code-practice/"},
+      {"@type": "ListItem", "position": 2, "name": "職種別ガイド", "item": "https://sy0929tora.github.io/claude-code-practice/engineer-types.html"}
+    ]
+  }
+  </script>
+  <style>
+    .type-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1.25rem;
+      align-items: start;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+    }
+    .type-card:hover { transform: translateY(-2px); }
+    .type-icon-wrap {
+      width: 60px;
+      height: 60px;
+      border-radius: var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+    }
+    .type-demand-bar { background: var(--border); border-radius: 99px; height: 6px; margin-top: .3rem; overflow: hidden; }
+    .type-demand-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent)); }
+    .type-salary-range { font-size: 1.1rem; font-weight: 800; color: var(--primary); white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<!-- ===== HERO ===== -->
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="index.html">ホーム</a><span>›</span><span>職種別ガイド</span>
+    </nav>
+    <div class="badge-hero">💼 By Job Type</div>
+    <h1>神奈川ITエンジニア<br>職種別転職ガイド</h1>
+    <p>あなたの職種から求人・年収・必要スキルを探す。神奈川エリア特化の職種別データです。</p>
+  </div>
+</section>
+
+<!-- ===== TYPE LIST ===== -->
+<section class="section">
+  <div class="container">
+    <span class="section-label">All Types</span>
+    <h2 class="section-title">職種から探す</h2>
+    <p class="section-desc">各職種の求人数・年収帯・難易度・神奈川エリアでの需要トレンドをまとめました。</p>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;margin-top:2rem;">
+
+      <!-- Frontend -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:var(--primary-light);">💻</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">フロントエンドエンジニア</h3>
+            <span class="tag" style="background:var(--danger-light);color:var(--danger);">需要急増</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">React/Next.js・TypeScriptを中心にUIの開発を担当。UXへの関心とデザイン感覚も求められる。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">Next.js</span><span class="tag">Vue.js</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 280件+ ／ 難易度 ★★★☆☆</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:96%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">500〜780万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- Backend -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:var(--accent-light);">⚙️</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">バックエンドエンジニア</h3>
+            <span class="tag" style="background:var(--danger-light);color:var(--danger);">高年収</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">APIサーバ・データベース設計・マイクロサービス開発を担当。Go・Python・Javaの経験が武器になる。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">Go</span><span class="tag">Python</span><span class="tag">Java</span><span class="tag">Node.js</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 340件+ ／ 難易度 ★★★★☆</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:93%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">550〜900万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- Fullstack -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:var(--success-light);">🔮</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">フルスタックエンジニア</h3>
+            <span class="tag" style="background:var(--success-light);color:var(--success);">スタートアップ人気</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">フロントからバックまで幅広く開発。少人数チームで裁量を持って働きたいエンジニアに最適。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">React</span><span class="tag">Node.js</span><span class="tag">PostgreSQL</span><span class="tag">AWS</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 210件+ ／ 難易度 ★★★★☆</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:85%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">580〜880万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- Infra / Cloud -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:#ecfdf5;">☁️</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">インフラ・クラウドエンジニア</h3>
+            <span class="tag" style="background:var(--danger-light);color:var(--danger);">希少スキル</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">AWS/GCP/Azureでのインフラ設計・構築・自動化。Kubernetes・Terraformの経験者は引く手あまた。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">AWS</span><span class="tag">Kubernetes</span><span class="tag">Terraform</span><span class="tag">Linux</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 190件+ ／ 難易度 ★★★★☆</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:88%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">600〜950万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- SRE / DevOps -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:#f5f3ff;">🔄</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">SRE / DevOpsエンジニア</h3>
+            <span class="tag" style="background:var(--danger-light);color:var(--danger);">急増中</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">サービスの信頼性・可用性を高めるSRE、CI/CDパイプラインを構築するDevOps。神奈川の自社開発企業で需要急増。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">Kubernetes</span><span class="tag">GitHub Actions</span><span class="tag">Datadog</span><span class="tag">Go</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 95件+ ／ 難易度 ★★★★★</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:80%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">650〜950万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- Mobile -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:var(--warning-light);">📱</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">モバイルエンジニア</h3>
+            <span class="tag" style="background:var(--warning-light);color:#92400e;">Flutter人気</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">iOS(Swift)・Android(Kotlin)・クロスプラットフォーム(Flutter)でアプリ開発。スタートアップ・金融・ヘルスケアに多い。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">Flutter</span><span class="tag">Swift</span><span class="tag">Kotlin</span><span class="tag">React Native</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 145件+ ／ 難易度 ★★★☆☆</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:72%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">480〜750万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- Data / AI -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:#fdf4ff;">🤖</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">データエンジニア / AIエンジニア</h3>
+            <span class="tag" style="background:var(--danger-light);color:var(--danger);">2026年最注目</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">データ基盤構築・MLOps・LLMアプリ開発。AIブームで神奈川でも急速に求人が増加している。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">Python</span><span class="tag">PyTorch</span><span class="tag">BigQuery</span><span class="tag">Spark</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 115件+ ／ 難易度 ★★★★★</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:91%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">600〜950万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- Security -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:#fef2f2;">🔐</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">セキュリティエンジニア</h3>
+            <span class="tag" style="background:var(--danger-light);color:var(--danger);">希少高給</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">脆弱性診断・SOC・CSIRT・ゼロトラスト設計など。横須賀・川崎の防衛・金融系企業での需要が高い。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">ペネトレーション</span><span class="tag">SOC</span><span class="tag">CISSP</span><span class="tag">ゼロトラスト</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 80件+ ／ 難易度 ★★★★★</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:78%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">650〜1,000万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- Embedded -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:#fff7ed;">🔩</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">組み込み・制御エンジニア</h3>
+            <span class="tag" style="background:var(--primary-light);color:var(--primary);">神奈川特有</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">車載ソフト・産業機器制御・IoT機器の組み込み開発。厚木・横須賀・相模原エリアの製造系IT企業が中心。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">C/C++</span><span class="tag">RTOS</span><span class="tag">AUTOSAR</span><span class="tag">ROS</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 220件+ ／ 難易度 ★★★★☆</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:76%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">520〜820万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+      <!-- PM -->
+      <a href="jobs.html" class="card type-card card-hover-border">
+        <div class="type-icon-wrap" style="background:#f0fdf4;">📋</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.4rem;">
+            <h3 style="font-size:1rem;margin:0;">プロジェクトマネージャー / PL</h3>
+            <span class="tag" style="background:var(--success-light);color:var(--success);">高年収</span>
+          </div>
+          <p class="text-gray text-sm" style="margin-bottom:.6rem;">開発チームのマネジメント・顧客折衝・スケジュール管理。技術バックグラウンドを持つPMは神奈川の大手SIerで特に需要が高い。</p>
+          <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem;">
+            <span class="tag">スクラム</span><span class="tag">PMP</span><span class="tag">要件定義</span><span class="tag">ステークホルダー管理</span>
+          </div>
+          <div style="font-size:.8rem;color:var(--gray);">神奈川求人数 120件+ ／ 難易度 ★★★★★</div>
+          <div class="type-demand-bar" style="width:200px;margin-top:.4rem;"><div class="type-demand-fill" style="width:68%;"></div></div>
+        </div>
+        <div style="text-align:right;">
+          <div class="type-salary-range">650〜1,000万</div>
+          <div style="font-size:.75rem;color:var(--gray);margin-top:.2rem;">年収帯</div>
+          <div style="margin-top:1rem;font-size:.85rem;color:var(--primary);font-weight:700;">求人を見る →</div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== RELATED ===== -->
+<section class="section bg-light" style="padding-top:3rem;padding-bottom:3rem;">
+  <div class="container">
+    <span class="section-label">Related</span>
+    <h2 class="section-title" style="font-size:1.25rem;">あわせて読みたい</h2>
+    <div class="grid-3" style="margin-top:1.5rem;">
+      <a href="skill-guide.html" class="card card-link card-hover-border" style="text-decoration:none;">
+        <div class="card-icon icon-blue">🛠️</div>
+        <h3 style="font-size:.95rem;">スキル別ガイド</h3>
+        <p class="text-gray text-sm">2026年需要TOP10スキルと年収比較。</p>
+      </a>
+      <a href="salary.html" class="card card-link card-hover-border" style="text-decoration:none;">
+        <div class="card-icon icon-orange">💰</div>
+        <h3 style="font-size:.95rem;">年収相場</h3>
+        <p class="text-gray text-sm">職種・経験年数別の詳細な年収データ。</p>
+      </a>
+      <a href="career-change-guide.html" class="card card-link card-hover-border" style="text-decoration:none;">
+        <div class="card-icon icon-green">📘</div>
+        <h3 style="font-size:.95rem;">転職完全ガイド</h3>
+        <p class="text-gray text-sm">自己分析から内定まで5ステップで解説。</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section-cta">
+  <div class="container" style="text-align:center;">
+    <h2>あなたの職種で神奈川の求人を探しませんか？</h2>
+    <p>現役エージェントが職種に合った神奈川エリアの非公開求人をご紹介します。</p>
+    <div class="cta-buttons">
+      <a href="jobs.html" class="btn btn-white btn-lg">求人一覧を見る →</a>
+      <a href="contact.html" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.4);">無料相談をする</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="js/main.js"></script>
+</body>
+</html>

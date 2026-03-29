@@ -162,6 +162,32 @@ p  { line-height: 1.75; }
 }
 .nav-links .btn-nav:hover { background: var(--primary-dark); }
 
+/* Dropdown menu */
+.nav-dropdown { position: relative; }
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+  z-index: 300;
+  padding: .4rem;
+}
+.dropdown-menu li a {
+  display: block;
+  padding: .55rem .9rem;
+  font-size: .85rem;
+  white-space: nowrap;
+  border-radius: var(--radius-sm);
+}
+.nav-dropdown:hover .dropdown-menu,
+.nav-dropdown:focus-within .dropdown-menu { display: block; }
+
 .hamburger {
   display: none;
   flex-direction: column;
@@ -220,7 +246,7 @@ p  { line-height: 1.75; }
   margin: 0 auto;
   padding: 3.5rem 1.5rem 2.5rem;
   display: grid;
-  grid-template-columns: 1.5fr repeat(3, 1fr);
+  grid-template-columns: 1.5fr repeat(4, 1fr);
   gap: 2.5rem;
 }
 .footer-brand .site-logo { font-size: 1.1rem; color: var(--white); margin-bottom: .75rem; display: block; }
@@ -654,3 +680,58 @@ tbody td { padding: .85rem 1.25rem; vertical-align: middle; }
 .delay-2 { animation-delay: .2s; }
 .delay-3 { animation-delay: .3s; }
 .delay-4 { animation-delay: .4s; }
+
+/* ---------- Scroll-to-top button ---------- */
+#scroll-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .3s, transform .3s;
+  z-index: 100;
+  border: none;
+}
+#scroll-top.visible { opacity: 1; pointer-events: auto; }
+#scroll-top:hover { transform: translateY(-3px); background: var(--primary-dark); }
+
+/* ---------- Progress bar ---------- */
+#reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  z-index: 999;
+  transition: width .1s;
+}
+
+/* ---------- Notification toast ---------- */
+.toast {
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  background: var(--dark);
+  color: #fff;
+  padding: .85rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-size: .88rem;
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .3s, transform .3s;
+  z-index: 200;
+  max-width: 280px;
+}
+.toast.show { opacity: 1; transform: translateY(0); }

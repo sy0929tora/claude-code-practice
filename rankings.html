@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="神奈川ITエンジニア向け企業ランキング2026。年収・リモートワーク率・成長環境・女性活躍度など5つの視点でランキング化。">
+  <meta name="keywords" content="神奈川,IT,エンジニア,企業,ランキング,年収,リモートワーク,転職,横浜,川崎">
+  <meta property="og:title" content="神奈川IT企業ランキング2026｜年収・リモート・成長環境で比較">
+  <meta property="og:description" content="神奈川エリアのIT企業を年収・リモート率・成長環境・女性活躍・未経験入社しやすさの5軸でランキング。転職先選びの参考に。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/rankings.html">
+  <meta property="og:site_name" content="神奈川ITエンジニア転職ラボ">
+  <meta property="og:locale" content="ja_JP">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/rankings.html">
+  <title>神奈川IT企業ランキング2026｜年収・リモート・成長環境で比較</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "神奈川IT企業ランキング2026",
+    "description": "神奈川エリアのIT企業を年収・リモート率・成長環境など5軸でランキング。",
+    "url": "https://sy0929tora.github.io/claude-code-practice/rankings.html",
+    "inLanguage": "ja",
+    "datePublished": "2026-03-28",
+    "dateModified": "2026-03-28",
+    "publisher": { "@type": "Organization", "name": "神奈川ITエンジニア転職ラボ" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {"@type": "ListItem", "position": 1, "name": "ホーム", "item": "https://sy0929tora.github.io/claude-code-practice/"},
+      {"@type": "ListItem", "position": 2, "name": "企業ランキング", "item": "https://sy0929tora.github.io/claude-code-practice/rankings.html"}
+    ]
+  }
+  </script>
+  <style>
+    .rank-badge {
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; font-weight: 900; flex-shrink: 0;
+    }
+    .rank-1 { background: #fef3c7; color: #b45309; border: 2px solid #f59e0b; }
+    .rank-2 { background: #f1f5f9; color: #475569; border: 2px solid #94a3b8; }
+    .rank-3 { background: #fff7ed; color: #92400e; border: 2px solid #b45309; }
+    .rank-other { background: var(--light); color: var(--gray); border: 2px solid var(--border); }
+    .score-bar { background: var(--border); border-radius: 99px; height: 8px; flex:1; overflow: hidden; }
+    .score-fill { height: 100%; border-radius: 99px; }
+    .rank-card { display: flex; gap: 1.25rem; align-items: flex-start; }
+    .rank-section-title {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.25rem 1.5rem;
+      background: var(--dark);
+      color: #fff;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      margin-top: 3rem;
+    }
+    .rank-section-title h2 { color: #fff; font-size: 1.15rem; margin: 0; }
+    .rank-section-body { border: 1px solid var(--border); border-top: none; border-radius: 0 0 var(--radius-lg) var(--radius-lg); overflow: hidden; }
+    .rank-row { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; gap: 1rem; align-items: flex-start; transition: background .15s; }
+    .rank-row:last-child { border-bottom: none; }
+    .rank-row:hover { background: var(--light); }
+    .disclaimer { background: var(--light); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.5rem; margin-top: 3rem; font-size: .82rem; color: var(--gray); }
+  </style>
+</head>
+<body>
+
+<div id="header-placeholder"></div>
+
+<!-- ===== HERO ===== -->
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb">
+      <a href="index.html">ホーム</a><span>›</span><span>企業ランキング</span>
+    </nav>
+    <div class="badge-hero">🏆 Rankings 2026</div>
+    <h1>神奈川IT企業<br>ランキング <span style="font-size:.65em;opacity:.85;">2026</span></h1>
+    <p>年収・リモートワーク率・成長環境・女性活躍・未経験入社しやすさ。5つの視点で神奈川のIT企業を徹底比較します。</p>
+    <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-top:1.5rem;">
+      <a href="#salary-rank" style="background:rgba(255,255,255,.2);color:#fff;padding:.5rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:600;text-decoration:none;">💰 年収</a>
+      <a href="#remote-rank" style="background:rgba(255,255,255,.2);color:#fff;padding:.5rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:600;text-decoration:none;">💻 リモート</a>
+      <a href="#growth-rank" style="background:rgba(255,255,255,.2);color:#fff;padding:.5rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:600;text-decoration:none;">📈 成長環境</a>
+      <a href="#junior-rank" style="background:rgba(255,255,255,.2);color:#fff;padding:.5rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:600;text-decoration:none;">🌱 未経験</a>
+      <a href="#women-rank" style="background:rgba(255,255,255,.2);color:#fff;padding:.5rem 1.1rem;border-radius:99px;font-size:.85rem;font-weight:600;text-decoration:none;">👩‍💻 女性活躍</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- ===== SALARY RANKING ===== -->
+    <div id="salary-rank">
+      <div class="rank-section-title">
+        <span style="font-size:1.5rem;">💰</span>
+        <div>
+          <h2>年収ランキング TOP5</h2>
+          <p style="font-size:.82rem;opacity:.7;margin:0;">エンジニア職（経験3〜7年）の想定年収中央値で比較</p>
+        </div>
+      </div>
+      <div class="rank-section-body">
+
+        <div class="rank-row">
+          <div class="rank-badge rank-1">1</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">サイバーエージェント（横浜拠点）</h3>
+              <span class="tag" style="background:var(--warning-light);color:#92400e;">自社開発</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">AbemaTVなど大規模サービスの開発。エンジニアの市場価値を重視した高待遇で知られる。</p>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <div class="score-bar"><div class="score-fill" style="width:98%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div></div>
+              <span style="font-weight:800;color:#b45309;white-space:nowrap;">750〜1,200万</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-2">2</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">DeNA（川崎スタジオ）</h3>
+              <span class="tag" style="background:var(--primary-light);color:var(--primary);">ゲーム・SaaS</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">モバイルゲーム・ヘルスケアDX。エンジニア評価制度が充実しており実力主義の高報酬体系。</p>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <div class="score-bar"><div class="score-fill" style="width:90%;background:linear-gradient(90deg,#94a3b8,#64748b);"></div></div>
+              <span style="font-weight:800;color:#475569;white-space:nowrap;">700〜1,050万</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-3">3</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">LINEヤフー（横浜オフィス）</h3>
+              <span class="tag" style="background:var(--success-light);color:var(--success);">メガベンチャー</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">月間利用者数9,500万人超のプロダクト開発。大規模分散システムの経験が積める。</p>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <div class="score-bar"><div class="score-fill" style="width:84%;background:linear-gradient(90deg,#b45309,#78350f);"></div></div>
+              <span style="font-weight:800;color:#92400e;white-space:nowrap;">680〜1,000万</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-other">4</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">GMOインターネットグループ（横浜）</h3>
+              <span class="tag">インターネット</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">インターネットインフラ・決済・仮想通貨など多岐にわたる事業。技術職の待遇向上に積極的。</p>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <div class="score-bar"><div class="score-fill" style="width:78%;background:var(--primary);"></div></div>
+              <span style="font-weight:800;color:var(--primary);white-space:nowrap;">650〜950万</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-other">5</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">KDDI（神奈川拠点）</h3>
+              <span class="tag">通信・DX</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">5G・IoT・クラウドDXを推進する通信大手。安定した待遇と最先端技術の両立が魅力。</p>
+            <div style="display:flex;align-items:center;gap:.75rem;">
+              <div class="score-bar"><div class="score-fill" style="width:72%;background:var(--primary);"></div></div>
+              <span style="font-weight:800;color:var(--primary);white-space:nowrap;">620〜900万</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== REMOTE RANKING ===== -->
+    <div id="remote-rank">
+      <div class="rank-section-title">
+        <span style="font-size:1.5rem;">💻</span>
+        <div>
+          <h2>リモートワーク実施率ランキング TOP5</h2>
+          <p style="font-size:.82rem;opacity:.7;margin:0;">フルリモート可・週あたりリモート日数・フレックス対応で評価</p>
+        </div>
+      </div>
+      <div class="rank-section-body">
+
+        <div class="rank-row">
+          <div class="rank-badge rank-1">1</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">Chatwork（横浜）</h3>
+              <span class="tag" style="background:var(--success-light);color:var(--success);">フルリモート可</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">コミュニケーションツール開発企業。エンジニアはフルリモートが標準。全国どこからでも応募可能。</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <span style="font-size:.85rem;font-weight:700;color:var(--success);">フルリモート率 95%</span>
+              <span class="tag">フレックス完全自由</span><span class="tag">コアタイムなし</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-2">2</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">HERP（横浜発スタートアップ）</h3>
+              <span class="tag" style="background:var(--success-light);color:var(--success);">フルリモート可</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">HR Tech領域のSaaS。少数精鋭で各自の裁量が大きく、リモートワーク・フレックスが充実。</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <span style="font-size:.85rem;font-weight:700;color:var(--success);">フルリモート率 90%</span>
+              <span class="tag">副業OK</span><span class="tag">フレックス</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-3">3</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">サイバーエージェント（横浜拠点）</h3>
+              <span class="tag">週4リモート可</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">大手の中では珍しく週4日リモートを推進。コアタイム12〜15時でほぼ自由な働き方が可能。</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <span style="font-size:.85rem;font-weight:700;color:var(--success);">リモート率 82%</span>
+              <span class="tag">週1出社</span><span class="tag">フレックス</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-other">4</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">神奈川県内Web系スタートアップ各社</h3>
+              <span class="tag">フルリモート多数</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">横浜・川崎の若いスタートアップはフルリモートを標準化している企業が多い。エージェント経由で最新情報を確認。</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <span style="font-size:.85rem;font-weight:700;color:var(--success);">平均リモート率 78%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="rank-row">
+          <div class="rank-badge rank-other">5</div>
+          <div style="flex:1;">
+            <div style="display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-bottom:.3rem;">
+              <h3 style="font-size:1rem;margin:0;">LINEヤフー（横浜オフィス）</h3>
+              <span class="tag">週3〜4リモート</span>
+            </div>
+            <p class="text-gray text-sm" style="margin-bottom:.6rem;">大企業でありながら柔軟なリモートワーク制度を整備。Working Agreementで個人の裁量が認められている。</p>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap;">
+              <span style="font-size:.85rem;font-weight:700;color:var(--success);">リモート率 72%</span>
+              <span class="tag">フレックス</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ===== GROWTH RANKING ===== -->
+    <div id="growth-rank">
+      <div class="rank-section-title">
+        <span style="font-size:1.5rem;">📈</span>
+        <div>
+          <h2>エンジニア成長環境ランキング TOP5</h2>
+          <p style="font-size:.82rem;opacity:.7;margin:0;">勉強会・カンファレンス支援・副業可否・技術ブログ文化で評価</p>
+        </div>
+      </div>
+      <div class="rank-section-body">
+        <div class="rank-row">
+          <div class="rank-badge rank-1">1</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">メルカリ（横浜R&Dセンター）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">技術カンファレンス登壇支援・OSS活動奨励・書籍購入無制限・英語学習補助。エンジニアの外部発信を積極的に支援するカルチャー。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">カンファレンス全額支援</span><span class="tag">OSS奨励</span><span class="tag">副業OK</span><span class="tag">英語学習補助</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-2">2</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">DeNA（川崎スタジオ）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">社内勉強会が週複数回開催・技術書典など技術イベントへの参加費支援・TechCon（社内技術発表会）で登壇機会が豊富。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">週次勉強会</span><span class="tag">TechCon</span><span class="tag">資格取得補助</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-3">3</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">KDDI（神奈川拠点）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">社内AI・クラウド資格取得支援が充実。1人あたり年間15万円の技術研修・学習費用補助。外部講師を招いたワークショップも定期開催。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">年15万研修費</span><span class="tag">AWS資格支援</span><span class="tag">社外ワークショップ</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-other">4</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">横浜発フィンテックスタートアップ各社</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">金融×テックの最前線で業界トップレベルの技術に触れられる。少人数ゆえに1人が複数ドメインをカバーし急速に成長できる環境。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">裁量大</span><span class="tag">最新技術スタック</span><span class="tag">副業OK</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-other">5</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">富士通Japan（川崎）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">大企業ながらDX推進部門は最新クラウド技術に積極投資。社内ベンチャー制度や社内公募でキャリアチェンジも可能。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">社内公募制度</span><span class="tag">DX研修</span><span class="tag">クラウド資格支援</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== JUNIOR RANKING ===== -->
+    <div id="junior-rank">
+      <div class="rank-section-title">
+        <span style="font-size:1.5rem;">🌱</span>
+        <div>
+          <h2>未経験・第二新卒が入りやすいランキング TOP5</h2>
+          <p style="font-size:.82rem;opacity:.7;margin:0;">研修制度・メンター制度・育成実績・採用実績で評価</p>
+        </div>
+      </div>
+      <div class="rank-section-body">
+        <div class="rank-row">
+          <div class="rank-badge rank-1">1</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">野村総合研究所（横浜）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">未経験採用に積極的な大手SIer。3〜6ヶ月の充実した新人研修プログラムと専任メンター制度。文系・異業種出身者の活躍事例も多数。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">6ヶ月研修</span><span class="tag">専任メンター</span><span class="tag">文系歓迎</span><span class="tag">未経験可</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-2">2</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">TIS（横浜・川崎）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">IT未経験者向けの体系的な研修プログラムが評判。入社後6ヶ月は研修専念可能で、配属先マッチングにも丁寧に対応。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">研修専念期間あり</span><span class="tag">希望配属考慮</span><span class="tag">第二新卒歓迎</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-3">3</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">神奈川県内IT教育系スタートアップ</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">プログラミングスクール系の自社開発部門は未経験でも実務経験を積みやすい。スクール運営側のため教育ノウハウが高い。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">未経験歓迎</span><span class="tag">丁寧な育成</span><span class="tag">学習支援充実</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-other">4</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">SCSKニューテック（横浜）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">第二新卒・文系未経験採用に実績あり。OJT制度が充実しており先輩エンジニアとペアで業務を進める仕組みが整っている。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">OJT充実</span><span class="tag">ペアプロ文化</span><span class="tag">資格取得支援</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-other">5</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">横浜のEC・Webサービス系中小企業</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">少人数ゆえに幅広い業務を経験でき、短期間での成長が期待できる。未経験採用でポートフォリオ重視の選考が多い。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">ポートフォリオ重視</span><span class="tag">幅広い業務</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== WOMEN RANKING ===== -->
+    <div id="women-rank">
+      <div class="rank-section-title">
+        <span style="font-size:1.5rem;">👩‍💻</span>
+        <div>
+          <h2>女性エンジニアが働きやすい企業ランキング TOP5</h2>
+          <p style="font-size:.82rem;opacity:.7;margin:0;">育休取得率・女性管理職比率・時短制度・ダイバーシティ推進で評価</p>
+        </div>
+      </div>
+      <div class="rank-section-body">
+        <div class="rank-row">
+          <div class="rank-badge rank-1">1</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">富士通Japan（川崎）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">育休取得率95%以上・復職率98%・女性管理職比率22%。育児サポートが手厚く、子育て中の女性エンジニアが活躍しやすい環境。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">育休取得率95%</span><span class="tag">時短勤務</span><span class="tag">保育所支援</span><span class="tag">女性管理職22%</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-2">2</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">NTTデータ（横浜）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">女性技術者の育成プログラム「Women in Tech」を推進。メンタリング制度・ネットワーキングイベントが充実。育休後のリスキリング支援も手厚い。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">Women in Tech</span><span class="tag">メンタリング</span><span class="tag">リスキリング支援</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-3">3</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">サイバーエージェント（横浜拠点）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">女性エンジニア比率30%超・女性マネージャー比率向上中。産前産後サポート・育児時短・保育費補助など福利厚生が充実。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">女性比率30%</span><span class="tag">保育費補助</span><span class="tag">フルリモート可</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-other">4</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">神奈川ヘルスケア系スタートアップ</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">医療・ヘルスケア分野は女性エンジニアの割合が高い傾向。フレックス・リモート・時短の組み合わせで育児中でも継続就業しやすい。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">フレックス</span><span class="tag">時短OK</span><span class="tag">フルリモート</span></div>
+          </div>
+        </div>
+        <div class="rank-row">
+          <div class="rank-badge rank-other">5</div>
+          <div style="flex:1;">
+            <h3 style="font-size:1rem;margin-bottom:.3rem;">KDDI（神奈川拠点）</h3>
+            <p class="text-gray text-sm" style="margin-bottom:.5rem;">女性活躍推進法に基づく数値目標を公表・達成。女性エンジニアのキャリア形成を支援するプログラムを実施。</p>
+            <div style="display:flex;flex-wrap:wrap;gap:.4rem;"><span class="tag">数値目標公表</span><span class="tag">育休復帰支援</span><span class="tag">ダイバーシティ推進</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DISCLAIMER -->
+    <div class="disclaimer">
+      <strong>【ランキング選定基準について】</strong><br>
+      本ランキングは、神奈川ITエンジニア転職ラボ編集部による独自調査・エージェントのヒアリング・公開情報（各社採用ページ・有価証券報告書・ESG報告書）をもとに作成しています。順位は変動することがあり、最新情報はエージェントへの無料相談でご確認ください。特定の企業との金銭的関係はありません。
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section-cta">
+  <div class="container" style="text-align:center;">
+    <h2>ランキング上位企業への転職を検討しませんか？</h2>
+    <p>現役エージェントが非公開求人をご紹介します。年収交渉も代行します。</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn btn-white btn-lg">無料転職相談をする →</a>
+      <a href="companies.html" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.4);">おすすめ企業一覧</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="js/main.js"></script>
+</body>
+</html>
