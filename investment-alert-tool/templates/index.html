@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>📈 投資アラート</title>
+  <style>
+    :root {
+      --bg: #f2f2f7;
+      --card: #ffffff;
+      --border: #e5e5ea;
+      --text: #1c1c1e;
+      --text2: #8e8e93;
+      --green: #34c759;
+      --red: #ff3b30;
+      --orange: #ff9500;
+      --blue: #007aff;
+      --blue-light: #e8f2ff;
+      --green-light: #e8f9ed;
+      --red-light: #fff0ef;
+      --yellow-light: #fff8e6;
+      --radius: 14px;
+      --shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1c1c1e;
+        --card: #2c2c2e;
+        --border: #3a3a3c;
+        --text: #ffffff;
+        --text2: #8e8e93;
+        --blue-light: #1a2a3a;
+        --green-light: #1a2e1f;
+        --red-light: #2e1a1a;
+        --yellow-light: #2e2410;
+      }
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* ── ヘッダー ── */
+    .header {
+      background: rgba(242,242,247,.85);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      position: sticky; top: 0; z-index: 100;
+      padding: calc(env(safe-area-inset-top) + 12px) 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    @media (prefers-color-scheme: dark) {
+      .header { background: rgba(28,28,30,.85); }
+    }
+    .header-row { display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 20px; font-weight: 700; }
+    .header .subtitle { font-size: 12px; color: var(--text2); margin-top: 2px; }
+    .btn-refresh {
+      background: var(--blue); color: #fff; border: none;
+      border-radius: 20px; padding: 8px 18px; font-size: 15px;
+      font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-refresh:active { opacity: .7; }
+    .btn-refresh .spin { display: none; }
+    .btn-refresh.loading .spin { display: inline; animation: spin .8s linear infinite; }
+    .btn-refresh.loading .icon { display: none; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── コンテンツ ── */
+    .content { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+    /* ── セクションタイトル ── */
+    .section-title {
+      font-size: 13px; font-weight: 600; color: var(--text2);
+      text-transform: uppercase; letter-spacing: .5px;
+      margin: 20px 0 8px 4px;
+    }
+
+    /* ── 銘柄カード ── */
+    .card {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 12px; overflow: hidden;
+    }
+    .card-header {
+      padding: 14px 16px; display: flex;
+      align-items: center; justify-content: space-between;
+      cursor: pointer; user-select: none;
+    }
+    .card-left { display: flex; align-items: center; gap: 12px; }
+    .symbol-badge {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--blue-light); color: var(--blue);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; text-align: center; line-height: 1.2;
+    }
+    .stock-name { font-size: 16px; font-weight: 600; }
+    .stock-symbol { font-size: 13px; color: var(--text2); margin-top: 1px; }
+    .card-right { text-align: right; }
+    .price { font-size: 18px; font-weight: 700; }
+    .change { font-size: 13px; font-weight: 600; margin-top: 2px; }
+    .change.up { color: var(--green); }
+    .change.down { color: var(--red); }
+
+    /* ── ロード中スケルトン ── */
+    .skeleton { background: var(--border); border-radius: 6px; animation: pulse 1.5s ease infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+    /* ── シグナル ── */
+    .signals { padding: 0 16px 4px; }
+    .signal-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 4px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 600; margin: 3px 4px 3px 0;
+    }
+    .signal-chip.buy  { background: var(--green-light);  color: var(--green); }
+    .signal-chip.sell { background: var(--red-light);    color: var(--red);   }
+    .signal-chip.alert{ background: var(--yellow-light); color: var(--orange);}
+
+    /* ── 指標バー ── */
+    .indicators {
+      padding: 10px 16px; display: grid;
+      grid-template-columns: 1fr 1fr 1fr; gap: 8px;
+      border-top: 1px solid var(--border);
+    }
+    .ind-item { text-align: center; }
+    .ind-label { font-size: 11px; color: var(--text2); margin-bottom: 2px; }
+    .ind-value { font-size: 14px; font-weight: 600; }
+    .ind-value.bullish { color: var(--green); }
+    .ind-value.bearish { color: var(--red); }
+    .ind-value.neutral { color: var(--text2); }
+
+    /* ── ポートフォリオ損益 ── */
+    .pnl-row {
+      padding: 10px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .pnl-label { color: var(--text2); }
+    .pnl-value { font-weight: 600; }
+    .pnl-value.profit { color: var(--green); }
+    .pnl-value.loss   { color: var(--red); }
+
+    /* ── AI分析ボタン ── */
+    .analyze-row {
+      padding: 10px 16px 14px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-analyze {
+      width: 100%; padding: 12px;
+      background: var(--blue); color: #fff;
+      border: none; border-radius: 10px;
+      font-size: 15px; font-weight: 600; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .btn-analyze:active { opacity: .8; }
+    .btn-analyze.loading { background: var(--text2); }
+
+    /* ── AI分析パネル ── */
+    .analysis-panel {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+      background: var(--blue-light);
+      display: none;
+    }
+    .analysis-panel.open { display: block; }
+    .analysis-title {
+      font-size: 13px; font-weight: 700; color: var(--blue);
+      margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .analysis-text {
+      font-size: 14px; line-height: 1.7; color: var(--text);
+      white-space: pre-wrap; word-break: break-word;
+    }
+    .analysis-cursor {
+      display: inline-block; width: 2px; height: 15px;
+      background: var(--blue); vertical-align: middle;
+      animation: blink .8s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── 総合評価バッジ ── */
+    .summary-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; margin-bottom: 8px;
+    }
+    .summary-badge.STRONG_BUY  { background: var(--green);  color: #fff; }
+    .summary-badge.BUY         { background: var(--green-light); color: var(--green); }
+    .summary-badge.NEUTRAL     { background: var(--border); color: var(--text2); }
+    .summary-badge.SELL        { background: var(--red-light); color: var(--red); }
+    .summary-badge.STRONG_SELL { background: var(--red);    color: #fff; }
+
+    /* ── ポートフォリオサマリーカード ── */
+    .portfolio-card {
+      background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); overflow: hidden;
+    }
+    .portfolio-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+    .portfolio-row:last-child { border-bottom: none; }
+    .portfolio-total {
+      padding: 14px 16px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .portfolio-total .label { font-size: 15px; font-weight: 600; }
+    .portfolio-total .value { font-size: 18px; font-weight: 700; }
+
+    /* ── エラー ── */
+    .error-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; color: var(--red); padding: 4px 0;
+    }
+
+    /* ── 最終更新 ── */
+    .last-updated {
+      text-align: center; font-size: 12px; color: var(--text2);
+      padding: 16px 0 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="header">
+  <div class="header-row">
+    <div>
+      <h1>📈 投資アラート</h1>
+      <div class="subtitle" id="subtitle">読み込み中...</div>
+    </div>
+    <button class="btn-refresh" id="btn-refresh" onclick="scanAll()">
+      <span class="icon">↻</span>
+      <span class="spin">↻</span>
+      <span>更新</span>
+    </button>
+  </div>
+</div>
+
+<!-- コンテンツ -->
+<div class="content">
+  <div class="section-title">ウォッチリスト</div>
+  <div id="watchlist"></div>
+
+  <div class="section-title">ポートフォリオ</div>
+  <div id="portfolio-section"></div>
+
+  <div class="last-updated" id="last-updated"></div>
+</div>
+
+<script>
+  // ── データ ──────────────────────────────────────────────────────
+
+  let watchlist = [];
+  let scanResults = {};  // symbol → data
+  let activeAnalysis = null;  // 現在分析中のsymbol
+
+  const summaryLabels = {
+    STRONG_BUY:  '⬆⬆ 強い買い',
+    BUY:         '⬆  買い',
+    NEUTRAL:     '━  中立',
+    SELL:        '⬇  売り',
+    STRONG_SELL: '⬇⬇ 強い売り',
+  };
+
+  // ── 初期化 ──────────────────────────────────────────────────────
+
+  async function init() {
+    const res = await fetch('/api/watchlist');
+    const json = await res.json();
+    watchlist = json.watchlist || [];
+    renderSkeletons();
+    scanAll();
+  }
+
+  // ── スケルトン表示 ──────────────────────────────────────────────
+
+  function renderSkeletons() {
+    const el = document.getElementById('watchlist');
+    el.innerHTML = watchlist.map(w => `
+      <div class="card" id="card-${w.symbol}">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="symbol-badge">${w.symbol.replace('.T','')}</div>
+            <div>
+              <div class="stock-name">${w.name}</div>
+              <div class="stock-symbol">${w.symbol}</div>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="skeleton" style="width:70px;height:20px;margin-bottom:4px"></div>
+            <div class="skeleton" style="width:50px;height:14px"></div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ── 全銘柄スキャン ─────────────────────────────────────────────
+
+  async function scanAll() {
+    const btn = document.getElementById('btn-refresh');
+    btn.classList.add('loading');
+    document.getElementById('subtitle').textContent = 'スキャン中...';
+
+    const promises = watchlist.map(w => scanSymbol(w.symbol, w.name));
+    await Promise.allSettled(promises);
+
+    btn.classList.remove('loading');
+    const now = new Date().toLocaleTimeString('ja-JP');
+    document.getElementById('subtitle').textContent = `最終更新: ${now}`;
+    document.getElementById('last-updated').textContent = `最終スキャン: ${now}`;
+
+    renderPortfolio();
+  }
+
+  // ── 1銘柄スキャン ─────────────────────────────────────────────
+
+  async function scanSymbol(symbol, name) {
+    try {
+      const res = await fetch(`/api/scan/${symbol}`);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      scanResults[symbol] = data;
+      renderCard(data);
+    } catch (e) {
+      renderCardError(symbol, name, e.message);
+    }
+  }
+
+  // ── カード描画 ─────────────────────────────────────────────────
+
+  function renderCard(d) {
+    const card = document.getElementById(`card-${d.symbol}`);
+    if (!card) return;
+
+    const upDown = d.change_pct >= 0;
+    const arrow = upDown ? '▲' : '▼';
+    const changeClass = upDown ? 'up' : 'down';
+
+    // シグナルchips
+    const signalHtml = d.signals.length ? d.signals.map(s => {
+      const cls = s.type === 'BUY' ? 'buy' : s.type === 'SELL' ? 'sell' : 'alert';
+      const icon = s.type === 'BUY' ? '🟢' : s.type === 'SELL' ? '🔴' : '🟡';
+      return `<span class="signal-chip ${cls}">${icon} ${s.reason}</span>`;
+    }).join('') : '<span style="font-size:12px;color:var(--text2);">シグナルなし</span>';
+
+    // 総合評価バッジ
+    const summaryBadge = d.summary
+      ? `<span class="summary-badge ${d.summary}">${summaryLabels[d.summary] || d.summary}</span>`
+      : '';
+
+    // RSI表示
+    const rsiColor = d.rsi == null ? 'neutral' : d.rsi > 70 ? 'bearish' : d.rsi < 30 ? 'bullish' : 'neutral';
+    const rsiText = d.rsi != null ? d.rsi.toFixed(1) : '--';
+
+    // MACD
+    const macdBull = d.macd != null && d.macd_signal != null && d.macd > d.macd_signal;
+    const macdColor = d.macd == null ? 'neutral' : macdBull ? 'bullish' : 'bearish';
+    const macdText = d.macd == null ? '--' : macdBull ? '↑ 上回り' : '↓ 下回り';
+
+    // SMA
+    const smaBull = d.sma5 != null && d.sma25 != null && d.sma5 > d.sma25;
+    const smaColor = d.sma5 == null ? 'neutral' : smaBull ? 'bullish' : 'bearish';
+    const smaText = d.sma5 == null ? '--' : smaBull ? '↑ 上昇' : '↓ 下降';
+
+    // ポートフォリオ損益行
+    const pnlHtml = d.portfolio ? `
+      <div class="pnl-row">
+        <span class="pnl-label">💼 ${d.portfolio.shares}株 @ ${d.portfolio.avg_cost}</span>
+        <span class="pnl-value ${d.portfolio.pnl >= 0 ? 'profit' : 'loss'}">
+          ${d.portfolio.pnl >= 0 ? '▲' : '▼'} ${Math.abs(d.portfolio.pnl).toLocaleString('ja-JP', {maximumFractionDigits:0})}
+          (${d.portfolio.pnl_pct >= 0 ? '+' : ''}${d.portfolio.pnl_pct}%)
+        </span>
+      </div>` : '';
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-left">
+          <div class="symbol-badge">${d.symbol.replace('.T','')}</div>
+          <div>
+            <div class="stock-name">${d.name}</div>
+            <div class="stock-symbol">${d.symbol}</div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="price">${Number(d.price).toLocaleString('ja-JP', {maximumFractionDigits:2})}</div>
+          <div class="change ${changeClass}">${arrow} ${Math.abs(d.change_pct).toFixed(2)}%</div>
+        </div>
+      </div>
+
+      <div class="signals">
+        ${summaryBadge}
+        <div>${signalHtml}</div>
+      </div>
+
+      <div class="indicators">
+        <div class="ind-item">
+          <div class="ind-label">RSI</div>
+          <div class="ind-value ${rsiColor}">${rsiText}</div>
+        </div>
+        <div class="ind-item">
+          <div class="ind-label">MACD</div>
+          <div class="ind-value ${macdColor}">${macdText}</div>
+        </div>
+        <div class="ind-item">
+          <div class="ind-label">トレンド</div>
+          <div class="ind-value ${smaColor}">${smaText}</div>
+        </div>
+      </div>
+
+      ${pnlHtml}
+
+      <div class="analyze-row">
+        <button class="btn-analyze" id="btn-${d.symbol}" onclick="startAnalysis('${d.symbol}')">
+          🤖 Claude AI で詳細分析
+        </button>
+      </div>
+
+      <div class="analysis-panel" id="panel-${d.symbol}">
+        <div class="analysis-title">🤖 AI分析結果</div>
+        <div class="analysis-text" id="text-${d.symbol}"></div>
+      </div>
+    `;
+  }
+
+  function renderCardError(symbol, name, message) {
+    const card = document.getElementById(`card-${symbol}`);
+    if (!card) return;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-left">
+          <div class="symbol-badge">${symbol.replace('.T','')}</div>
+          <div>
+            <div class="stock-name">${name}</div>
+            <div class="stock-symbol">${symbol}</div>
+          </div>
+        </div>
+        <div class="card-right">
+          <span class="error-chip">⚠ 取得失敗</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── AI 分析（SSE ストリーミング）──────────────────────────────────
+
+  function startAnalysis(symbol) {
+    // 前回の分析を閉じる
+    if (activeAnalysis && activeAnalysis !== symbol) {
+      const prev = document.getElementById(`panel-${activeAnalysis}`);
+      if (prev) prev.classList.remove('open');
+      const prevBtn = document.getElementById(`btn-${activeAnalysis}`);
+      if (prevBtn) { prevBtn.classList.remove('loading'); prevBtn.textContent = '🤖 Claude AI で詳細分析'; }
+    }
+
+    const panel = document.getElementById(`panel-${symbol}`);
+    const textEl = document.getElementById(`text-${symbol}`);
+    const btn = document.getElementById(`btn-${symbol}`);
+
+    // 既に表示済みならトグル
+    if (panel.classList.contains('open') && !btn.classList.contains('loading')) {
+      panel.classList.remove('open');
+      return;
+    }
+
+    panel.classList.add('open');
+    textEl.innerHTML = '<span class="analysis-cursor"></span>';
+    btn.classList.add('loading');
+    btn.textContent = '⏳ 分析中...';
+    activeAnalysis = symbol;
+
+    const es = new EventSource(`/api/analyze/${symbol}`);
+    let fullText = '';
+
+    es.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      if (data.text) {
+        fullText += data.text;
+        textEl.innerHTML = fullText.replace(/\n/g, '<br>') + '<span class="analysis-cursor"></span>';
+        // 自動スクロール
+        panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      if (data.done || data.error) {
+        es.close();
+        btn.classList.remove('loading');
+        btn.textContent = '🤖 AI分析済み（タップで開閉）';
+        if (data.error) {
+          textEl.innerHTML = `<span style="color:var(--red)">エラー: ${data.error}</span>`;
+        } else {
+          textEl.innerHTML = fullText.replace(/\n/g, '<br>');
+        }
+      }
+    };
+
+    es.onerror = () => {
+      es.close();
+      btn.classList.remove('loading');
+      btn.textContent = '🤖 Claude AI で詳細分析';
+      textEl.innerHTML = '<span style="color:var(--red)">接続エラーが発生しました。再度お試しください。</span>';
+    };
+  }
+
+  // ── ポートフォリオサマリー ─────────────────────────────────────
+
+  function renderPortfolio() {
+    const section = document.getElementById('portfolio-section');
+    const hasPortfolio = Object.values(scanResults).some(d => d.portfolio);
+
+    if (!hasPortfolio) {
+      section.innerHTML = '<p style="font-size:13px;color:var(--text2);padding:8px 4px;">config.py の PORTFOLIO に保有株を入力するとここに表示されます</p>';
+      return;
+    }
+
+    let totalCost = 0, totalPnl = 0;
+    const rows = [];
+
+    Object.values(scanResults).forEach(d => {
+      if (!d.portfolio) return;
+      const p = d.portfolio;
+      const cost = p.shares * p.avg_cost;
+      totalCost += cost;
+      totalPnl += p.pnl;
+      const pnlClass = p.pnl >= 0 ? 'profit' : 'loss';
+      const arrow = p.pnl >= 0 ? '▲' : '▼';
+      rows.push(`
+        <div class="portfolio-row">
+          <div>
+            <span style="font-weight:600">${d.symbol}</span>
+            <span style="color:var(--text2);font-size:12px;margin-left:6px">${p.shares}株</span>
+          </div>
+          <div class="pnl-value ${pnlClass}">
+            ${arrow} ${Math.abs(p.pnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}
+            <span style="font-size:11px">(${p.pnl_pct >= 0 ? '+' : ''}${p.pnl_pct}%)</span>
+          </div>
+        </div>
+      `);
+    });
+
+    const totalPct = totalCost > 0 ? totalPnl / totalCost * 100 : 0;
+    const totalClass = totalPnl >= 0 ? 'profit' : 'loss';
+    const totalArrow = totalPnl >= 0 ? '▲' : '▼';
+
+    section.innerHTML = `
+      <div class="portfolio-card">
+        ${rows.join('')}
+        <div class="portfolio-total">
+          <span class="label">合計損益</span>
+          <span class="value pnl-value ${totalClass}">
+            ${totalArrow} ${Math.abs(totalPnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}
+            <span style="font-size:13px">(${totalPct >= 0 ? '+' : ''}${totalPct.toFixed(1)}%)</span>
+          </span>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── 起動 ────────────────────────────────────────────────────────
+  init();
+</script>
+</body>
+</html>
