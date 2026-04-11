@@ -13,28 +13,33 @@
   <title>求人一覧 | 神奈川ITエンジニア転職ラボ</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .job-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 1.5rem;
-      transition: var(--transition);
-      display: flex;
-      flex-direction: column;
-      gap: .85rem;
-    }
-    .job-card:hover { box-shadow: var(--shadow-lg); border-color: var(--primary); transform: translateY(-2px); }
-    .job-card-header { display: flex; align-items: flex-start; gap: 1rem; }
-    .job-logo { width: 48px; height: 48px; border-radius: var(--radius); background: var(--light); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
-    .job-title { font-size: 1rem; font-weight: 800; color: var(--dark); margin-bottom: .25rem; }
-    .job-company { font-size: .85rem; color: var(--gray); }
-    .job-meta { display: flex; flex-wrap: wrap; gap: .5rem; font-size: .82rem; color: var(--gray); }
-    .job-meta span { display: flex; align-items: center; gap: .3rem; }
-    .job-salary { font-size: 1.1rem; font-weight: 900; color: var(--primary); }
-    .job-footer { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem; padding-top: .75rem; border-top: 1px solid var(--border-light); }
-    .new-badge { background: var(--danger); color: #fff; font-size: .7rem; font-weight: 800; padding: .15rem .55rem; border-radius: 99px; }
+    .job-card { background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;transition:var(--transition);display:flex;flex-direction:column;gap:.85rem;position:relative; }
+    .job-card:hover { box-shadow:var(--shadow-lg);border-color:var(--primary);transform:translateY(-2px); }
+    .job-card.featured { border-color:var(--primary);border-width:2px; }
+    .job-card.featured::before { content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:var(--radius-lg) var(--radius-lg) 0 0; }
+    .job-card-header { display:flex;align-items:flex-start;gap:1rem; }
+    .job-logo { width:52px;height:52px;border-radius:var(--radius);background:var(--light);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0; }
+    .job-title { font-size:1rem;font-weight:800;color:var(--dark);margin-bottom:.25rem;line-height:1.4; }
+    .job-company { font-size:.85rem;color:var(--gray); }
+    .job-meta { display:flex;flex-wrap:wrap;gap:.5rem;font-size:.82rem;color:var(--gray); }
+    .job-meta span { display:flex;align-items:center;gap:.3rem; }
+    .job-salary { font-size:1.15rem;font-weight:900;color:var(--primary); }
+    .job-footer { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;padding-top:.75rem;border-top:1px solid var(--border-light); }
+    .new-badge { background:var(--danger);color:#fff;font-size:.7rem;font-weight:800;padding:.15rem .55rem;border-radius:99px; }
+    .urgent-badge { background:var(--warning);color:#fff;font-size:.7rem;font-weight:800;padding:.15rem .55rem;border-radius:99px; }
+    .featured-badge { background:var(--primary);color:#fff;font-size:.7rem;font-weight:800;padding:.15rem .55rem;border-radius:99px; }
+    .search-bar { display:flex;gap:.75rem;align-items:center;flex-wrap:wrap; }
+    .search-input-wrap { position:relative;flex:1;min-width:220px; }
+    .search-input-wrap input { width:100%;padding:.6rem 1rem .6rem 2.5rem;border:1px solid var(--border);border-radius:var(--radius);font-size:.9rem;outline:none;transition:var(--transition);background:var(--white);box-sizing:border-box; }
+    .search-input-wrap input:focus { border-color:var(--primary);box-shadow:0 0 0 3px rgba(26,86,219,.1); }
+    .search-icon { position:absolute;left:.75rem;top:50%;transform:translateY(-50%);color:var(--gray);font-size:1rem;pointer-events:none; }
+    .filter-row { display:flex;gap:.6rem;flex-wrap:wrap;align-items:center; }
+    .sort-bar { display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem; }
+    .sort-btn { background:none;border:1px solid var(--border);border-radius:var(--radius);padding:.35rem .75rem;font-size:.82rem;cursor:pointer;color:var(--gray);transition:var(--transition); }
+    .sort-btn:hover,.sort-btn.active { background:var(--primary);color:#fff;border-color:var(--primary); }
+    .no-results { text-align:center;padding:3rem;color:var(--gray); }
+    @media(max-width:640px){ .search-input-wrap{min-width:100%;} }
   </style>
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
 </head>
@@ -43,50 +48,73 @@
 
 <section class="page-hero">
   <div class="container">
-    <nav class="breadcrumb">
-      <a href="index.html">ホーム</a><span>›</span><span>求人一覧</span>
-    </nav>
+    <nav class="breadcrumb"><a href="index.html">ホーム</a><span>›</span><span>求人一覧</span></nav>
     <div class="badge-hero">💼 Jobs</div>
     <h1>神奈川ITエンジニア<br>求人一覧</h1>
     <p>横浜・川崎・相模原エリアのITエンジニア求人を掲載。<br>非公開求人は無料転職相談にてご案内します。</p>
   </div>
 </section>
 
-<!-- FILTER -->
-<section class="section-sm" style="background:var(--light);border-bottom:1px solid var(--border);">
+<!-- FILTER BAR -->
+<section class="section-sm" style="background:var(--light);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:90;">
   <div class="container">
-    <div class="filter-bar">
-      <label>絞り込み：</label>
-      <div class="select-wrap" style="min-width:130px;">
-        <select class="filter-select" data-filter="area">
-          <option value="">エリア：すべて</option>
-          <option value="yokohama">横浜</option>
-          <option value="kawasaki">川崎</option>
-          <option value="sagamihara">相模原</option>
-          <option value="atsugi">厚木・海老名</option>
-          <option value="remote">フルリモート</option>
-        </select>
+    <div class="search-bar mb-2">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="keyword-input" placeholder="キーワード（Go, React, AWS, AI…）">
       </div>
-      <div class="select-wrap" style="min-width:160px;">
-        <select class="filter-select" data-filter="role">
-          <option value="">職種：すべて</option>
-          <option value="backend">バックエンド</option>
-          <option value="frontend">フロントエンド</option>
-          <option value="infra">インフラ・SRE</option>
-          <option value="data">データ・AI</option>
-          <option value="mobile">モバイル</option>
-          <option value="security">セキュリティ</option>
-          <option value="pm">PM・PL</option>
-        </select>
+      <div class="filter-row">
+        <div class="select-wrap">
+          <select class="filter-select" id="filter-area">
+            <option value="">エリア：すべて</option>
+            <option value="yokohama">横浜</option>
+            <option value="kawasaki">川崎</option>
+            <option value="sagamihara">相模原</option>
+            <option value="atsugi">厚木・海老名</option>
+            <option value="fujisawa">藤沢・湘南</option>
+            <option value="yokosuka">横須賀</option>
+          </select>
+        </div>
+        <div class="select-wrap">
+          <select class="filter-select" id="filter-role">
+            <option value="">職種：すべて</option>
+            <option value="backend">バックエンド</option>
+            <option value="frontend">フロントエンド</option>
+            <option value="fullstack">フルスタック</option>
+            <option value="infra">インフラ・SRE</option>
+            <option value="data">データ・AI</option>
+            <option value="mobile">モバイル</option>
+            <option value="security">セキュリティ</option>
+            <option value="embedded">組み込み</option>
+            <option value="pm">PM・PL</option>
+          </select>
+        </div>
+        <div class="select-wrap">
+          <select class="filter-select" id="filter-salary">
+            <option value="">年収：すべて</option>
+            <option value="low">〜500万円</option>
+            <option value="mid">500〜700万円</option>
+            <option value="high">700〜1000万円</option>
+            <option value="top">1000万円以上</option>
+          </select>
+        </div>
+        <div class="select-wrap">
+          <select class="filter-select" id="filter-remote">
+            <option value="">勤務形態：すべて</option>
+            <option value="full-remote">フルリモート可</option>
+            <option value="hybrid">ハイブリッド</option>
+          </select>
+        </div>
       </div>
-      <div class="select-wrap" style="min-width:140px;">
-        <select class="filter-select" data-filter="remote">
-          <option value="">勤務形態：すべて</option>
-          <option value="full-remote">フルリモート可</option>
-          <option value="hybrid">ハイブリッド</option>
-        </select>
+    </div>
+    <div class="sort-bar">
+      <span style="font-size:.82rem;color:var(--gray);"><strong id="result-count">20</strong>件表示中</span>
+      <div style="display:flex;gap:.4rem;align-items:center;">
+        <span style="font-size:.82rem;color:var(--gray);">並び替え：</span>
+        <button class="sort-btn active" data-sort="new">新着順</button>
+        <button class="sort-btn" data-sort="salary-high">年収高い順</button>
+        <button class="sort-btn" data-sort="salary-low">年収低い順</button>
       </div>
-      <span style="font-size:.82rem;color:var(--gray);margin-left:auto;"><span id="result-count">12</span>件表示中</span>
     </div>
   </div>
 </section>
@@ -98,263 +126,12 @@
       <span class="notice-icon">🔒</span>
       <div>掲載求人は一部のみです。<strong>非公開求人を含む全求人</strong>は<a href="contact.html" style="color:var(--primary);font-weight:700;">無料転職相談</a>にてご案内しています。</div>
     </div>
-
-    <div class="grid-2">
-
-      <div class="job-card anim-up" data-tags="yokohama backend full-remote">
-        <div class="job-card-header">
-          <div class="job-logo">🚀</div>
-          <div>
-            <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
-              <div class="job-title">バックエンドエンジニア（Go）</div>
-              <span class="new-badge">NEW</span>
-            </div>
-            <div class="job-company">横浜SaaS株式会社（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">500〜850万円</div>
-        <div class="job-meta">
-          <span>📍 横浜市西区（フルリモート可）</span>
-          <span>🛠 Go / React / AWS / k8s</span>
-          <span>👥 従業員120名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-cyan">フルリモート可</span>
-          <span class="badge badge-blue">自社プロダクト</span>
-          <span class="badge badge-green">副業OK</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/11/01</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up delay-1" data-tags="kawasaki frontend hybrid">
-        <div class="job-card-header">
-          <div class="job-logo">🌐</div>
-          <div>
-            <div class="job-title">フロントエンドエンジニア（React）</div>
-            <div class="job-company">川崎テクノロジーズ（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">450〜720万円</div>
-        <div class="job-meta">
-          <span>📍 川崎市幸区（週2〜3出社）</span>
-          <span>🛠 TypeScript / Next.js / GraphQL</span>
-          <span>👥 従業員280名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-blue">ハイブリッド</span>
-          <span class="badge badge-yellow">教育制度充実</span>
-          <span class="badge badge-cyan">副業OK</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/11/01</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up" data-tags="yokohama security full-remote">
-        <div class="job-card-header">
-          <div class="job-logo">🔒</div>
-          <div>
-            <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;">
-              <div class="job-title">セキュリティエンジニア</div>
-              <span class="new-badge">NEW</span>
-            </div>
-            <div class="job-company">横浜セキュリティラボ（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">600〜1,000万円</div>
-        <div class="job-meta">
-          <span>📍 横浜市中区（フルリモート可）</span>
-          <span>🛠 Python / Rust / Splunk / AWS</span>
-          <span>👥 従業員85名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-cyan">フルリモート可</span>
-          <span class="badge badge-red">高年収</span>
-          <span class="badge badge-green">資格取得支援</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/11/01</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up delay-1" data-tags="sagamihara infra hybrid">
-        <div class="job-card-header">
-          <div class="job-logo">☁️</div>
-          <div>
-            <div class="job-title">インフラ・SREエンジニア</div>
-            <div class="job-company">相模原クラウドシステムズ（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">480〜780万円</div>
-        <div class="job-meta">
-          <span>📍 相模原市中央区（週2出社）</span>
-          <span>🛠 AWS / Terraform / Python / k8s</span>
-          <span>👥 従業員450名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-blue">ハイブリッド</span>
-          <span class="badge badge-green">安定経営</span>
-          <span class="badge badge-blue">IoT・AI</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/10/28</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up" data-tags="kawasaki data hybrid">
-        <div class="job-card-header">
-          <div class="job-logo">📊</div>
-          <div>
-            <div class="job-title">データエンジニア / MLエンジニア</div>
-            <div class="job-company">川崎データアナリティクス（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">550〜900万円</div>
-        <div class="job-meta">
-          <span>📍 川崎市川崎区（ハイブリッド）</span>
-          <span>🛠 Python / Spark / Databricks / GCP</span>
-          <span>👥 従業員160名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-blue">大規模データ</span>
-          <span class="badge badge-cyan">論文発表支援</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/10/25</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up delay-1" data-tags="yokohama mobile full-remote">
-        <div class="job-card-header">
-          <div class="job-logo">📱</div>
-          <div>
-            <div class="job-title">iOSエンジニア / Flutterエンジニア</div>
-            <div class="job-company">横浜モバイルスタジオ（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">480〜780万円</div>
-        <div class="job-meta">
-          <span>📍 横浜市港北区（フルリモート可）</span>
-          <span>🛠 Swift / Flutter / Firebase</span>
-          <span>👥 従業員45名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-cyan">フルリモート可</span>
-          <span class="badge badge-blue">裁量大</span>
-          <span class="badge badge-yellow">スタートアップ</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/10/22</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up" data-tags="kawasaki pm hybrid">
-        <div class="job-card-header">
-          <div class="job-logo">💼</div>
-          <div>
-            <div class="job-title">プロジェクトマネージャー / PL</div>
-            <div class="job-company">川崎ITコンサルティング（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">600〜950万円</div>
-        <div class="job-meta">
-          <span>📍 川崎市中原区（ハイブリッド）</span>
-          <span>🛠 Salesforce / SAP / Azure</span>
-          <span>👥 従業員320名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-yellow">上流工程</span>
-          <span class="badge badge-blue">キャリアUP</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/10/20</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up delay-1" data-tags="yokohama backend hybrid">
-        <div class="job-card-header">
-          <div class="job-logo">🏥</div>
-          <div>
-            <div class="job-title">バックエンドエンジニア（Ruby / Rails）</div>
-            <div class="job-company">横浜ヘルステックラボ（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">500〜820万円</div>
-        <div class="job-meta">
-          <span>📍 横浜市港南区（週2出社）</span>
-          <span>🛠 Ruby on Rails / React / AWS</span>
-          <span>👥 従業員190名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-green">社会貢献</span>
-          <span class="badge badge-cyan">医療DX</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/10/18</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up" data-tags="atsugi infra hybrid">
-        <div class="job-card-header">
-          <div class="job-logo">⚙️</div>
-          <div>
-            <div class="job-title">組み込みソフトウェアエンジニア</div>
-            <div class="job-company">厚木エンジニアリング株式会社（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">480〜750万円</div>
-        <div class="job-meta">
-          <span>📍 厚木市（本厚木駅徒歩8分）</span>
-          <span>🛠 C / C++ / MATLAB / AUTOSAR</span>
-          <span>👥 従業員600名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-green">福利厚生◎</span>
-          <span class="badge badge-gray">転勤なし可</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/10/15</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
-      <div class="job-card anim-up delay-1" data-tags="sagamihara backend full-remote">
-        <div class="job-card-header">
-          <div class="job-logo">🎓</div>
-          <div>
-            <div class="job-title">フルスタックエンジニア（Vue / Django）</div>
-            <div class="job-company">相模原エドテックス（仮称）</div>
-          </div>
-        </div>
-        <div class="job-salary">460〜800万円</div>
-        <div class="job-meta">
-          <span>📍 相模原市南区（フルリモート可）</span>
-          <span>🛠 Vue.js / Django / PostgreSQL / AWS</span>
-          <span>👥 従業員70名</span>
-        </div>
-        <div class="tag-group">
-          <span class="badge badge-yellow">急成長中</span>
-          <span class="badge badge-blue">ストックオプション</span>
-        </div>
-        <div class="job-footer">
-          <span class="text-xs text-gray">掲載日：2024/10/10</span>
-          <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
-        </div>
-      </div>
-
+    <div id="jobs-grid" class="grid-2"></div>
+    <div id="no-results" class="no-results" style="display:none;">
+      <div style="font-size:3rem;margin-bottom:1rem;">🔍</div>
+      <p style="font-weight:700;font-size:1.1rem;">条件に合う求人が見つかりませんでした</p>
+      <p style="margin-top:.5rem;">別の条件でお試しください。非公開求人は<a href="contact.html" style="color:var(--primary);">無料転職相談</a>でご案内しています。</p>
     </div>
-
-    <!-- 非公開求人CTA -->
     <div class="card mt-4 anim-up" style="background:linear-gradient(135deg,var(--primary),var(--accent));color:#fff;text-align:center;border:none;padding:2.5rem;">
       <div style="font-size:2rem;margin-bottom:.75rem;">🔒</div>
       <h3 style="color:#fff;font-size:1.3rem;margin-bottom:.5rem;">非公開求人は全体の約60%</h3>
@@ -364,7 +141,7 @@
   </div>
 </section>
 
-<section class="cta-section" id="cta">
+<section class="cta-section">
   <div class="container">
     <h2>あなたに合う求人を探しませんか？</h2>
     <p>無料転職相談で非公開求人を含む全求人をご案内します。<br>年収交渉・面接対策もすべて無料でサポート。</p>
@@ -377,5 +154,104 @@
 
 <div id="footer-placeholder"></div>
 <script src="js/main.js"></script>
+<script>
+const JOBS = [
+  { id:1, icon:"🚀", title:"バックエンドエンジニア（Go / gRPC）", company:"横浜SaaS株式会社", salaryMin:500, salaryMax:850, salaryLabel:"500〜850万円", location:"横浜市西区", remoteLabel:"フルリモート可", skills:"Go / gRPC / AWS / k8s / PostgreSQL", employees:"120名", date:"2026/03/28", tags:["yokohama","backend","full-remote"], badges:[{l:"NEW",c:"new-badge"},{l:"急募",c:"urgent-badge"}], btags:["フルリモート可","自社プロダクト","副業OK"], bcolors:["badge-cyan","badge-blue","badge-green"], featured:true },
+  { id:2, icon:"🌐", title:"フロントエンドエンジニア（React / Next.js）", company:"川崎テクノロジーズ", salaryMin:450, salaryMax:720, salaryLabel:"450〜720万円", location:"川崎市幸区", remoteLabel:"週2〜3出社", skills:"TypeScript / Next.js / GraphQL / Figma", employees:"280名", date:"2026/03/25", tags:["kawasaki","frontend","hybrid"], badges:[{l:"NEW",c:"new-badge"}], btags:["ハイブリッド","教育制度充実","副業OK"], bcolors:["badge-blue","badge-yellow","badge-cyan"], featured:false },
+  { id:3, icon:"🔒", title:"セキュリティエンジニア（CSIRT）", company:"横浜セキュリティラボ", salaryMin:600, salaryMax:1000, salaryLabel:"600〜1,000万円", location:"横浜市中区", remoteLabel:"フルリモート可", skills:"Python / Rust / Splunk / AWS / CISSP", employees:"85名", date:"2026/03/22", tags:["yokohama","security","full-remote"], badges:[{l:"急募",c:"urgent-badge"}], btags:["フルリモート可","高年収","資格取得支援"], bcolors:["badge-cyan","badge-red","badge-green"], featured:true },
+  { id:4, icon:"☁️", title:"インフラ・SREエンジニア", company:"相模原クラウドシステムズ", salaryMin:480, salaryMax:780, salaryLabel:"480〜780万円", location:"相模原市中央区", remoteLabel:"週2出社", skills:"AWS / Terraform / Python / k8s / Datadog", employees:"450名", date:"2026/03/20", tags:["sagamihara","infra","hybrid"], badges:[], btags:["ハイブリッド","安定経営","IoT・AI"], bcolors:["badge-blue","badge-green","badge-blue"], featured:false },
+  { id:5, icon:"📊", title:"データエンジニア / MLエンジニア", company:"川崎データアナリティクス", salaryMin:550, salaryMax:900, salaryLabel:"550〜900万円", location:"川崎市川崎区", remoteLabel:"ハイブリッド", skills:"Python / Spark / Databricks / GCP / MLflow", employees:"160名", date:"2026/03/18", tags:["kawasaki","data","hybrid"], badges:[{l:"NEW",c:"new-badge"}], btags:["大規模データ","論文発表支援","成長企業"], bcolors:["badge-blue","badge-cyan","badge-yellow"], featured:false },
+  { id:6, icon:"📱", title:"iOSエンジニア / Flutterエンジニア", company:"横浜モバイルスタジオ", salaryMin:480, salaryMax:780, salaryLabel:"480〜780万円", location:"横浜市港北区", remoteLabel:"フルリモート可", skills:"Swift / Flutter / Firebase / Fastlane", employees:"45名", date:"2026/03/15", tags:["yokohama","mobile","full-remote"], badges:[], btags:["フルリモート可","裁量大","スタートアップ"], bcolors:["badge-cyan","badge-blue","badge-yellow"], featured:false },
+  { id:7, icon:"💼", title:"プロジェクトマネージャー / PL", company:"川崎ITコンサルティング", salaryMin:600, salaryMax:950, salaryLabel:"600〜950万円", location:"川崎市中原区", remoteLabel:"ハイブリッド", skills:"Salesforce / SAP / Azure / PMP", employees:"320名", date:"2026/03/12", tags:["kawasaki","pm","hybrid"], badges:[], btags:["上流工程","キャリアUP","大手案件"], bcolors:["badge-yellow","badge-blue","badge-green"], featured:false },
+  { id:8, icon:"🏥", title:"バックエンドエンジニア（Ruby on Rails）", company:"横浜ヘルステックラボ", salaryMin:500, salaryMax:820, salaryLabel:"500〜820万円", location:"横浜市港南区", remoteLabel:"週2出社", skills:"Ruby on Rails / React / AWS / Docker", employees:"190名", date:"2026/03/10", tags:["yokohama","backend","hybrid"], badges:[], btags:["社会貢献","医療DX","安定成長"], bcolors:["badge-green","badge-cyan","badge-blue"], featured:false },
+  { id:9, icon:"⚙️", title:"組み込みソフトウェアエンジニア（車載）", company:"厚木エンジニアリング", salaryMin:480, salaryMax:750, salaryLabel:"480〜750万円", location:"厚木市・本厚木駅徒歩8分", remoteLabel:"一部リモート可", skills:"C / C++ / MATLAB / AUTOSAR / CAN", employees:"600名", date:"2026/03/08", tags:["atsugi","embedded","hybrid"], badges:[], btags:["福利厚生◎","転勤なし可","自動車・IoT"], bcolors:["badge-green","badge-gray","badge-blue"], featured:false },
+  { id:10, icon:"🎓", title:"フルスタックエンジニア（Vue / Django）", company:"相模原エドテックス", salaryMin:460, salaryMax:800, salaryLabel:"460〜800万円", location:"相模原市南区", remoteLabel:"フルリモート可", skills:"Vue.js / Django / PostgreSQL / AWS / Redis", employees:"70名", date:"2026/03/05", tags:["sagamihara","fullstack","full-remote"], badges:[{l:"急募",c:"urgent-badge"}], btags:["急成長中","ストックオプション","EdTech"], bcolors:["badge-yellow","badge-blue","badge-green"], featured:false },
+  { id:11, icon:"🌊", title:"バックエンドエンジニア（Java / Spring）", company:"藤沢マリンテック", salaryMin:520, salaryMax:830, salaryLabel:"520〜830万円", location:"藤沢市・藤沢駅徒歩5分", remoteLabel:"週3出社", skills:"Java / Spring Boot / AWS / Elasticsearch", employees:"230名", date:"2026/03/03", tags:["fujisawa","backend","hybrid"], badges:[{l:"NEW",c:"new-badge"}], btags:["湘南勤務","海洋DX","安定基盤"], bcolors:["badge-cyan","badge-blue","badge-green"], featured:false },
+  { id:12, icon:"🤖", title:"AIエンジニア / LLMエンジニア", company:"横浜AIラボ", salaryMin:700, salaryMax:1200, salaryLabel:"700〜1,200万円", location:"横浜市西区", remoteLabel:"フルリモート可", skills:"Python / PyTorch / LangChain / OpenAI API / RAG", employees:"55名", date:"2026/03/01", tags:["yokohama","data","full-remote"], badges:[{l:"NEW",c:"new-badge"},{l:"急募",c:"urgent-badge"}], btags:["高年収","最先端AI","論文OK"], bcolors:["badge-red","badge-blue","badge-cyan"], featured:true },
+  { id:13, icon:"🛡️", title:"クラウドセキュリティエンジニア", company:"川崎セキュアクラウド", salaryMin:650, salaryMax:1000, salaryLabel:"650〜1,000万円", location:"川崎市高津区", remoteLabel:"フルリモート可", skills:"AWS / Azure / CSPM / Terraform / SOC2", employees:"110名", date:"2026/02/28", tags:["kawasaki","security","full-remote"], badges:[], btags:["フルリモート可","高年収","ゼロトラスト"], bcolors:["badge-cyan","badge-red","badge-blue"], featured:false },
+  { id:14, icon:"🚗", title:"自動運転ソフトウェアエンジニア", company:"相模原オートモーティブAI", salaryMin:600, salaryMax:950, salaryLabel:"600〜950万円", location:"相模原市緑区", remoteLabel:"週3出社", skills:"C++ / Python / ROS2 / CUDA / OpenCV", employees:"180名", date:"2026/02/25", tags:["sagamihara","embedded","hybrid"], badges:[{l:"急募",c:"urgent-badge"}], btags:["自動運転","研究開発","特許支援"], bcolors:["badge-blue","badge-green","badge-cyan"], featured:false },
+  { id:15, icon:"📡", title:"インフラエンジニア（ネットワーク）", company:"横須賀ネットワークテック", salaryMin:450, salaryMax:700, salaryLabel:"450〜700万円", location:"横須賀市・横須賀中央駅徒歩3分", remoteLabel:"一部リモート", skills:"Cisco / Juniper / Python / Ansible / BGP", employees:"380名", date:"2026/02/22", tags:["yokosuka","infra","hybrid"], badges:[], btags:["大規模NW","防衛関連","資格支援"], bcolors:["badge-blue","badge-gray","badge-green"], featured:false },
+  { id:16, icon:"🎮", title:"サーバーサイドエンジニア（Scala / Akka）", company:"横浜ゲームスタジオ", salaryMin:550, salaryMax:900, salaryLabel:"550〜900万円", location:"横浜市中区", remoteLabel:"フルリモート可", skills:"Scala / Akka / Redis / MongoDB / AWS", employees:"95名", date:"2026/02/20", tags:["yokohama","backend","full-remote"], badges:[{l:"NEW",c:"new-badge"}], btags:["ゲーム開発","高負荷設計","フルリモート可"], bcolors:["badge-yellow","badge-blue","badge-cyan"], featured:false },
+  { id:17, icon:"🏭", title:"製造業DX・IoTエンジニア", company:"海老名スマートファクトリー", salaryMin:500, salaryMax:800, salaryLabel:"500〜800万円", location:"海老名市・海老名駅徒歩7分", remoteLabel:"週2出社", skills:"Python / Azure IoT / PLC / SCADA / Docker", employees:"420名", date:"2026/02/18", tags:["atsugi","infra","hybrid"], badges:[], btags:["製造DX","安定経営","IoT最前線"], bcolors:["badge-blue","badge-green","badge-yellow"], featured:false },
+  { id:18, icon:"💳", title:"バックエンドエンジニア（Kotlin / Spring）", company:"川崎フィンテックラボ", salaryMin:600, salaryMax:1000, salaryLabel:"600〜1,000万円", location:"川崎市幸区", remoteLabel:"フルリモート可", skills:"Kotlin / Spring Boot / PostgreSQL / Kafka / AWS", employees:"150名", date:"2026/02/15", tags:["kawasaki","backend","full-remote"], badges:[{l:"急募",c:"urgent-badge"}], btags:["フィンテック","高年収","ストックオプション"], bcolors:["badge-red","badge-blue","badge-yellow"], featured:true },
+  { id:19, icon:"🎯", title:"プロダクトマネージャー（B2B SaaS）", company:"横浜プロダクトスタジオ", salaryMin:700, salaryMax:1100, salaryLabel:"700〜1,100万円", location:"横浜市西区", remoteLabel:"フルリモート可", skills:"プロダクト戦略 / SQL / Figma / A/Bテスト", employees:"80名", date:"2026/02/12", tags:["yokohama","pm","full-remote"], badges:[{l:"NEW",c:"new-badge"}], btags:["高年収","裁量大","グローバル展開"], bcolors:["badge-red","badge-blue","badge-green"], featured:false },
+  { id:20, icon:"🌍", title:"DevOpsエンジニア（CI/CD基盤）", company:"相模原クラウドネイティブ", salaryMin:520, salaryMax:850, salaryLabel:"520〜850万円", location:"相模原市中央区", remoteLabel:"フルリモート可", skills:"GitHub Actions / ArgoCD / k8s / Helm / Prometheus", employees:"65名", date:"2026/02/10", tags:["sagamihara","infra","full-remote"], badges:[], btags:["フルリモート可","OSS貢献OK","モダン技術"], bcolors:["badge-cyan","badge-green","badge-blue"], featured:false }
+];
+
+const salaryRanges = { low:[0,499], mid:[500,699], high:[700,999], top:[1000,9999] };
+
+function renderJobs() {
+  const kw = document.getElementById('keyword-input').value.toLowerCase();
+  const area = document.getElementById('filter-area').value;
+  const role = document.getElementById('filter-role').value;
+  const sal = document.getElementById('filter-salary').value;
+  const remote = document.getElementById('filter-remote').value;
+  const sort = document.querySelector('.sort-btn.active')?.dataset.sort || 'new';
+
+  let list = JOBS.filter(j => {
+    if (kw) {
+      const txt = [j.title,j.company,j.skills,j.location,...j.btags].join(' ').toLowerCase();
+      if (!txt.includes(kw)) return false;
+    }
+    if (area && !j.tags.includes(area)) return false;
+    if (role && !j.tags.includes(role)) return false;
+    if (remote && !j.tags.includes(remote)) return false;
+    if (sal) {
+      const [mn,mx] = salaryRanges[sal];
+      if (j.salaryMax < mn || j.salaryMin > mx) return false;
+    }
+    return true;
+  });
+
+  if (sort === 'salary-high') list.sort((a,b) => b.salaryMax - a.salaryMax);
+  else if (sort === 'salary-low') list.sort((a,b) => a.salaryMin - b.salaryMin);
+  else list.sort((a,b) => (b.featured?1:0)-(a.featured?1:0));
+
+  document.getElementById('result-count').textContent = list.length;
+  const grid = document.getElementById('jobs-grid');
+  const noRes = document.getElementById('no-results');
+
+  if (!list.length) { grid.innerHTML=''; noRes.style.display='block'; return; }
+  noRes.style.display = 'none';
+
+  grid.innerHTML = list.map(j => `
+    <div class="job-card${j.featured?' featured':''} anim-up">
+      <div class="job-card-header">
+        <div class="job-logo">${j.icon}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-bottom:.25rem;">
+            <div class="job-title">${j.title}</div>
+            ${j.badges.map(b=>`<span class="${b.c}">${b.l}</span>`).join('')}
+            ${j.featured?'<span class="featured-badge">注目</span>':''}
+          </div>
+          <div class="job-company">${j.company}</div>
+        </div>
+      </div>
+      <div class="job-salary">${j.salaryLabel}</div>
+      <div class="job-meta">
+        <span>📍 ${j.location}（${j.remoteLabel}）</span>
+        <span>🛠 ${j.skills}</span>
+        <span>👥 従業員${j.employees}</span>
+      </div>
+      <div class="tag-group">
+        ${j.btags.map((t,i)=>`<span class="badge ${j.bcolors[i]}">${t}</span>`).join('')}
+      </div>
+      <div class="job-footer">
+        <span class="text-xs text-gray">掲載日：${j.date}</span>
+        <a href="contact.html" class="btn btn-primary btn-sm">この求人に応募する</a>
+      </div>
+    </div>`).join('');
+}
+
+document.getElementById('keyword-input').addEventListener('input', renderJobs);
+['filter-area','filter-role','filter-salary','filter-remote'].forEach(id=>
+  document.getElementById(id).addEventListener('change', renderJobs));
+document.querySelectorAll('.sort-btn').forEach(btn=>btn.addEventListener('click',()=>{
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderJobs();
+}));
+renderJobs();
+</script>
 </body>
 </html>

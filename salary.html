@@ -244,6 +244,14 @@
       </table>
     </div>
     <p class="text-xs text-gray mt-2">※ 経験3〜5年・神奈川エリア在勤の場合。2024年エージェント実績データに基づく参考値です。</p>
+
+    <!-- Chart.js グラフ -->
+    <div class="anim-up mt-3" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--dark);">職種別 平均年収比較グラフ</h3>
+      <div style="height:320px;position:relative;">
+        <canvas id="roleChart"></canvas>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -287,6 +295,15 @@
         <div class="label">15年以上（CTO・エンジニアリングマネージャー）</div>
         <div class="progress-bar mt-2"><div class="progress-fill" style="width:100%;"></div></div>
       </div>
+    </div>
+
+    <!-- 経験年数別推移グラフ -->
+    <div class="anim-up mt-3" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.5rem;">
+      <h3 style="font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--dark);">経験年数別 年収推移グラフ（職種比較）</h3>
+      <div style="height:300px;position:relative;">
+        <canvas id="expChart"></canvas>
+      </div>
+      <p class="text-xs text-gray mt-2">※ バックエンド・フロントエンド・AI/MLエンジニアの推移比較。神奈川エリア実績データに基づく参考値。</p>
     </div>
   </div>
 </section>
@@ -501,6 +518,7 @@
 
 <div id="footer-placeholder"></div>
 <script src="js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
   // Show calc result div when calcSalary is called
   const origCalcSalary = window.calcSalary;
@@ -509,6 +527,94 @@
     if (el) el.style.display = 'block';
     origCalcSalary && origCalcSalary();
   };
+
+  // Chart.js: 職種別平均年収グラフ
+  document.addEventListener('DOMContentLoaded', function() {
+    const roleCtx = document.getElementById('roleChart');
+    if (roleCtx) {
+      new Chart(roleCtx, {
+        type: 'bar',
+        data: {
+          labels: ['AI/MLエンジニア','PMM/PdM','セキュリティ','バックエンド','インフラ・SRE','フルスタック','フロントエンド','モバイル','組み込み'],
+          datasets: [{
+            label: '平均年収（万円）',
+            data: [820, 780, 750, 680, 660, 640, 600, 590, 560],
+            backgroundColor: [
+              'rgba(26,86,219,0.9)','rgba(26,86,219,0.85)','rgba(26,86,219,0.8)',
+              'rgba(6,182,212,0.8)','rgba(6,182,212,0.75)','rgba(6,182,212,0.7)',
+              'rgba(16,185,129,0.75)','rgba(16,185,129,0.7)','rgba(16,185,129,0.65)'
+            ],
+            borderRadius: 6,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { callbacks: { label: ctx => ` ${ctx.raw}万円` } }
+          },
+          scales: {
+            x: {
+              beginAtZero: false,
+              min: 400,
+              ticks: { callback: v => v + '万' }
+            }
+          }
+        }
+      });
+    }
+
+    // 経験年数別年収推移グラフ
+    const expCtx = document.getElementById('expChart');
+    if (expCtx) {
+      new Chart(expCtx, {
+        type: 'line',
+        data: {
+          labels: ['1年目','2年目','3年目','4年目','5年目','7年目','10年目','15年目'],
+          datasets: [
+            {
+              label: 'バックエンド',
+              data: [380, 430, 480, 540, 600, 680, 780, 900],
+              borderColor: 'rgba(26,86,219,1)',
+              backgroundColor: 'rgba(26,86,219,0.1)',
+              tension: 0.4, fill: true, pointRadius: 4
+            },
+            {
+              label: 'フロントエンド',
+              data: [360, 410, 460, 510, 570, 640, 730, 840],
+              borderColor: 'rgba(6,182,212,1)',
+              backgroundColor: 'rgba(6,182,212,0.1)',
+              tension: 0.4, fill: true, pointRadius: 4
+            },
+            {
+              label: 'AI/MLエンジニア',
+              data: [420, 490, 580, 660, 750, 870, 1000, 1200],
+              borderColor: 'rgba(239,68,68,1)',
+              backgroundColor: 'rgba(239,68,68,0.1)',
+              tension: 0.4, fill: true, pointRadius: 4
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.raw}万円` } }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 300,
+              ticks: { callback: v => v + '万' }
+            }
+          }
+        }
+      });
+    }
+  });
 </script>
 </body>
 </html>
