@@ -3,6 +3,7 @@
 yfinance を使って米国株・日本株・ETFのデータを取得します
 """
 
+import time
 import pandas as pd
 import yfinance as yf
 from typing import Optional
@@ -10,7 +11,7 @@ from typing import Optional
 
 def fetch_stock_data(symbol: str, period: str = "6mo", interval: str = "1d") -> pd.DataFrame:
     """
-    ヒストリカルデータを取得する
+    ヒストリカルデータを取得する（リトライあり）
 
     Args:
         symbol: 銘柄コード (例: AAPL, 7203.T)
@@ -20,14 +21,20 @@ def fetch_stock_data(symbol: str, period: str = "6mo", interval: str = "1d") -> 
     Returns:
         DataFrame: Open, High, Low, Close, Volume を含むデータフレーム
     """
-    ticker = yf.Ticker(symbol)
-    df = ticker.history(period=period, interval=interval)
-    if df.empty:
-        return df
-    # タイムゾーン情報を除去（処理を簡略化するため）
-    if df.index.tz is not None:
-        df.index = df.index.tz_localize(None)
-    return df
+    last_exc = None
+    for attempt in range(3):
+        try:
+            ticker = yf.Ticker(symbol)
+            df = ticker.history(period=period, interval=interval)
+            if not df.empty:
+                if df.index.tz is not None:
+                    df.index = df.index.tz_localize(None)
+                return df
+        except Exception as e:
+            last_exc = e
+        if attempt < 2:
+            time.sleep(2)
+    return pd.DataFrame()
 
 
 def fetch_ticker_info(symbol: str) -> dict:
