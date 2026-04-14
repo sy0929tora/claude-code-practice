@@ -17,7 +17,7 @@ WATCHLIST = [
 # 保有銘柄・ポートフォリオ（空リストでも可）
 PORTFOLIO = [
     {"symbol": "9433.T", "shares": 100, "avg_cost": 2653.0},
-    {"symbol": "9702.T", "shares": 100, "avg_cost": 1178.0},
+    {"symbol": "9889.T", "shares": 100, "avg_cost": 1178.0},
     {"symbol": "VOO",    "shares": 1,   "avg_cost": 626.42},
     {"symbol": "MSFT",   "shares": 1,   "avg_cost": 376.34},
     {"symbol": "NVDA",   "shares": 1,   "avg_cost": 175.00},

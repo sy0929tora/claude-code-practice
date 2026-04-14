@@ -531,22 +531,24 @@
       return;
     }
 
-    let totalCost = 0, totalPnl = 0;
+    let totalJPY = 0, totalUSD = 0;
     const rows = [];
 
     Object.values(scanResults).forEach(d => {
       if (!d.portfolio) return;
       const p = d.portfolio;
       const isJP = d.symbol.endsWith('.T');
+      if (isJP) totalJPY += p.pnl; else totalUSD += p.pnl;
       const pnlClass = p.pnl >= 0 ? 'profit' : 'loss';
       const arrow = p.pnl >= 0 ? '▲' : '▼';
       const pnlStr = isJP
         ? `${Math.abs(p.pnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}円`
         : `$${Math.abs(p.pnl).toLocaleString('en-US',{maximumFractionDigits:2})}`;
+      const displayName = d.name || d.symbol;
       rows.push(`
         <div class="portfolio-row">
           <div>
-            <span style="font-weight:600">${d.symbol}</span>
+            <span style="font-weight:600">${displayName}</span>
             <span style="color:var(--text2);font-size:12px;margin-left:6px">${p.shares}株</span>
           </div>
           <div class="pnl-value ${pnlClass}">
@@ -557,16 +559,25 @@
       `);
     });
 
-    const totalPct = totalCost > 0 ? totalPnl / totalCost * 100 : 0;
-    const totalClass = totalPnl >= 0 ? 'profit' : 'loss';
-    const totalArrow = totalPnl >= 0 ? '▲' : '▼';
+    const jpyClass = totalJPY >= 0 ? 'profit' : 'loss';
+    const usdClass = totalUSD >= 0 ? 'profit' : 'loss';
 
     section.innerHTML = `
       <div class="portfolio-card">
         ${rows.join('')}
-        <div class="portfolio-total" style="flex-direction:column;align-items:flex-start;gap:4px;">
-          <span class="label">個別損益（各通貨建て）</span>
-          <span style="font-size:11px;color:var(--text2)">※円建て・ドル建て混在のため合計は参考値</span>
+        <div class="portfolio-total" style="flex-direction:column;align-items:flex-start;gap:6px;padding:14px 16px;">
+          <div style="display:flex;justify-content:space-between;width:100%">
+            <span style="font-size:13px;color:var(--text2)">国内株 合計</span>
+            <span class="pnl-value ${jpyClass}" style="font-size:15px;font-weight:700;">
+              ${totalJPY >= 0 ? '▲' : '▼'} ${Math.abs(totalJPY).toLocaleString('ja-JP',{maximumFractionDigits:0})}円
+            </span>
+          </div>
+          <div style="display:flex;justify-content:space-between;width:100%">
+            <span style="font-size:13px;color:var(--text2)">米国株 合計</span>
+            <span class="pnl-value ${usdClass}" style="font-size:15px;font-weight:700;">
+              ${totalUSD >= 0 ? '▲' : '▼'} $${Math.abs(totalUSD).toLocaleString('en-US',{maximumFractionDigits:2})}
+            </span>
+          </div>
         </div>
       </div>
     `;
