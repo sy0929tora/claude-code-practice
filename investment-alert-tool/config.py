@@ -18,10 +18,10 @@ WATCHLIST = [
 PORTFOLIO = [
     {"symbol": "9433.T", "shares": 100, "avg_cost": 2653.0},
     {"symbol": "9702.T", "shares": 100, "avg_cost": 1178.0},
-    {"symbol": "VOO",    "shares": 1,   "avg_cost": 622.0},
-    {"symbol": "MSFT",   "shares": 1,   "avg_cost": 421.0},
-    {"symbol": "NVDA",   "shares": 1,   "avg_cost": 174.0},
-    {"symbol": "IONQ",   "shares": 4,   "avg_cost": 7.17},
+    {"symbol": "VOO",    "shares": 1,   "avg_cost": 626.42},
+    {"symbol": "MSFT",   "shares": 1,   "avg_cost": 376.34},
+    {"symbol": "NVDA",   "shares": 1,   "avg_cost": 175.00},
+    {"symbol": "IONQ",   "shares": 4,   "avg_cost": 28.58},
 ]
 
 # アラート閾値
