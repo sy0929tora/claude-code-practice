@@ -21,6 +21,9 @@ from signals import detect_signals, summarize_signals
 app = Flask(__name__)
 portfolio = Portfolio(PORTFOLIO)
 
+# スキャン結果のキャッシュ（市場閉鎖時に最終データを返すため）
+_scan_cache: dict = {}
+
 
 def _safe_float(val) -> float | None:
     """NaN / None を None に変換"""
@@ -112,9 +115,16 @@ def api_scan(symbol: str):
                 "pnl_pct": round(pos.pnl_pct, 1),
             }
 
+        # キャッシュに保存
+        _scan_cache[symbol] = result
         return result
 
     except Exception as exc:
+        # キャッシュがあれば返す（市場閉鎖時など）
+        if symbol in _scan_cache:
+            cached = dict(_scan_cache[symbol])
+            cached["cached"] = True
+            return cached
         return {"error": str(exc), "symbol": symbol}, 500
 
 
