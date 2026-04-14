@@ -373,12 +373,22 @@
     const smaColor = d.sma5 == null ? 'neutral' : smaBull ? 'bullish' : 'bearish';
     const smaText = d.sma5 == null ? '--' : smaBull ? '↑ 上昇' : '↓ 下降';
 
+    // 通貨判定（.T で終わる = 日本株 = 円、それ以外 = 米国株 = USD）
+    const isJP = d.symbol.endsWith('.T');
+    const currency = isJP ? '円' : 'USD';
+    const costStr = isJP
+      ? `${d.portfolio ? d.portfolio.avg_cost.toLocaleString() : ''}円`
+      : `$${d.portfolio ? d.portfolio.avg_cost : ''}`;
+    const pnlNumStr = isJP
+      ? `${Math.abs(d.portfolio ? d.portfolio.pnl : 0).toLocaleString('ja-JP', {maximumFractionDigits:0})}円`
+      : `$${Math.abs(d.portfolio ? d.portfolio.pnl : 0).toLocaleString('en-US', {maximumFractionDigits:2})}`;
+
     // ポートフォリオ損益行
     const pnlHtml = d.portfolio ? `
       <div class="pnl-row">
-        <span class="pnl-label">💼 ${d.portfolio.shares}株 @ ${d.portfolio.avg_cost}</span>
+        <span class="pnl-label">💼 ${d.portfolio.shares}株 @ ${costStr}</span>
         <span class="pnl-value ${d.portfolio.pnl >= 0 ? 'profit' : 'loss'}">
-          ${d.portfolio.pnl >= 0 ? '▲' : '▼'} ${Math.abs(d.portfolio.pnl).toLocaleString('ja-JP', {maximumFractionDigits:0})}
+          ${d.portfolio.pnl >= 0 ? '▲' : '▼'} ${pnlNumStr}
           (${d.portfolio.pnl_pct >= 0 ? '+' : ''}${d.portfolio.pnl_pct}%)
         </span>
       </div>` : '';
@@ -527,11 +537,12 @@
     Object.values(scanResults).forEach(d => {
       if (!d.portfolio) return;
       const p = d.portfolio;
-      const cost = p.shares * p.avg_cost;
-      totalCost += cost;
-      totalPnl += p.pnl;
+      const isJP = d.symbol.endsWith('.T');
       const pnlClass = p.pnl >= 0 ? 'profit' : 'loss';
       const arrow = p.pnl >= 0 ? '▲' : '▼';
+      const pnlStr = isJP
+        ? `${Math.abs(p.pnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}円`
+        : `$${Math.abs(p.pnl).toLocaleString('en-US',{maximumFractionDigits:2})}`;
       rows.push(`
         <div class="portfolio-row">
           <div>
@@ -539,7 +550,7 @@
             <span style="color:var(--text2);font-size:12px;margin-left:6px">${p.shares}株</span>
           </div>
           <div class="pnl-value ${pnlClass}">
-            ${arrow} ${Math.abs(p.pnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}
+            ${arrow} ${pnlStr}
             <span style="font-size:11px">(${p.pnl_pct >= 0 ? '+' : ''}${p.pnl_pct}%)</span>
           </div>
         </div>
@@ -553,12 +564,9 @@
     section.innerHTML = `
       <div class="portfolio-card">
         ${rows.join('')}
-        <div class="portfolio-total">
-          <span class="label">合計損益</span>
-          <span class="value pnl-value ${totalClass}">
-            ${totalArrow} ${Math.abs(totalPnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}
-            <span style="font-size:13px">(${totalPct >= 0 ? '+' : ''}${totalPct.toFixed(1)}%)</span>
-          </span>
+        <div class="portfolio-total" style="flex-direction:column;align-items:flex-start;gap:4px;">
+          <span class="label">個別損益（各通貨建て）</span>
+          <span style="font-size:11px;color:var(--text2)">※円建て・ドル建て混在のため合計は参考値</span>
         </div>
       </div>
     `;
