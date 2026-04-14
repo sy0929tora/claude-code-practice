@@ -21,17 +21,28 @@ def fetch_stock_data(symbol: str, period: str = "6mo", interval: str = "1d") -> 
     Returns:
         DataFrame: Open, High, Low, Close, Volume を含むデータフレーム
     """
-    last_exc = None
     for attempt in range(3):
         try:
+            # 方法1: ticker.history()
             ticker = yf.Ticker(symbol)
             df = ticker.history(period=period, interval=interval)
             if not df.empty:
                 if df.index.tz is not None:
                     df.index = df.index.tz_localize(None)
                 return df
-        except Exception as e:
-            last_exc = e
+
+            # 方法2: yf.download() にフォールバック
+            df = yf.download(symbol, period=period, interval=interval,
+                             progress=False, auto_adjust=True)
+            if not df.empty:
+                if df.index.tz is not None:
+                    df.index = df.index.tz_localize(None)
+                # MultiIndex の場合フラット化
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+                return df
+        except Exception:
+            pass
         if attempt < 2:
             time.sleep(2)
     return pd.DataFrame()
