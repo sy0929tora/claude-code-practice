@@ -46,6 +46,18 @@ def api_watchlist():
     return {"watchlist": WATCHLIST}
 
 
+@app.route("/api/fx")
+def api_fx():
+    """USD/JPY リアルタイムレートを返す"""
+    try:
+        import yfinance as yf
+        ticker = yf.Ticker("USDJPY=X")
+        rate = ticker.fast_info.last_price
+        return {"usdjpy": round(float(rate), 2)}
+    except Exception as exc:
+        return {"error": str(exc), "usdjpy": 150.0}, 200
+
+
 @app.route("/api/scan/<symbol>")
 def api_scan(symbol: str):
     """1銘柄をスキャンして価格・指標・シグナルを返す"""

@@ -562,6 +562,18 @@
     const jpyClass = totalJPY >= 0 ? 'profit' : 'loss';
     const usdClass = totalUSD >= 0 ? 'profit' : 'loss';
 
+    // USD/JPY レート取得して円換算表示
+    fetch('/api/fx')
+      .then(r => r.json())
+      .then(fx => {
+        const rate = fx.usdjpy || 150;
+        const usdInJPY = Math.round(totalUSD * rate);
+        const usdInJPYClass = usdInJPY >= 0 ? 'profit' : 'loss';
+        document.getElementById('usd-jpy-row').innerHTML = `
+          <span style="font-size:11px;color:var(--text2)">≈ ${usdInJPY >= 0 ? '▲' : '▼'} <span class="pnl-value ${usdInJPYClass}">${Math.abs(usdInJPY).toLocaleString('ja-JP')}円</span>（1USD=${rate}円）</span>
+        `;
+      }).catch(() => {});
+
     section.innerHTML = `
       <div class="portfolio-card">
         ${rows.join('')}
@@ -572,11 +584,16 @@
               ${totalJPY >= 0 ? '▲' : '▼'} ${Math.abs(totalJPY).toLocaleString('ja-JP',{maximumFractionDigits:0})}円
             </span>
           </div>
-          <div style="display:flex;justify-content:space-between;width:100%">
-            <span style="font-size:13px;color:var(--text2)">米国株 合計</span>
-            <span class="pnl-value ${usdClass}" style="font-size:15px;font-weight:700;">
-              ${totalUSD >= 0 ? '▲' : '▼'} $${Math.abs(totalUSD).toLocaleString('en-US',{maximumFractionDigits:2})}
-            </span>
+          <div style="display:flex;justify-content:space-between;width:100%;align-items:flex-start;flex-direction:column;gap:2px;">
+            <div style="display:flex;justify-content:space-between;width:100%">
+              <span style="font-size:13px;color:var(--text2)">米国株 合計</span>
+              <span class="pnl-value ${usdClass}" style="font-size:15px;font-weight:700;">
+                ${totalUSD >= 0 ? '▲' : '▼'} $${Math.abs(totalUSD).toLocaleString('en-US',{maximumFractionDigits:2})}
+              </span>
+            </div>
+            <div id="usd-jpy-row" style="text-align:right;width:100%">
+              <span style="font-size:11px;color:var(--text2)">円換算 取得中...</span>
+            </div>
           </div>
         </div>
       </div>
