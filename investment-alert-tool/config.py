@@ -7,7 +7,7 @@
 # 日本株は銘柄コード + ".T" 例: 7203.T (トヨタ)
 WATCHLIST = [
     {"symbol": "9433.T", "name": "KDDI"},
-    {"symbol": "9702.T", "name": "JBCC HD"},
+    {"symbol": "9889.T", "name": "JBCC HD"},
     {"symbol": "VOO",    "name": "VOO (S&P500)"},
     {"symbol": "MSFT",   "name": "マイクロソフト"},
     {"symbol": "NVDA",   "name": "エヌビディア"},
