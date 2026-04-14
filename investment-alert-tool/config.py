@@ -6,19 +6,22 @@
 # 監視銘柄リスト（米国株・日本株・ETFなど何でも可）
 # 日本株は銘柄コード + ".T" 例: 7203.T (トヨタ)
 WATCHLIST = [
-    {"symbol": "AAPL",   "name": "Apple"},
-    {"symbol": "NVDA",   "name": "NVIDIA"},
-    {"symbol": "TSLA",   "name": "Tesla"},
-    {"symbol": "7203.T", "name": "トヨタ自動車"},
-    {"symbol": "9984.T", "name": "ソフトバンクグループ"},
-    {"symbol": "SPY",    "name": "S&P500 ETF"},
+    {"symbol": "9433.T", "name": "KDDI"},
+    {"symbol": "9702.T", "name": "JBCC HD"},
+    {"symbol": "VOO",    "name": "VOO (S&P500)"},
+    {"symbol": "MSFT",   "name": "マイクロソフト"},
+    {"symbol": "NVDA",   "name": "エヌビディア"},
+    {"symbol": "IONQ",   "name": "IonQ"},
 ]
 
 # 保有銘柄・ポートフォリオ（空リストでも可）
 PORTFOLIO = [
-    {"symbol": "AAPL",   "shares": 10,  "avg_cost": 175.0},
-    {"symbol": "NVDA",   "shares": 5,   "avg_cost": 450.0},
-    {"symbol": "7203.T", "shares": 100, "avg_cost": 2800.0},
+    {"symbol": "9433.T", "shares": 100, "avg_cost": 2653.0},
+    {"symbol": "9702.T", "shares": 100, "avg_cost": 1178.0},
+    {"symbol": "VOO",    "shares": 1,   "avg_cost": 622.0},
+    {"symbol": "MSFT",   "shares": 1,   "avg_cost": 421.0},
+    {"symbol": "NVDA",   "shares": 1,   "avg_cost": 174.0},
+    {"symbol": "IONQ",   "shares": 4,   "avg_cost": 7.17},
 ]
 
 # アラート閾値
