@@ -1,0 +1,9 @@
+# Core: Claude API
+anthropic>=0.40.0
+
+# Structured output parsing
+pydantic>=2.0.0
+
+# Web research (optional but recommended)
+# Provides free web search without needing an API key
+duckduckgo-search>=6.0.0
