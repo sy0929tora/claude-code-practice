@@ -105,6 +105,11 @@ def api_scan(symbol: str):
                 for s in signals
             ],
             "summary": summary,
+            "chart": {
+                "dates": [d.strftime("%m/%d") for d in df.index[-60:]],
+                "closes": [round(float(v), 2) for v in df["Close"].iloc[-60:]],
+                "sma25": [_safe_float(v) for v in df["SMA_25"].iloc[-60:]],
+            },
         }
 
         if pos:

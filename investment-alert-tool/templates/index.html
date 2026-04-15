@@ -6,6 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>📈 投資アラート</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
       --bg: #f2f2f7;
@@ -146,6 +147,23 @@
     .pnl-value { font-weight: 600; }
     .pnl-value.profit { color: var(--green); }
     .pnl-value.loss   { color: var(--red); }
+
+    /* ── チャート ── */
+    .chart-toggle-row {
+      padding: 0 16px 4px;
+      display: flex; justify-content: flex-end;
+    }
+    .btn-chart {
+      background: none; border: 1px solid var(--border);
+      border-radius: 12px; padding: 4px 12px;
+      font-size: 12px; color: var(--text2); cursor: pointer;
+    }
+    .btn-chart:active { opacity: .6; }
+    .chart-container {
+      display: none; padding: 0 12px 12px;
+    }
+    .chart-container.open { display: block; }
+    .chart-container canvas { border-radius: 8px; }
 
     /* ── AI分析ボタン ── */
     .analyze-row {
@@ -431,6 +449,13 @@
 
       ${pnlHtml}
 
+      <div class="chart-toggle-row">
+        <button class="btn-chart" onclick="toggleChart('${d.symbol}')">📊 チャート</button>
+      </div>
+      <div class="chart-container" id="chart-${d.symbol}">
+        <canvas id="canvas-${d.symbol}" height="160"></canvas>
+      </div>
+
       <div class="analyze-row">
         <button class="btn-analyze" id="btn-${d.symbol}" onclick="startAnalysis('${d.symbol}')">
           🤖 Claude AI で詳細分析
@@ -599,6 +624,99 @@
         </div>
       </div>
     `;
+  }
+
+  // ── チャート ────────────────────────────────────────────────────
+  const chartInstances = {};
+
+  function toggleChart(symbol) {
+    const container = document.getElementById(`chart-${symbol}`);
+    if (!container) return;
+    const isOpen = container.classList.toggle('open');
+    if (isOpen && !chartInstances[symbol]) {
+      renderChart(symbol);
+    }
+  }
+
+  function renderChart(symbol) {
+    const d = scanResults[symbol];
+    if (!d || !d.chart) return;
+    const canvas = document.getElementById(`canvas-${symbol}`);
+    if (!canvas) return;
+
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+    const textColor = isDark ? '#8e8e93' : '#8e8e93';
+    const isUp = d.change_pct >= 0;
+    const lineColor = isUp ? '#34c759' : '#ff3b30';
+    const fillColor = isUp ? 'rgba(52,199,89,0.12)' : 'rgba(255,59,48,0.12)';
+
+    const datasets = [{
+      label: '終値',
+      data: d.chart.closes,
+      borderColor: lineColor,
+      backgroundColor: fillColor,
+      borderWidth: 2,
+      fill: true,
+      pointRadius: 0,
+      tension: 0.3,
+    }];
+
+    const sma25 = d.chart.sma25.filter(v => v !== null);
+    if (sma25.length > 0) {
+      datasets.push({
+        label: 'SMA25',
+        data: d.chart.sma25,
+        borderColor: 'rgba(255,149,0,0.8)',
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: false,
+        tension: 0.3,
+      });
+    }
+
+    // 取得単価ライン
+    if (d.portfolio) {
+      datasets.push({
+        label: '取得単価',
+        data: Array(d.chart.dates.length).fill(d.portfolio.avg_cost),
+        borderColor: 'rgba(142,142,147,0.6)',
+        borderWidth: 1,
+        borderDash: [4, 4],
+        pointRadius: 0,
+        fill: false,
+      });
+    }
+
+    chartInstances[symbol] = new Chart(canvas, {
+      type: 'line',
+      data: { labels: d.chart.dates, datasets },
+      options: {
+        responsive: true,
+        animation: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toLocaleString('ja-JP', {maximumFractionDigits:2})}`,
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, maxTicksLimit: 6, font: { size: 10 } },
+          },
+          y: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, font: { size: 10 },
+              callback: v => v.toLocaleString('ja-JP', {maximumFractionDigits:0}) },
+            position: 'right',
+          }
+        }
+      }
+    });
   }
 
   // ── 起動 ────────────────────────────────────────────────────────
