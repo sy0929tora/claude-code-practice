@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ITエンジニア向けキャリアタイプ診断。5つの質問に答えるだけであなたに合った転職タイプ・おすすめ企業・年収目安がわかります。">
+  <meta property="og:title" content="エンジニアキャリアタイプ診断 | 神奈川ITエンジニア転職ラボ">
+  <meta property="og:description" content="5問の診断であなたのキャリアタイプが判明。スタートアップ型・大手安定型・フリーランス型など6タイプから診断。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/career-type.html">
+  <meta property="og:site_name" content="神奈川ITエンジニア転職ラボ">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/career-type.html">
+  <title>エンジニアキャリアタイプ診断 | 神奈川ITエンジニア転職ラボ</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .quiz-wrap { max-width: 720px; margin: 0 auto; }
+    .quiz-progress { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; }
+    .progress-step { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 800; flex-shrink: 0; transition: all .3s; }
+    .progress-step.done { background: var(--success); color: #fff; }
+    .progress-step.current { background: var(--primary); color: #fff; box-shadow: 0 0 0 4px rgba(26,86,219,.2); }
+    .progress-step.todo { background: var(--border); color: var(--gray); }
+    .progress-line { flex: 1; height: 3px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .progress-line-fill { height: 100%; background: var(--primary); transition: width .5s ease; }
+    .quiz-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 2.5rem; box-shadow: var(--shadow); }
+    .quiz-q-num { font-size: .82rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: .05em; margin-bottom: .75rem; }
+    .quiz-q-text { font-size: 1.25rem; font-weight: 800; color: var(--dark); line-height: 1.5; margin-bottom: 1.75rem; }
+    .quiz-options { display: flex; flex-direction: column; gap: .75rem; }
+    .quiz-option { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border: 2px solid var(--border); border-radius: var(--radius-lg); cursor: pointer; transition: all .2s; background: var(--white); }
+    .quiz-option:hover { border-color: var(--primary); background: #eff6ff; }
+    .quiz-option.selected { border-color: var(--primary); background: #eff6ff; }
+    .quiz-option-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .quiz-option-text { font-size: .95rem; font-weight: 600; color: var(--dark); }
+    .quiz-option-sub { font-size: .8rem; color: var(--gray); margin-top: .2rem; }
+    .quiz-nav { display: flex; justify-content: space-between; margin-top: 2rem; }
+
+    /* Result styles */
+    .result-wrap { display: none; max-width: 720px; margin: 0 auto; }
+    .result-header { text-align: center; padding: 2.5rem; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: var(--radius-xl); color: #fff; margin-bottom: 2rem; }
+    .result-type-icon { font-size: 4rem; margin-bottom: 1rem; }
+    .result-type-name { font-size: 1.8rem; font-weight: 900; margin-bottom: .5rem; }
+    .result-type-sub { font-size: 1rem; opacity: .85; }
+    .result-score-bar { display: flex; gap: .5rem; align-items: center; margin-bottom: .75rem; }
+    .result-score-label { width: 140px; font-size: .85rem; font-weight: 600; color: var(--dark); flex-shrink: 0; }
+    .result-score-track { flex: 1; height: 10px; background: var(--border); border-radius: 99px; overflow: hidden; }
+    .result-score-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--primary), var(--accent)); transition: width 1s ease .3s; }
+    .result-score-num { width: 36px; text-align: right; font-size: .85rem; font-weight: 700; color: var(--primary); }
+    .job-recommend { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; }
+    .job-recommend-card { background: var(--light); border-radius: var(--radius-lg); padding: 1rem; border: 1px solid var(--border); }
+    @media(max-width:640px){ .quiz-card{padding:1.5rem;} .quiz-q-text{font-size:1.1rem;} }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+<div id="header-placeholder"></div>
+
+<section class="page-hero">
+  <div class="container">
+    <nav class="breadcrumb"><a href="index.html">ホーム</a><span>›</span><span>キャリアタイプ診断</span></nav>
+    <div class="badge-hero">🎯 Career Type Quiz</div>
+    <h1>エンジニア<br>キャリアタイプ診断</h1>
+    <p>5つの質問に答えるだけ。<br>あなたに最適な転職タイプ・企業スタイル・年収目安がわかります。</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- QUIZ -->
+    <div class="quiz-wrap" id="quiz-section">
+      <!-- Progress -->
+      <div class="quiz-progress" id="progress-bar">
+        <div class="progress-step current" id="step-1">1</div>
+        <div class="progress-line"><div class="progress-line-fill" id="line-1" style="width:0%"></div></div>
+        <div class="progress-step todo" id="step-2">2</div>
+        <div class="progress-line"><div class="progress-line-fill" id="line-2" style="width:0%"></div></div>
+        <div class="progress-step todo" id="step-3">3</div>
+        <div class="progress-line"><div class="progress-line-fill" id="line-3" style="width:0%"></div></div>
+        <div class="progress-step todo" id="step-4">4</div>
+        <div class="progress-line"><div class="progress-line-fill" id="line-4" style="width:0%"></div></div>
+        <div class="progress-step todo" id="step-5">5</div>
+      </div>
+
+      <!-- Question Card -->
+      <div class="quiz-card" id="quiz-card">
+        <div class="quiz-q-num" id="q-num">Question 1 / 5</div>
+        <div class="quiz-q-text" id="q-text"></div>
+        <div class="quiz-options" id="q-options"></div>
+        <div class="quiz-nav">
+          <button class="btn btn-outline" id="btn-prev" onclick="prevQ()" style="display:none;">← 戻る</button>
+          <button class="btn btn-primary" id="btn-next" onclick="nextQ()" disabled style="margin-left:auto;">次へ →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-wrap" id="result-section">
+      <div class="result-header">
+        <div class="result-type-icon" id="r-icon">🚀</div>
+        <div class="result-type-name" id="r-name"></div>
+        <div class="result-type-sub" id="r-sub"></div>
+      </div>
+
+      <div class="card mb-3">
+        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;">あなたのキャリア傾向スコア</h3>
+        <div id="r-scores"></div>
+      </div>
+
+      <div class="card mb-3">
+        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:.5rem;">🎯 あなたへのアドバイス</h3>
+        <p id="r-advice" style="color:var(--gray);line-height:1.8;"></p>
+      </div>
+
+      <div class="card mb-3">
+        <h3 style="font-size:1.1rem;font-weight:800;margin-bottom:1rem;">💼 おすすめ求人タイプ</h3>
+        <div class="job-recommend" id="r-jobs"></div>
+      </div>
+
+      <div class="card mb-3" style="background:var(--light);">
+        <h3 style="font-size:1rem;font-weight:700;margin-bottom:.5rem;">💰 想定年収レンジ</h3>
+        <div style="font-size:2rem;font-weight:900;color:var(--primary);" id="r-salary"></div>
+        <p class="text-xs text-gray mt-1">※ 神奈川エリア・あなたのキャリアタイプ平均値</p>
+      </div>
+
+      <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:2rem;">
+        <a href="contact.html" class="btn btn-primary btn-lg" style="flex:1;text-align:center;">無料転職相談で詳しく聞く →</a>
+        <button onclick="restartQuiz()" class="btn btn-outline btn-lg" style="flex:1;">もう一度診断する</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="section bg-light">
+  <div class="container">
+    <h2 class="section-title text-center">診断でわかること</h2>
+    <div class="grid-3 mt-3">
+      <div class="card text-center">
+        <div style="font-size:2.5rem;margin-bottom:.75rem;">🏢</div>
+        <h3 style="font-size:1rem;font-weight:800;">向いている企業タイプ</h3>
+        <p class="text-sm text-gray mt-1">スタートアップ・大手・受託・自社開発など、あなたに合う環境を特定</p>
+      </div>
+      <div class="card text-center">
+        <div style="font-size:2.5rem;margin-bottom:.75rem;">💰</div>
+        <h3 style="font-size:1rem;font-weight:800;">年収ポテンシャル</h3>
+        <p class="text-sm text-gray mt-1">現在のキャリアタイプでの年収目安と、アップさせるための方向性</p>
+      </div>
+      <div class="card text-center">
+        <div style="font-size:2.5rem;margin-bottom:.75rem;">📈</div>
+        <h3 style="font-size:1rem;font-weight:800;">キャリアパス提案</h3>
+        <p class="text-sm text-gray mt-1">5年後・10年後のキャリアイメージと、今取るべきアクション</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <h2>診断結果を元に転職相談しませんか？</h2>
+    <p>あなたのキャリアタイプに合った非公開求人を無料でご紹介します。<br>経験豊富なエージェントが年収交渉までサポート。</p>
+    <div class="cta-buttons">
+      <a href="contact.html" class="btn btn-white btn-lg">無料で転職相談する →</a>
+      <a href="jobs.html" class="btn btn-outline btn-lg" style="color:#fff;border-color:rgba(255,255,255,.4);">求人一覧を見る</a>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="js/main.js"></script>
+<script>
+const QUESTIONS = [
+  {
+    text: "仕事でもっとも大切にしていることは？",
+    options: [
+      { icon:"🚀", text:"技術的チャレンジ", sub:"最新技術・難しい問題に挑みたい", scores:{tech:3,growth:2,stable:0,creative:1,social:0,free:1} },
+      { icon:"💰", text:"年収・報酬", sub:"頑張りに見合った対価が欲しい", scores:{tech:1,growth:2,stable:1,creative:0,social:0,free:3} },
+      { icon:"⚖️", text:"ワークライフバランス", sub:"プライベートも大切にしたい", scores:{tech:0,growth:1,stable:3,creative:1,social:1,free:2} },
+      { icon:"🌍", text:"社会への貢献", sub:"社会課題を解決する仕事がしたい", scores:{tech:1,growth:1,stable:1,creative:2,social:3,free:0} }
+    ]
+  },
+  {
+    text: "どんな開発スタイルが好きですか？",
+    options: [
+      { icon:"⚡", text:"スピード重視", sub:"素早くリリース・改善を繰り返したい", scores:{tech:1,growth:3,stable:0,creative:2,social:1,free:2} },
+      { icon:"🏗️", text:"品質・設計重視", sub:"しっかり設計してから丁寧に作りたい", scores:{tech:2,growth:1,stable:3,creative:1,social:1,free:0} },
+      { icon:"🎨", text:"クリエイティブ重視", sub:"デザイン・UX・体験を大切にしたい", scores:{tech:1,growth:2,stable:0,creative:3,social:1,free:2} },
+      { icon:"🔬", text:"研究・探求重視", sub:"深く調査・実験しながら作りたい", scores:{tech:3,growth:1,stable:1,creative:0,social:2,free:1} }
+    ]
+  },
+  {
+    text: "どんな職場環境が理想ですか？",
+    options: [
+      { icon:"🏢", text:"大手・安定企業", sub:"福利厚生◎、長期的に安定して働きたい", scores:{tech:0,growth:0,stable:3,creative:0,social:2,free:0} },
+      { icon:"🦄", text:"スタートアップ", sub:"裁量大・成長中の会社でスピード感を楽しみたい", scores:{tech:2,growth:3,stable:0,creative:2,social:1,free:1} },
+      { icon:"🌐", text:"フルリモート・柔軟", sub:"場所を問わず自由に働きたい", scores:{tech:1,growth:1,stable:1,creative:2,social:0,free:3} },
+      { icon:"🤝", text:"チームワーク重視", sub:"仲間と密にコラボしながら働きたい", scores:{tech:1,growth:2,stable:1,creative:3,social:2,free:0} }
+    ]
+  },
+  {
+    text: "5年後のキャリアイメージは？",
+    options: [
+      { icon:"👑", text:"テックリード・アーキテクト", sub:"技術の専門家として深く追求したい", scores:{tech:3,growth:1,stable:1,creative:0,social:0,free:1} },
+      { icon:"📊", text:"マネージャー・PdM", sub:"チームやプロダクトをマネジメントしたい", scores:{tech:0,growth:2,stable:2,creative:1,social:2,free:0} },
+      { icon:"🏄", text:"フリーランス・副業", sub:"複数の仕事を掛け持ちして自由に働きたい", scores:{tech:2,growth:1,stable:0,creative:2,social:0,free:3} },
+      { icon:"🌱", text:"まだわからない", sub:"色々試しながら方向性を見つけたい", scores:{tech:1,growth:3,stable:0,creative:1,social:1,free:1} }
+    ]
+  },
+  {
+    text: "転職で最も重視することは？",
+    options: [
+      { icon:"📈", text:"年収アップ（100万円以上）", sub:"とにかく年収を上げたい", scores:{tech:1,growth:2,stable:0,creative:0,social:0,free:3} },
+      { icon:"🛠️", text:"技術力アップ", sub:"使える技術・スキルを広げたい", scores:{tech:3,growth:2,stable:0,creative:1,social:0,free:1} },
+      { icon:"🏖️", text:"働き方改善", sub:"残業削減・リモート・柔軟な働き方", scores:{tech:0,growth:0,stable:2,creative:1,social:1,free:3} },
+      { icon:"🎯", text:"やりがい・ミッション", sub:"意味のある仕事・好きな分野で働きたい", scores:{tech:1,growth:1,stable:1,creative:3,social:3,free:0} }
+    ]
+  }
+];
+
+const TYPES = {
+  tech:    { name:"テクニカルエキスパート型", icon:"⚡", color:"var(--primary)", salary:"600〜1,000万円", sub:"技術を極める専門家志向", advice:"最新技術への探求心が強く、深い専門性でキャリアを築くタイプ。スタートアップや研究開発部門、技術特化のSaaSが向いています。OSS活動や技術登壇でブランドを高めることで年収1,000万円超も狙えます。", jobs:[{icon:"⚡",label:"テック特化スタートアップ"},{icon:"🔬",label:"研究開発・R&Dポジション"},{icon:"🤖",label:"AI/ML エンジニア"},{icon:"🏗️",label:"テックリード・アーキテクト"}] },
+  growth:  { name:"ハイグロース型", icon:"🚀", color:"var(--accent)", salary:"500〜850万円", sub:"成長環境で急成長したい志向", advice:"変化を楽しみ、スピード感のある環境でどんどん成長していけるタイプ。成長期のスタートアップやメガベンチャーで裁量を持って働くと力を発揮します。短期間での年収アップ・役職昇進が期待できます。", jobs:[{icon:"🦄",label:"成長期スタートアップ"},{icon:"📦",label:"メガベンチャー"},{icon:"💼",label:"事業会社・自社開発"},{icon:"🎯",label:"プロダクトマネージャー"}] },
+  stable:  { name:"安定キャリア型", icon:"🏛️", color:"var(--success)", salary:"450〜750万円", sub:"安定した環境でじっくり成長", advice:"長期的なキャリアを計画的に積み上げていくタイプ。福利厚生・制度が整った大手企業や上場企業が向いています。専門性を活かしながら、管理職へのキャリアパスも見えやすい環境が最適です。", jobs:[{icon:"🏢",label:"大手IT企業・SIer"},{icon:"🏦",label:"金融・インフラ系企業"},{icon:"🏭",label:"製造業ITポジション"},{icon:"🏥",label:"医療・官公庁系"}] },
+  creative:{ name:"クリエイティブビルダー型", icon:"🎨", color:"var(--warning)", salary:"480〜800万円", sub:"作ることで価値を生み出す志向", advice:"デザイン・UX・プロダクトにこだわりを持ち、ユーザーに届く体験を作ることにやりがいを感じるタイプ。フロントエンド・フルスタック・デザインエンジニアリングの分野で特に輝きます。", jobs:[{icon:"🎨",label:"フロントエンドエンジニア"},{icon:"📱",label:"モバイルアプリ開発"},{icon:"🛍️",label:"EC・メディア企業"},{icon:"🎮",label:"ゲーム・エンタメ系"}] },
+  social:  { name:"ソーシャルインパクト型", icon:"🌱", color:"#10b981", salary:"420〜700万円", sub:"社会課題の解決に情熱を持つ", advice:"技術を通じて社会をより良くしたいという強い動機があるタイプ。医療DX・教育テック・環境テック・官民連携などの分野で特に充実感を得られます。NPOやソーシャルベンチャーでの活躍も視野に。", jobs:[{icon:"🏥",label:"ヘルステック・医療DX"},{icon:"🎓",label:"EdTech・教育系"},{icon:"🌍",label:"環境・SDGs系スタートアップ"},{icon:"🤝",label:"官民連携・GovTech"}] },
+  free:    { name:"フリーエージェント型", icon:"🏄", color:"#f59e0b", salary:"600〜1,200万円", sub:"自由・高収入を両立したい志向", advice:"組織に縛られず自分のペースで高い成果を出せるタイプ。フリーランス・副業・ハイクラス転職が向いています。まずは現職を続けながら副業で実績を積み、段階的にフリーランスや高収入ポジションへ移行する戦略が効果的です。", jobs:[{icon:"💻",label:"フリーランスエンジニア"},{icon:"💰",label:"ハイクラス転職（800万〜）"},{icon:"🌐",label:"フルリモート求人"},{icon:"⏰",label:"副業・複業OK企業"}] }
+};
+
+let current = 0;
+let answers = [];
+
+function renderQ() {
+  const q = QUESTIONS[current];
+  document.getElementById('q-num').textContent = `Question ${current+1} / ${QUESTIONS.length}`;
+  document.getElementById('q-text').textContent = q.text;
+  document.getElementById('btn-prev').style.display = current > 0 ? 'inline-flex' : 'none';
+  document.getElementById('btn-next').disabled = answers[current] === undefined;
+  document.getElementById('btn-next').textContent = current === QUESTIONS.length - 1 ? '診断結果を見る 🎯' : '次へ →';
+
+  // Update progress steps
+  for (let i = 0; i < QUESTIONS.length; i++) {
+    const el = document.getElementById(`step-${i+1}`);
+    el.className = 'progress-step ' + (i < current ? 'done' : i === current ? 'current' : 'todo');
+    el.textContent = i < current ? '✓' : i+1;
+    if (i < QUESTIONS.length - 1) {
+      document.getElementById(`line-${i+1}`).style.width = i < current ? '100%' : '0%';
+    }
+  }
+
+  document.getElementById('q-options').innerHTML = q.options.map((o, i) => `
+    <div class="quiz-option${answers[current] === i ? ' selected' : ''}" onclick="selectOption(${i})">
+      <div class="quiz-option-icon">${o.icon}</div>
+      <div>
+        <div class="quiz-option-text">${o.text}</div>
+        <div class="quiz-option-sub">${o.sub}</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectOption(i) {
+  answers[current] = i;
+  document.querySelectorAll('.quiz-option').forEach((el, idx) => {
+    el.classList.toggle('selected', idx === i);
+  });
+  document.getElementById('btn-next').disabled = false;
+}
+
+function nextQ() {
+  if (answers[current] === undefined) return;
+  if (current < QUESTIONS.length - 1) {
+    current++;
+    renderQ();
+  } else {
+    showResult();
+  }
+}
+
+function prevQ() {
+  if (current > 0) { current--; renderQ(); }
+}
+
+function showResult() {
+  const totals = {tech:0, growth:0, stable:0, creative:0, social:0, free:0};
+  QUESTIONS.forEach((q, qi) => {
+    const s = q.options[answers[qi]].scores;
+    Object.keys(s).forEach(k => totals[k] += s[k]);
+  });
+  const winner = Object.entries(totals).sort((a,b) => b[1]-a[1])[0][0];
+  const type = TYPES[winner];
+  const maxScore = Math.max(...Object.values(totals));
+
+  document.getElementById('quiz-section').style.display = 'none';
+  const rs = document.getElementById('result-section');
+  rs.style.display = 'block';
+  document.getElementById('r-icon').textContent = type.icon;
+  document.getElementById('r-name').textContent = type.name;
+  document.getElementById('r-sub').textContent = type.sub;
+  document.getElementById('r-advice').textContent = type.advice;
+  document.getElementById('r-salary').textContent = type.salary;
+
+  const labels = {tech:'技術探求力', growth:'成長志向', stable:'安定志向', creative:'創造性', social:'社会貢献', free:'自由・自律'};
+  document.getElementById('r-scores').innerHTML = Object.entries(totals).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `
+    <div class="result-score-bar">
+      <div class="result-score-label">${labels[k]}</div>
+      <div class="result-score-track"><div class="result-score-fill" style="width:${Math.round(v/maxScore*100)}%"></div></div>
+      <div class="result-score-num">${v}pt</div>
+    </div>`).join('');
+
+  document.getElementById('r-jobs').innerHTML = type.jobs.map(j => `
+    <div class="job-recommend-card">
+      <div style="font-size:1.5rem;margin-bottom:.5rem;">${j.icon}</div>
+      <div style="font-size:.85rem;font-weight:700;color:var(--dark);">${j.label}</div>
+    </div>`).join('');
+
+  rs.scrollIntoView({behavior:'smooth'});
+}
+
+function restartQuiz() {
+  current = 0; answers = [];
+  document.getElementById('result-section').style.display = 'none';
+  document.getElementById('quiz-section').style.display = 'block';
+  renderQ();
+}
+
+renderQ();
+</script>
+</body>
+</html>
