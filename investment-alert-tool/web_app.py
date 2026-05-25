@@ -61,6 +61,37 @@ def api_fx():
         return {"error": str(exc), "usdjpy": 150.0}, 200
 
 
+@app.route("/api/news/<symbol>")
+def api_news(symbol: str):
+    """Yahoo Finance RSSからニュースを取得する"""
+    import urllib.request
+    import xml.etree.ElementTree as ET
+    from email.utils import parsedate_to_datetime
+
+    symbol = symbol.upper()
+    url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={symbol}&region=US&lang=en-US"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            xml_data = resp.read()
+        root = ET.fromstring(xml_data)
+        channel = root.find("channel")
+        items = []
+        for item in (channel.findall("item") if channel is not None else [])[:6]:
+            title = item.findtext("title", "")
+            link = item.findtext("link", "")
+            pub = item.findtext("pubDate", "")
+            try:
+                dt = parsedate_to_datetime(pub)
+                pub_fmt = dt.strftime("%m/%d %H:%M")
+            except Exception:
+                pub_fmt = pub[:16]
+            items.append({"title": title, "link": link, "pub": pub_fmt})
+        return {"news": items, "symbol": symbol}
+    except Exception as exc:
+        return {"error": str(exc), "news": []}, 200
+
+
 @app.route("/api/scan/<symbol>")
 def api_scan(symbol: str):
     """1銘柄をスキャンして価格・指標・シグナルを返す"""

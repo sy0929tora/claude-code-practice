@@ -165,6 +165,19 @@
     .chart-container.open { display: block; }
     .chart-container canvas { border-radius: 8px; }
 
+    /* ── ニュース ── */
+    .news-container { display:none; padding: 0 16px 12px; }
+    .news-container.open { display: block; }
+    .news-item {
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .news-item:last-child { border-bottom: none; }
+    .news-title { font-size: 13px; line-height: 1.4; color: var(--text); }
+    .news-title a { color: var(--text); text-decoration: none; }
+    .news-title a:active { opacity: .6; }
+    .news-pub { font-size: 11px; color: var(--text2); }
+
     /* ── AI分析ボタン ── */
     .analyze-row {
       padding: 10px 16px 14px;
@@ -478,7 +491,11 @@
       ${pnlHtml}
 
       <div class="chart-toggle-row">
-        <button class="btn-chart" onclick="toggleChart('${d.symbol}')">📊 チャート</button>
+        <button class="btn-chart" onclick="toggleNews('${d.symbol}')">📰 ニュース</button>
+        <button class="btn-chart" style="margin-left:6px" onclick="toggleChart('${d.symbol}')">📊 チャート</button>
+      </div>
+      <div class="news-container" id="news-${d.symbol}">
+        <div style="font-size:12px;color:var(--text2);padding:8px 0;">読み込み中...</div>
       </div>
       <div class="chart-container" id="chart-${d.symbol}">
         <canvas id="canvas-${d.symbol}" height="160"></canvas>
@@ -666,6 +683,34 @@
         document.getElementById('usd-jpy-row').innerHTML =
           `≈ ${mvJPY.toLocaleString('ja-JP')}円　損益: <span class="pnl-value ${pnlClass}">${pnlJPY >= 0 ? '▲' : '▼'}${Math.abs(pnlJPY).toLocaleString('ja-JP')}円</span>（1USD=${rate}円）`;
       }).catch(() => {});
+  }
+
+  // ── ニュース ────────────────────────────────────────────────────
+  const newsLoaded = {};
+
+  async function toggleNews(symbol) {
+    const container = document.getElementById(`news-${symbol}`);
+    if (!container) return;
+    const isOpen = container.classList.toggle('open');
+    if (!isOpen || newsLoaded[symbol]) return;
+
+    newsLoaded[symbol] = true;
+    try {
+      const res = await fetch(`/api/news/${symbol}`);
+      const data = await res.json();
+      if (!data.news || data.news.length === 0) {
+        container.innerHTML = '<div style="font-size:12px;color:var(--text2);padding:8px 0;">ニュースが見つかりませんでした</div>';
+        return;
+      }
+      container.innerHTML = data.news.map(n => `
+        <div class="news-item">
+          <div class="news-title"><a href="${n.link}" target="_blank">${n.title}</a></div>
+          <div class="news-pub">${n.pub}</div>
+        </div>
+      `).join('');
+    } catch (e) {
+      container.innerHTML = '<div style="font-size:12px;color:var(--red);padding:8px 0;">取得失敗</div>';
+    }
   }
 
   // ── チャート ────────────────────────────────────────────────────
