@@ -63,13 +63,22 @@ def api_fx():
 
 @app.route("/api/news/<symbol>")
 def api_news(symbol: str):
-    """Yahoo Finance RSSからニュースを取得する"""
+    """ニュースを取得する（日本株はGoogle News日本語、米国株はYahoo Finance）"""
     import urllib.request
+    import urllib.parse
     import xml.etree.ElementTree as ET
     from email.utils import parsedate_to_datetime
 
     symbol = symbol.upper()
-    url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={symbol}&region=US&lang=en-US"
+    is_jp = symbol.endswith(".T")
+
+    if is_jp:
+        name = next((w["name"] for w in WATCHLIST if w["symbol"].upper() == symbol), symbol.replace(".T", ""))
+        query = urllib.parse.quote(f"{name} 株価")
+        url = f"https://news.google.com/rss/search?q={query}&hl=ja&gl=JP&ceid=JP:ja"
+    else:
+        url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={symbol}&region=US&lang=en-US"
+
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
         with urllib.request.urlopen(req, timeout=10) as resp:
