@@ -256,11 +256,14 @@
       <h1>📈 投資アラート</h1>
       <div class="subtitle" id="subtitle">読み込み中...</div>
     </div>
-    <button class="btn-refresh" id="btn-refresh" onclick="scanAll()">
-      <span class="icon">↻</span>
-      <span class="spin">↻</span>
-      <span>更新</span>
-    </button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="btn-notify" onclick="requestNotification()" style="background:none;border:1px solid var(--border);border-radius:20px;padding:8px 12px;font-size:13px;color:var(--text2);cursor:pointer;">🔔</button>
+      <button class="btn-refresh" id="btn-refresh" onclick="scanAll()">
+        <span class="icon">↻</span>
+        <span class="spin">↻</span>
+        <span>更新</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -374,6 +377,7 @@
       if (data.error) throw new Error(data.error);
       scanResults[symbol] = data;
       renderCard(data);
+      checkAndNotify(data);
     } catch (e) {
       renderCardError(symbol, name, e.message);
     }
@@ -743,7 +747,67 @@
     });
   }
 
+  // ── 通知 ────────────────────────────────────────────────────────
+
+  let notifiedSignals = JSON.parse(localStorage.getItem('notifiedSignals') || '{}');
+
+  async function requestNotification() {
+    if (!('Notification' in window)) {
+      alert('このブラウザは通知に対応していません。\nホーム画面に追加してPWAとして使用してください。');
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    const btn = document.getElementById('btn-notify');
+    if (perm === 'granted') {
+      btn.textContent = '🔔';
+      btn.style.color = 'var(--blue)';
+      btn.style.borderColor = 'var(--blue)';
+      showNotification('投資アラート', '通知が有効になりました！強いシグナルを検出したらお知らせします。', '📈');
+    } else {
+      btn.textContent = '🔕';
+    }
+  }
+
+  function showNotification(title, body, icon = '📈') {
+    if (Notification.permission !== 'granted') return;
+    new Notification(title, { body, icon: '/static/icon.png', badge: '/static/icon.png' });
+  }
+
+  function checkAndNotify(data) {
+    if (Notification.permission !== 'granted') return;
+    const strongSignals = (data.signals || []).filter(s => s.strength === 'STRONG');
+    strongSignals.forEach(sig => {
+      const key = `${data.symbol}_${sig.type}_${sig.reason}`;
+      if (!notifiedSignals[key]) {
+        notifiedSignals[key] = Date.now();
+        localStorage.setItem('notifiedSignals', JSON.stringify(notifiedSignals));
+        const emoji = sig.type === 'BUY' ? '📈' : '📉';
+        showNotification(
+          `${emoji} ${data.name} ${sig.type === 'BUY' ? '買いシグナル' : '売りシグナル'}`,
+          sig.reason
+        );
+      }
+    });
+    // 24時間経過した通知記録は削除
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    Object.keys(notifiedSignals).forEach(k => {
+      if (notifiedSignals[k] < cutoff) delete notifiedSignals[k];
+    });
+  }
+
+  function initNotifyButton() {
+    const btn = document.getElementById('btn-notify');
+    if (!('Notification' in window)) { btn.style.display = 'none'; return; }
+    if (Notification.permission === 'granted') {
+      btn.style.color = 'var(--blue)';
+      btn.style.borderColor = 'var(--blue)';
+    } else if (Notification.permission === 'denied') {
+      btn.textContent = '🔕';
+    }
+  }
+
   // ── 起動 ────────────────────────────────────────────────────────
+  initNotifyButton();
   init();
 </script>
 </body>
