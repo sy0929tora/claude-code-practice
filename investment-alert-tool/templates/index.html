@@ -325,6 +325,11 @@
 
   // ── 全銘柄スキャン ─────────────────────────────────────────────
 
+  const AUTO_REFRESH_MIN = 30;
+  let autoRefreshTimer = null;
+  let countdownTimer = null;
+  let nextRefreshAt = null;
+
   async function scanAll() {
     const btn = document.getElementById('btn-refresh');
     btn.classList.add('loading');
@@ -335,10 +340,29 @@
 
     btn.classList.remove('loading');
     const now = new Date().toLocaleTimeString('ja-JP');
-    document.getElementById('subtitle').textContent = `最終更新: ${now}`;
     document.getElementById('last-updated').textContent = `最終スキャン: ${now}`;
 
     renderPortfolio();
+    startAutoRefresh();
+  }
+
+  function startAutoRefresh() {
+    if (autoRefreshTimer) clearTimeout(autoRefreshTimer);
+    if (countdownTimer) clearInterval(countdownTimer);
+
+    nextRefreshAt = Date.now() + AUTO_REFRESH_MIN * 60 * 1000;
+
+    autoRefreshTimer = setTimeout(() => { scanAll(); }, AUTO_REFRESH_MIN * 60 * 1000);
+
+    countdownTimer = setInterval(() => {
+      const remaining = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      const now = new Date().toLocaleTimeString('ja-JP');
+      document.getElementById('subtitle').textContent =
+        `最終更新: ${now}　次回: ${m}分${s.toString().padStart(2,'0')}秒後`;
+      if (remaining === 0) clearInterval(countdownTimer);
+    }, 1000);
   }
 
   // ── 1銘柄スキャン ─────────────────────────────────────────────
