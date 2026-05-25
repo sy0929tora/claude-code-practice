@@ -18,7 +18,7 @@ WATCHLIST = [
 PORTFOLIO = [
     {"symbol": "9433.T", "shares": 100, "avg_cost": 2653.0},
     {"symbol": "9889.T", "shares": 100, "avg_cost": 1178.0},
-    {"symbol": "VOO",    "shares": 1,   "avg_cost": 626.42},
+    {"symbol": "VOO",    "shares": 2,   "avg_cost": 652.83},
     {"symbol": "MSFT",   "shares": 1,   "avg_cost": 376.34},
     {"symbol": "NVDA",   "shares": 1,   "avg_cost": 175.00},
     {"symbol": "IONQ",   "shares": 4,   "avg_cost": 28.58},
