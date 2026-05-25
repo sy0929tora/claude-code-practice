@@ -21,6 +21,9 @@ from signals import detect_signals, summarize_signals
 app = Flask(__name__)
 portfolio = Portfolio(PORTFOLIO)
 
+# スキャン結果のキャッシュ（市場閉鎖時に最終データを返すため）
+_scan_cache: dict = {}
+
 
 def _safe_float(val) -> float | None:
     """NaN / None を None に変換"""
@@ -44,6 +47,53 @@ def index():
 def api_watchlist():
     """ウォッチリストを返す"""
     return {"watchlist": WATCHLIST}
+
+
+@app.route("/api/fx")
+def api_fx():
+    """USD/JPY リアルタイムレートを返す"""
+    try:
+        import yfinance as yf
+        ticker = yf.Ticker("USDJPY=X")
+        rate = ticker.fast_info.last_price
+        return {"usdjpy": round(float(rate), 2)}
+    except Exception as exc:
+        return {"error": str(exc), "usdjpy": 150.0}, 200
+
+
+@app.route("/api/news/<symbol>")
+def api_news(symbol: str):
+    """ニュースを取得する（Google News日本語）"""
+    import urllib.request
+    import urllib.parse
+    import xml.etree.ElementTree as ET
+    from email.utils import parsedate_to_datetime
+
+    symbol = symbol.upper()
+    name = next((w["name"] for w in WATCHLIST if w["symbol"].upper() == symbol), symbol)
+    query = urllib.parse.quote(f"{name} 株")
+    url = f"https://news.google.com/rss/search?q={query}&hl=ja&gl=JP&ceid=JP:ja"
+
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            xml_data = resp.read()
+        root = ET.fromstring(xml_data)
+        channel = root.find("channel")
+        items = []
+        for item in (channel.findall("item") if channel is not None else [])[:6]:
+            title = item.findtext("title", "")
+            link = item.findtext("link", "")
+            pub = item.findtext("pubDate", "")
+            try:
+                dt = parsedate_to_datetime(pub)
+                pub_fmt = dt.strftime("%m/%d %H:%M")
+            except Exception:
+                pub_fmt = pub[:16]
+            items.append({"title": title, "link": link, "pub": pub_fmt})
+        return {"news": items, "symbol": symbol}
+    except Exception as exc:
+        return {"error": str(exc), "news": []}, 200
 
 
 @app.route("/api/scan/<symbol>")
@@ -90,6 +140,11 @@ def api_scan(symbol: str):
                 for s in signals
             ],
             "summary": summary,
+            "chart": {
+                "dates": [d.strftime("%m/%d") for d in df.index[-60:]],
+                "closes": [round(float(v), 2) for v in df["Close"].iloc[-60:]],
+                "sma25": [_safe_float(v) for v in df["SMA_25"].iloc[-60:]],
+            },
         }
 
         if pos:
@@ -100,10 +155,56 @@ def api_scan(symbol: str):
                 "pnl_pct": round(pos.pnl_pct, 1),
             }
 
+        # キャッシュに保存
+        _scan_cache[symbol] = result
         return result
 
     except Exception as exc:
+        # キャッシュがあれば返す（市場閉鎖時など）
+        if symbol in _scan_cache:
+            cached = dict(_scan_cache[symbol])
+            cached["cached"] = True
+            return cached
         return {"error": str(exc), "symbol": symbol}, 500
+
+
+@app.route("/api/chart/<symbol>/<period>")
+def api_chart(symbol: str, period: str):
+    """指定期間のチャートデータを返す (3mo / 1y / 3y)"""
+    symbol = symbol.upper()
+    period_map = {"3mo": "6mo", "1y": "1y", "3y": "3y"}
+    if period not in period_map:
+        return {"error": "無効な期間"}, 400
+
+    fetch_period = period_map[period]
+    date_fmt = "%y/%m" if period == "3y" else "%m/%d"
+
+    try:
+        df = fetch_stock_data(symbol, period=fetch_period)
+        if df.empty or len(df) < 10:
+            return {"error": "データ不足"}, 400
+
+        df = add_all_indicators(df)
+
+        if period == "3mo":
+            df = df.iloc[-65:]
+
+        avg_cost = next(
+            (p["avg_cost"] for p in PORTFOLIO if p["symbol"].upper() == symbol), None
+        )
+
+        return {
+            "symbol": symbol,
+            "period": period,
+            "chart": {
+                "dates": [d.strftime(date_fmt) for d in df.index],
+                "closes": [round(float(v), 2) for v in df["Close"]],
+                "sma25": [_safe_float(v) for v in df["SMA_25"]],
+                "avg_cost": avg_cost,
+            },
+        }
+    except Exception as exc:
+        return {"error": str(exc)}, 500
 
 
 @app.route("/api/analyze/<symbol>")

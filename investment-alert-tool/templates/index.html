@@ -6,6 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>📈 投資アラート</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     :root {
       --bg: #f2f2f7;
@@ -147,6 +148,48 @@
     .pnl-value.profit { color: var(--green); }
     .pnl-value.loss   { color: var(--red); }
 
+    /* ── チャート ── */
+    .chart-toggle-row {
+      padding: 0 16px 4px;
+      display: flex; justify-content: flex-end;
+    }
+    .btn-chart {
+      background: none; border: 1px solid var(--border);
+      border-radius: 12px; padding: 4px 12px;
+      font-size: 12px; color: var(--text2); cursor: pointer;
+    }
+    .btn-chart:active { opacity: .6; }
+    .chart-container {
+      display: none; padding: 0 12px 12px;
+    }
+    .chart-container.open { display: block; }
+    .chart-container canvas { border-radius: 8px; }
+    .chart-period-row {
+      display: flex; gap: 6px; padding: 6px 0 4px;
+    }
+    .btn-period {
+      background: none; border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px 12px;
+      font-size: 12px; color: var(--text2); cursor: pointer;
+    }
+    .btn-period.active {
+      background: var(--blue); border-color: var(--blue); color: #fff;
+    }
+    .btn-period:active { opacity: .7; }
+
+    /* ── ニュース ── */
+    .news-container { display:none; padding: 0 16px 12px; }
+    .news-container.open { display: block; }
+    .news-item {
+      padding: 8px 0; border-bottom: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 3px;
+    }
+    .news-item:last-child { border-bottom: none; }
+    .news-title { font-size: 13px; line-height: 1.4; color: var(--text); }
+    .news-title a { color: var(--text); text-decoration: none; }
+    .news-title a:active { opacity: .6; }
+    .news-pub { font-size: 11px; color: var(--text2); }
+
     /* ── AI分析ボタン ── */
     .analyze-row {
       padding: 10px 16px 14px;
@@ -238,11 +281,14 @@
       <h1>📈 投資アラート</h1>
       <div class="subtitle" id="subtitle">読み込み中...</div>
     </div>
-    <button class="btn-refresh" id="btn-refresh" onclick="scanAll()">
-      <span class="icon">↻</span>
-      <span class="spin">↻</span>
-      <span>更新</span>
-    </button>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <button id="btn-notify" onclick="requestNotification()" style="background:none;border:1px solid var(--border);border-radius:20px;padding:8px 12px;font-size:13px;color:var(--text2);cursor:pointer;">🔔</button>
+      <button class="btn-refresh" id="btn-refresh" onclick="scanAll()">
+        <span class="icon">↻</span>
+        <span class="spin">↻</span>
+        <span>更新</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -307,6 +353,11 @@
 
   // ── 全銘柄スキャン ─────────────────────────────────────────────
 
+  const AUTO_REFRESH_MIN = 30;
+  let autoRefreshTimer = null;
+  let countdownTimer = null;
+  let nextRefreshAt = null;
+
   async function scanAll() {
     const btn = document.getElementById('btn-refresh');
     btn.classList.add('loading');
@@ -317,10 +368,29 @@
 
     btn.classList.remove('loading');
     const now = new Date().toLocaleTimeString('ja-JP');
-    document.getElementById('subtitle').textContent = `最終更新: ${now}`;
     document.getElementById('last-updated').textContent = `最終スキャン: ${now}`;
 
     renderPortfolio();
+    startAutoRefresh();
+  }
+
+  function startAutoRefresh() {
+    if (autoRefreshTimer) clearTimeout(autoRefreshTimer);
+    if (countdownTimer) clearInterval(countdownTimer);
+
+    nextRefreshAt = Date.now() + AUTO_REFRESH_MIN * 60 * 1000;
+
+    autoRefreshTimer = setTimeout(() => { scanAll(); }, AUTO_REFRESH_MIN * 60 * 1000);
+
+    countdownTimer = setInterval(() => {
+      const remaining = Math.max(0, Math.round((nextRefreshAt - Date.now()) / 1000));
+      const m = Math.floor(remaining / 60);
+      const s = remaining % 60;
+      const now = new Date().toLocaleTimeString('ja-JP');
+      document.getElementById('subtitle').textContent =
+        `最終更新: ${now}　次回: ${m}分${s.toString().padStart(2,'0')}秒後`;
+      if (remaining === 0) clearInterval(countdownTimer);
+    }, 1000);
   }
 
   // ── 1銘柄スキャン ─────────────────────────────────────────────
@@ -332,6 +402,7 @@
       if (data.error) throw new Error(data.error);
       scanResults[symbol] = data;
       renderCard(data);
+      checkAndNotify(data);
     } catch (e) {
       renderCardError(symbol, name, e.message);
     }
@@ -373,12 +444,21 @@
     const smaColor = d.sma5 == null ? 'neutral' : smaBull ? 'bullish' : 'bearish';
     const smaText = d.sma5 == null ? '--' : smaBull ? '↑ 上昇' : '↓ 下降';
 
+    // 通貨判定（.T で終わる = 日本株 = 円、それ以外 = 米国株 = USD）
+    const isJP = d.symbol.endsWith('.T');
+    const costStr = isJP
+      ? `${d.portfolio ? d.portfolio.avg_cost.toLocaleString() : ''}円`
+      : `$${d.portfolio ? d.portfolio.avg_cost : ''}`;
+    const pnlNumStr = isJP
+      ? `${Math.abs(d.portfolio ? d.portfolio.pnl : 0).toLocaleString('ja-JP', {maximumFractionDigits:0})}円`
+      : `$${Math.abs(d.portfolio ? d.portfolio.pnl : 0).toLocaleString('en-US', {maximumFractionDigits:2})}`;
+
     // ポートフォリオ損益行
     const pnlHtml = d.portfolio ? `
       <div class="pnl-row">
-        <span class="pnl-label">💼 ${d.portfolio.shares}株 @ ${d.portfolio.avg_cost}</span>
+        <span class="pnl-label">💼 ${d.portfolio.shares}株 @ ${costStr}</span>
         <span class="pnl-value ${d.portfolio.pnl >= 0 ? 'profit' : 'loss'}">
-          ${d.portfolio.pnl >= 0 ? '▲' : '▼'} ${Math.abs(d.portfolio.pnl).toLocaleString('ja-JP', {maximumFractionDigits:0})}
+          ${d.portfolio.pnl >= 0 ? '▲' : '▼'} ${pnlNumStr}
           (${d.portfolio.pnl_pct >= 0 ? '+' : ''}${d.portfolio.pnl_pct}%)
         </span>
       </div>` : '';
@@ -395,6 +475,7 @@
         <div class="card-right">
           <div class="price">${Number(d.price).toLocaleString('ja-JP', {maximumFractionDigits:2})}</div>
           <div class="change ${changeClass}">${arrow} ${Math.abs(d.change_pct).toFixed(2)}%</div>
+          ${d.cached ? '<div style="font-size:10px;color:var(--text2);text-align:right;">前回データ</div>' : ''}
         </div>
       </div>
 
@@ -419,6 +500,23 @@
       </div>
 
       ${pnlHtml}
+
+      <div class="chart-toggle-row">
+        <button class="btn-chart" onclick="toggleNews('${d.symbol}')">📰 ニュース</button>
+        <button class="btn-chart" style="margin-left:6px" onclick="toggleChart('${d.symbol}')">📊 チャート</button>
+      </div>
+      <div class="news-container" id="news-${d.symbol}">
+        <div style="font-size:12px;color:var(--text2);padding:8px 0;">読み込み中...</div>
+      </div>
+      <div class="chart-container" id="chart-${d.symbol}">
+        <div class="chart-period-row" id="periods-${d.symbol}">
+          <button class="btn-period active" data-period="3mo" onclick="changeChartPeriod('${d.symbol}','3mo')">3ヶ月</button>
+          <button class="btn-period" data-period="1y" onclick="changeChartPeriod('${d.symbol}','1y')">1年</button>
+          <button class="btn-period" data-period="3y" onclick="changeChartPeriod('${d.symbol}','3y')">3年</button>
+        </div>
+        <div id="chart-loading-${d.symbol}" style="display:none;text-align:center;font-size:12px;color:var(--text2);padding:8px 0;">読み込み中...</div>
+        <canvas id="canvas-${d.symbol}" height="160"></canvas>
+      </div>
 
       <div class="analyze-row">
         <button class="btn-analyze" id="btn-${d.symbol}" onclick="startAnalysis('${d.symbol}')">
@@ -521,50 +619,317 @@
       return;
     }
 
-    let totalCost = 0, totalPnl = 0;
+    let totalJPY = 0, totalUSD = 0;
+    let marketValueJPY = 0, marketValueUSD = 0;
+    let costJPY = 0, costUSD = 0;
     const rows = [];
 
     Object.values(scanResults).forEach(d => {
       if (!d.portfolio) return;
       const p = d.portfolio;
+      const isJP = d.symbol.endsWith('.T');
+      const currentValue = p.shares * (d.price || 0);
       const cost = p.shares * p.avg_cost;
-      totalCost += cost;
-      totalPnl += p.pnl;
+      if (isJP) {
+        totalJPY += p.pnl;
+        marketValueJPY += currentValue;
+        costJPY += cost;
+      } else {
+        totalUSD += p.pnl;
+        marketValueUSD += currentValue;
+        costUSD += cost;
+      }
       const pnlClass = p.pnl >= 0 ? 'profit' : 'loss';
       const arrow = p.pnl >= 0 ? '▲' : '▼';
+      const pnlStr = isJP
+        ? `${Math.abs(p.pnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}円`
+        : `$${Math.abs(p.pnl).toLocaleString('en-US',{maximumFractionDigits:2})}`;
+      const displayName = d.name || d.symbol;
       rows.push(`
         <div class="portfolio-row">
           <div>
-            <span style="font-weight:600">${d.symbol}</span>
+            <span style="font-weight:600">${displayName}</span>
             <span style="color:var(--text2);font-size:12px;margin-left:6px">${p.shares}株</span>
           </div>
           <div class="pnl-value ${pnlClass}">
-            ${arrow} ${Math.abs(p.pnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}
+            ${arrow} ${pnlStr}
             <span style="font-size:11px">(${p.pnl_pct >= 0 ? '+' : ''}${p.pnl_pct}%)</span>
           </div>
         </div>
       `);
     });
 
-    const totalPct = totalCost > 0 ? totalPnl / totalCost * 100 : 0;
-    const totalClass = totalPnl >= 0 ? 'profit' : 'loss';
-    const totalArrow = totalPnl >= 0 ? '▲' : '▼';
+    const jpyClass = totalJPY >= 0 ? 'profit' : 'loss';
+    const usdClass = totalUSD >= 0 ? 'profit' : 'loss';
 
+    // USD/JPY レート取得して円換算表示
     section.innerHTML = `
       <div class="portfolio-card">
         ${rows.join('')}
-        <div class="portfolio-total">
-          <span class="label">合計損益</span>
-          <span class="value pnl-value ${totalClass}">
-            ${totalArrow} ${Math.abs(totalPnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}
-            <span style="font-size:13px">(${totalPct >= 0 ? '+' : ''}${totalPct.toFixed(1)}%)</span>
-          </span>
+        <div id="portfolio-totals" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;color:var(--text2)">国内株 評価額</div>
+              <div style="font-size:16px;font-weight:700;">${marketValueJPY.toLocaleString('ja-JP',{maximumFractionDigits:0})}円</div>
+            </div>
+            <span class="pnl-value ${jpyClass}" style="font-size:15px;font-weight:700;">
+              ${totalJPY >= 0 ? '▲' : '▼'} ${Math.abs(totalJPY).toLocaleString('ja-JP',{maximumFractionDigits:0})}円
+            </span>
+          </div>
+          <div style="border-top:1px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div style="font-size:12px;color:var(--text2)">米国株 評価額</div>
+              <div style="font-size:16px;font-weight:700;">$${marketValueUSD.toLocaleString('en-US',{maximumFractionDigits:2})}</div>
+              <div id="usd-jpy-row" style="font-size:11px;color:var(--text2)">円換算 取得中...</div>
+            </div>
+            <span class="pnl-value ${usdClass}" style="font-size:15px;font-weight:700;">
+              ${totalUSD >= 0 ? '▲' : '▼'} $${Math.abs(totalUSD).toLocaleString('en-US',{maximumFractionDigits:2})}
+            </span>
+          </div>
         </div>
       </div>
     `;
+
+    fetch('/api/fx')
+      .then(r => r.json())
+      .then(fx => {
+        const rate = fx.usdjpy || 150;
+        const mvJPY = Math.round(marketValueUSD * rate);
+        const pnlJPY = Math.round(totalUSD * rate);
+        const pnlClass = pnlJPY >= 0 ? 'profit' : 'loss';
+        document.getElementById('usd-jpy-row').innerHTML =
+          `≈ ${mvJPY.toLocaleString('ja-JP')}円　損益: <span class="pnl-value ${pnlClass}">${pnlJPY >= 0 ? '▲' : '▼'}${Math.abs(pnlJPY).toLocaleString('ja-JP')}円</span>（1USD=${rate}円）`;
+      }).catch(() => {});
+  }
+
+  // ── ニュース ────────────────────────────────────────────────────
+  const newsLoaded = {};
+
+  async function toggleNews(symbol) {
+    const container = document.getElementById(`news-${symbol}`);
+    if (!container) return;
+    const isOpen = container.classList.toggle('open');
+    if (!isOpen || newsLoaded[symbol]) return;
+
+    newsLoaded[symbol] = true;
+    try {
+      const res = await fetch(`/api/news/${symbol}`);
+      const data = await res.json();
+      if (!data.news || data.news.length === 0) {
+        container.innerHTML = '<div style="font-size:12px;color:var(--text2);padding:8px 0;">ニュースが見つかりませんでした</div>';
+        return;
+      }
+      container.innerHTML = data.news.map(n => `
+        <div class="news-item">
+          <div class="news-title"><a href="${n.link}" target="_blank">${n.title}</a></div>
+          <div class="news-pub">${n.pub}</div>
+        </div>
+      `).join('');
+    } catch (e) {
+      container.innerHTML = '<div style="font-size:12px;color:var(--red);padding:8px 0;">取得失敗</div>';
+    }
+  }
+
+  // ── チャート ────────────────────────────────────────────────────
+  const chartInstances = {};
+  const currentChartPeriod = {};
+
+  function toggleChart(symbol) {
+    const container = document.getElementById(`chart-${symbol}`);
+    if (!container) return;
+    const isOpen = container.classList.toggle('open');
+    if (isOpen && !chartInstances[symbol]) {
+      renderChart(symbol, currentChartPeriod[symbol] || '3mo');
+    }
+  }
+
+  async function changeChartPeriod(symbol, period) {
+    currentChartPeriod[symbol] = period;
+
+    // ボタンのアクティブ状態を更新
+    const row = document.getElementById(`periods-${symbol}`);
+    if (row) {
+      row.querySelectorAll('.btn-period').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.period === period);
+      });
+    }
+
+    // 既存チャートを破棄して再描画
+    if (chartInstances[symbol]) {
+      chartInstances[symbol].destroy();
+      delete chartInstances[symbol];
+    }
+    await renderChart(symbol, period);
+  }
+
+  async function renderChart(symbol, period = '3mo') {
+    const canvas = document.getElementById(`canvas-${symbol}`);
+    if (!canvas) return;
+
+    let chartData;
+
+    if (period === '3mo') {
+      const d = scanResults[symbol];
+      if (!d || !d.chart) return;
+      chartData = {
+        dates: d.chart.dates,
+        closes: d.chart.closes,
+        sma25: d.chart.sma25,
+        avg_cost: d.portfolio ? d.portfolio.avg_cost : null,
+      };
+    } else {
+      const loadingEl = document.getElementById(`chart-loading-${symbol}`);
+      if (loadingEl) loadingEl.style.display = 'block';
+      canvas.style.opacity = '0.3';
+      try {
+        const res = await fetch(`/api/chart/${symbol}/${period}`);
+        const data = await res.json();
+        if (loadingEl) loadingEl.style.display = 'none';
+        canvas.style.opacity = '1';
+        if (data.error) return;
+        chartData = data.chart;
+      } catch (e) {
+        if (loadingEl) loadingEl.style.display = 'none';
+        canvas.style.opacity = '1';
+        return;
+      }
+    }
+
+    const d = scanResults[symbol];
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+    const textColor = '#8e8e93';
+    const isUp = d && d.change_pct >= 0;
+    const lineColor = isUp ? '#34c759' : '#ff3b30';
+    const fillColor = isUp ? 'rgba(52,199,89,0.12)' : 'rgba(255,59,48,0.12)';
+
+    const datasets = [{
+      label: '終値',
+      data: chartData.closes,
+      borderColor: lineColor,
+      backgroundColor: fillColor,
+      borderWidth: 2,
+      fill: true,
+      pointRadius: 0,
+      tension: 0.3,
+    }];
+
+    if (chartData.sma25.some(v => v !== null)) {
+      datasets.push({
+        label: 'SMA25',
+        data: chartData.sma25,
+        borderColor: 'rgba(255,149,0,0.8)',
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: false,
+        tension: 0.3,
+      });
+    }
+
+    if (chartData.avg_cost) {
+      datasets.push({
+        label: '取得単価',
+        data: Array(chartData.dates.length).fill(chartData.avg_cost),
+        borderColor: 'rgba(142,142,147,0.6)',
+        borderWidth: 1,
+        borderDash: [4, 4],
+        pointRadius: 0,
+        fill: false,
+      });
+    }
+
+    chartInstances[symbol] = new Chart(canvas, {
+      type: 'line',
+      data: { labels: chartData.dates, datasets },
+      options: {
+        responsive: true,
+        animation: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toLocaleString('ja-JP', {maximumFractionDigits:2})}`,
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, maxTicksLimit: 6, font: { size: 10 } },
+          },
+          y: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, font: { size: 10 },
+              callback: v => v.toLocaleString('ja-JP', {maximumFractionDigits:0}) },
+            position: 'right',
+          }
+        }
+      }
+    });
+  }
+
+  // ── 通知 ────────────────────────────────────────────────────────
+
+  let notifiedSignals = JSON.parse(localStorage.getItem('notifiedSignals') || '{}');
+
+  async function requestNotification() {
+    if (!('Notification' in window)) {
+      alert('このブラウザは通知に対応していません。\nホーム画面に追加してPWAとして使用してください。');
+      return;
+    }
+    const perm = await Notification.requestPermission();
+    const btn = document.getElementById('btn-notify');
+    if (perm === 'granted') {
+      btn.textContent = '🔔';
+      btn.style.color = 'var(--blue)';
+      btn.style.borderColor = 'var(--blue)';
+      showNotification('投資アラート', '通知が有効になりました！強いシグナルを検出したらお知らせします。', '📈');
+    } else {
+      btn.textContent = '🔕';
+    }
+  }
+
+  function showNotification(title, body, icon = '📈') {
+    if (Notification.permission !== 'granted') return;
+    new Notification(title, { body, icon: '/static/icon.png', badge: '/static/icon.png' });
+  }
+
+  function checkAndNotify(data) {
+    if (Notification.permission !== 'granted') return;
+    const strongSignals = (data.signals || []).filter(s => s.strength === 'STRONG');
+    strongSignals.forEach(sig => {
+      const key = `${data.symbol}_${sig.type}_${sig.reason}`;
+      if (!notifiedSignals[key]) {
+        notifiedSignals[key] = Date.now();
+        localStorage.setItem('notifiedSignals', JSON.stringify(notifiedSignals));
+        const emoji = sig.type === 'BUY' ? '📈' : '📉';
+        showNotification(
+          `${emoji} ${data.name} ${sig.type === 'BUY' ? '買いシグナル' : '売りシグナル'}`,
+          sig.reason
+        );
+      }
+    });
+    // 24時間経過した通知記録は削除
+    const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+    Object.keys(notifiedSignals).forEach(k => {
+      if (notifiedSignals[k] < cutoff) delete notifiedSignals[k];
+    });
+  }
+
+  function initNotifyButton() {
+    const btn = document.getElementById('btn-notify');
+    if (!('Notification' in window)) { btn.style.display = 'none'; return; }
+    if (Notification.permission === 'granted') {
+      btn.style.color = 'var(--blue)';
+      btn.style.borderColor = 'var(--blue)';
+    } else if (Notification.permission === 'denied') {
+      btn.textContent = '🔕';
+    }
   }
 
   // ── 起動 ────────────────────────────────────────────────────────
+  initNotifyButton();
   init();
 </script>
 </body>
