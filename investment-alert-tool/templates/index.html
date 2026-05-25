@@ -164,6 +164,18 @@
     }
     .chart-container.open { display: block; }
     .chart-container canvas { border-radius: 8px; }
+    .chart-period-row {
+      display: flex; gap: 6px; padding: 6px 0 4px;
+    }
+    .btn-period {
+      background: none; border: 1px solid var(--border);
+      border-radius: 10px; padding: 3px 12px;
+      font-size: 12px; color: var(--text2); cursor: pointer;
+    }
+    .btn-period.active {
+      background: var(--blue); border-color: var(--blue); color: #fff;
+    }
+    .btn-period:active { opacity: .7; }
 
     /* ── ニュース ── */
     .news-container { display:none; padding: 0 16px 12px; }
@@ -434,7 +446,6 @@
 
     // 通貨判定（.T で終わる = 日本株 = 円、それ以外 = 米国株 = USD）
     const isJP = d.symbol.endsWith('.T');
-    const currency = isJP ? '円' : 'USD';
     const costStr = isJP
       ? `${d.portfolio ? d.portfolio.avg_cost.toLocaleString() : ''}円`
       : `$${d.portfolio ? d.portfolio.avg_cost : ''}`;
@@ -498,6 +509,12 @@
         <div style="font-size:12px;color:var(--text2);padding:8px 0;">読み込み中...</div>
       </div>
       <div class="chart-container" id="chart-${d.symbol}">
+        <div class="chart-period-row" id="periods-${d.symbol}">
+          <button class="btn-period active" data-period="3mo" onclick="changeChartPeriod('${d.symbol}','3mo')">3ヶ月</button>
+          <button class="btn-period" data-period="1y" onclick="changeChartPeriod('${d.symbol}','1y')">1年</button>
+          <button class="btn-period" data-period="3y" onclick="changeChartPeriod('${d.symbol}','3y')">3年</button>
+        </div>
+        <div id="chart-loading-${d.symbol}" style="display:none;text-align:center;font-size:12px;color:var(--text2);padding:8px 0;">読み込み中...</div>
         <canvas id="canvas-${d.symbol}" height="160"></canvas>
       </div>
 
@@ -715,32 +732,80 @@
 
   // ── チャート ────────────────────────────────────────────────────
   const chartInstances = {};
+  const currentChartPeriod = {};
 
   function toggleChart(symbol) {
     const container = document.getElementById(`chart-${symbol}`);
     if (!container) return;
     const isOpen = container.classList.toggle('open');
     if (isOpen && !chartInstances[symbol]) {
-      renderChart(symbol);
+      renderChart(symbol, currentChartPeriod[symbol] || '3mo');
     }
   }
 
-  function renderChart(symbol) {
-    const d = scanResults[symbol];
-    if (!d || !d.chart) return;
+  async function changeChartPeriod(symbol, period) {
+    currentChartPeriod[symbol] = period;
+
+    // ボタンのアクティブ状態を更新
+    const row = document.getElementById(`periods-${symbol}`);
+    if (row) {
+      row.querySelectorAll('.btn-period').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.period === period);
+      });
+    }
+
+    // 既存チャートを破棄して再描画
+    if (chartInstances[symbol]) {
+      chartInstances[symbol].destroy();
+      delete chartInstances[symbol];
+    }
+    await renderChart(symbol, period);
+  }
+
+  async function renderChart(symbol, period = '3mo') {
     const canvas = document.getElementById(`canvas-${symbol}`);
     if (!canvas) return;
 
+    let chartData;
+
+    if (period === '3mo') {
+      const d = scanResults[symbol];
+      if (!d || !d.chart) return;
+      chartData = {
+        dates: d.chart.dates,
+        closes: d.chart.closes,
+        sma25: d.chart.sma25,
+        avg_cost: d.portfolio ? d.portfolio.avg_cost : null,
+      };
+    } else {
+      const loadingEl = document.getElementById(`chart-loading-${symbol}`);
+      if (loadingEl) loadingEl.style.display = 'block';
+      canvas.style.opacity = '0.3';
+      try {
+        const res = await fetch(`/api/chart/${symbol}/${period}`);
+        const data = await res.json();
+        if (loadingEl) loadingEl.style.display = 'none';
+        canvas.style.opacity = '1';
+        if (data.error) return;
+        chartData = data.chart;
+      } catch (e) {
+        if (loadingEl) loadingEl.style.display = 'none';
+        canvas.style.opacity = '1';
+        return;
+      }
+    }
+
+    const d = scanResults[symbol];
     const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
-    const textColor = isDark ? '#8e8e93' : '#8e8e93';
-    const isUp = d.change_pct >= 0;
+    const textColor = '#8e8e93';
+    const isUp = d && d.change_pct >= 0;
     const lineColor = isUp ? '#34c759' : '#ff3b30';
     const fillColor = isUp ? 'rgba(52,199,89,0.12)' : 'rgba(255,59,48,0.12)';
 
     const datasets = [{
       label: '終値',
-      data: d.chart.closes,
+      data: chartData.closes,
       borderColor: lineColor,
       backgroundColor: fillColor,
       borderWidth: 2,
@@ -749,11 +814,10 @@
       tension: 0.3,
     }];
 
-    const sma25 = d.chart.sma25.filter(v => v !== null);
-    if (sma25.length > 0) {
+    if (chartData.sma25.some(v => v !== null)) {
       datasets.push({
         label: 'SMA25',
-        data: d.chart.sma25,
+        data: chartData.sma25,
         borderColor: 'rgba(255,149,0,0.8)',
         borderWidth: 1.5,
         pointRadius: 0,
@@ -762,11 +826,10 @@
       });
     }
 
-    // 取得単価ライン
-    if (d.portfolio) {
+    if (chartData.avg_cost) {
       datasets.push({
         label: '取得単価',
-        data: Array(d.chart.dates.length).fill(d.portfolio.avg_cost),
+        data: Array(chartData.dates.length).fill(chartData.avg_cost),
         borderColor: 'rgba(142,142,147,0.6)',
         borderWidth: 1,
         borderDash: [4, 4],
@@ -777,7 +840,7 @@
 
     chartInstances[symbol] = new Chart(canvas, {
       type: 'line',
-      data: { labels: d.chart.dates, datasets },
+      data: { labels: chartData.dates, datasets },
       options: {
         responsive: true,
         animation: false,

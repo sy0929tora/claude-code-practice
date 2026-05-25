@@ -63,7 +63,7 @@ def api_fx():
 
 @app.route("/api/news/<symbol>")
 def api_news(symbol: str):
-    """ニュースを取得する（日本株はGoogle News日本語、米国株はYahoo Finance）"""
+    """ニュースを取得する（Google News日本語）"""
     import urllib.request
     import urllib.parse
     import xml.etree.ElementTree as ET
@@ -166,6 +166,45 @@ def api_scan(symbol: str):
             cached["cached"] = True
             return cached
         return {"error": str(exc), "symbol": symbol}, 500
+
+
+@app.route("/api/chart/<symbol>/<period>")
+def api_chart(symbol: str, period: str):
+    """指定期間のチャートデータを返す (3mo / 1y / 3y)"""
+    symbol = symbol.upper()
+    period_map = {"3mo": "6mo", "1y": "1y", "3y": "3y"}
+    if period not in period_map:
+        return {"error": "無効な期間"}, 400
+
+    fetch_period = period_map[period]
+    date_fmt = "%y/%m" if period == "3y" else "%m/%d"
+
+    try:
+        df = fetch_stock_data(symbol, period=fetch_period)
+        if df.empty or len(df) < 10:
+            return {"error": "データ不足"}, 400
+
+        df = add_all_indicators(df)
+
+        if period == "3mo":
+            df = df.iloc[-65:]
+
+        avg_cost = next(
+            (p["avg_cost"] for p in PORTFOLIO if p["symbol"].upper() == symbol), None
+        )
+
+        return {
+            "symbol": symbol,
+            "period": period,
+            "chart": {
+                "dates": [d.strftime(date_fmt) for d in df.index],
+                "closes": [round(float(v), 2) for v in df["Close"]],
+                "sma25": [_safe_float(v) for v in df["SMA_25"]],
+                "avg_cost": avg_cost,
+            },
+        }
+    except Exception as exc:
+        return {"error": str(exc)}, 500
 
 
 @app.route("/api/analyze/<symbol>")
