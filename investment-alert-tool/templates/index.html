@@ -586,13 +586,25 @@
     }
 
     let totalJPY = 0, totalUSD = 0;
+    let marketValueJPY = 0, marketValueUSD = 0;
+    let costJPY = 0, costUSD = 0;
     const rows = [];
 
     Object.values(scanResults).forEach(d => {
       if (!d.portfolio) return;
       const p = d.portfolio;
       const isJP = d.symbol.endsWith('.T');
-      if (isJP) totalJPY += p.pnl; else totalUSD += p.pnl;
+      const currentValue = p.shares * (d.price || 0);
+      const cost = p.shares * p.avg_cost;
+      if (isJP) {
+        totalJPY += p.pnl;
+        marketValueJPY += currentValue;
+        costJPY += cost;
+      } else {
+        totalUSD += p.pnl;
+        marketValueUSD += currentValue;
+        costUSD += cost;
+      }
       const pnlClass = p.pnl >= 0 ? 'profit' : 'loss';
       const arrow = p.pnl >= 0 ? '▲' : '▼';
       const pnlStr = isJP
@@ -617,41 +629,43 @@
     const usdClass = totalUSD >= 0 ? 'profit' : 'loss';
 
     // USD/JPY レート取得して円換算表示
-    fetch('/api/fx')
-      .then(r => r.json())
-      .then(fx => {
-        const rate = fx.usdjpy || 150;
-        const usdInJPY = Math.round(totalUSD * rate);
-        const usdInJPYClass = usdInJPY >= 0 ? 'profit' : 'loss';
-        document.getElementById('usd-jpy-row').innerHTML = `
-          <span style="font-size:11px;color:var(--text2)">≈ ${usdInJPY >= 0 ? '▲' : '▼'} <span class="pnl-value ${usdInJPYClass}">${Math.abs(usdInJPY).toLocaleString('ja-JP')}円</span>（1USD=${rate}円）</span>
-        `;
-      }).catch(() => {});
-
     section.innerHTML = `
       <div class="portfolio-card">
         ${rows.join('')}
-        <div class="portfolio-total" style="flex-direction:column;align-items:flex-start;gap:6px;padding:14px 16px;">
-          <div style="display:flex;justify-content:space-between;width:100%">
-            <span style="font-size:13px;color:var(--text2)">国内株 合計</span>
+        <div id="portfolio-totals" style="padding:14px 16px;display:flex;flex-direction:column;gap:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-size:12px;color:var(--text2)">国内株 評価額</div>
+              <div style="font-size:16px;font-weight:700;">${marketValueJPY.toLocaleString('ja-JP',{maximumFractionDigits:0})}円</div>
+            </div>
             <span class="pnl-value ${jpyClass}" style="font-size:15px;font-weight:700;">
               ${totalJPY >= 0 ? '▲' : '▼'} ${Math.abs(totalJPY).toLocaleString('ja-JP',{maximumFractionDigits:0})}円
             </span>
           </div>
-          <div style="display:flex;justify-content:space-between;width:100%;align-items:flex-start;flex-direction:column;gap:2px;">
-            <div style="display:flex;justify-content:space-between;width:100%">
-              <span style="font-size:13px;color:var(--text2)">米国株 合計</span>
-              <span class="pnl-value ${usdClass}" style="font-size:15px;font-weight:700;">
-                ${totalUSD >= 0 ? '▲' : '▼'} $${Math.abs(totalUSD).toLocaleString('en-US',{maximumFractionDigits:2})}
-              </span>
+          <div style="border-top:1px solid var(--border);padding-top:10px;display:flex;justify-content:space-between;align-items:flex-start;">
+            <div>
+              <div style="font-size:12px;color:var(--text2)">米国株 評価額</div>
+              <div style="font-size:16px;font-weight:700;">$${marketValueUSD.toLocaleString('en-US',{maximumFractionDigits:2})}</div>
+              <div id="usd-jpy-row" style="font-size:11px;color:var(--text2)">円換算 取得中...</div>
             </div>
-            <div id="usd-jpy-row" style="text-align:right;width:100%">
-              <span style="font-size:11px;color:var(--text2)">円換算 取得中...</span>
-            </div>
+            <span class="pnl-value ${usdClass}" style="font-size:15px;font-weight:700;">
+              ${totalUSD >= 0 ? '▲' : '▼'} $${Math.abs(totalUSD).toLocaleString('en-US',{maximumFractionDigits:2})}
+            </span>
           </div>
         </div>
       </div>
     `;
+
+    fetch('/api/fx')
+      .then(r => r.json())
+      .then(fx => {
+        const rate = fx.usdjpy || 150;
+        const mvJPY = Math.round(marketValueUSD * rate);
+        const pnlJPY = Math.round(totalUSD * rate);
+        const pnlClass = pnlJPY >= 0 ? 'profit' : 'loss';
+        document.getElementById('usd-jpy-row').innerHTML =
+          `≈ ${mvJPY.toLocaleString('ja-JP')}円　損益: <span class="pnl-value ${pnlClass}">${pnlJPY >= 0 ? '▲' : '▼'}${Math.abs(pnlJPY).toLocaleString('ja-JP')}円</span>（1USD=${rate}円）`;
+      }).catch(() => {});
   }
 
   // ── チャート ────────────────────────────────────────────────────
