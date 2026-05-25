@@ -70,14 +70,9 @@ def api_news(symbol: str):
     from email.utils import parsedate_to_datetime
 
     symbol = symbol.upper()
-    is_jp = symbol.endswith(".T")
-
-    if is_jp:
-        name = next((w["name"] for w in WATCHLIST if w["symbol"].upper() == symbol), symbol.replace(".T", ""))
-        query = urllib.parse.quote(f"{name} 株価")
-        url = f"https://news.google.com/rss/search?q={query}&hl=ja&gl=JP&ceid=JP:ja"
-    else:
-        url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={symbol}&region=US&lang=en-US"
+    name = next((w["name"] for w in WATCHLIST if w["symbol"].upper() == symbol), symbol)
+    query = urllib.parse.quote(f"{name} 株")
+    url = f"https://news.google.com/rss/search?q={query}&hl=ja&gl=JP&ceid=JP:ja"
 
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
