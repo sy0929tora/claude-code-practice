@@ -12,7 +12,7 @@ from flask import Flask, Response, render_template, stream_with_context
 
 import anthropic
 from analyzer import build_analysis_prompt
-from config import PORTFOLIO, WATCHLIST
+from config import FUNDS, PORTFOLIO, WATCHLIST
 from fetcher import fetch_stock_data, fetch_ticker_info
 from indicators import add_all_indicators
 from portfolio import Portfolio
@@ -47,6 +47,12 @@ def index():
 def api_watchlist():
     """ウォッチリストを返す"""
     return {"watchlist": WATCHLIST}
+
+
+@app.route("/api/funds")
+def api_funds():
+    """投資信託リストを返す（手動管理）"""
+    return {"funds": FUNDS}
 
 
 @app.route("/api/fx")

@@ -300,6 +300,9 @@
   <div class="section-title">ポートフォリオ</div>
   <div id="portfolio-section"></div>
 
+  <div class="section-title">投資信託</div>
+  <div id="funds-section"></div>
+
   <div class="last-updated" id="last-updated"></div>
 </div>
 
@@ -307,6 +310,7 @@
   // ── データ ──────────────────────────────────────────────────────
 
   let watchlist = [];
+  let funds = [];
   let scanResults = {};  // symbol → data
   let activeAnalysis = null;  // 現在分析中のsymbol
 
@@ -321,9 +325,12 @@
   // ── 初期化 ──────────────────────────────────────────────────────
 
   async function init() {
-    const res = await fetch('/api/watchlist');
-    const json = await res.json();
-    watchlist = json.watchlist || [];
+    const [wlRes, fRes] = await Promise.all([
+      fetch('/api/watchlist'),
+      fetch('/api/funds'),
+    ]);
+    watchlist = (await wlRes.json()).watchlist || [];
+    funds = (await fRes.json()).funds || [];
     renderSkeletons();
     scanAll();
   }
@@ -371,6 +378,7 @@
     document.getElementById('last-updated').textContent = `最終スキャン: ${now}`;
 
     renderPortfolio();
+    renderFunds();
     startAutoRefresh();
   }
 
@@ -700,6 +708,45 @@
         document.getElementById('usd-jpy-row').innerHTML =
           `≈ ${mvJPY.toLocaleString('ja-JP')}円　損益: <span class="pnl-value ${pnlClass}">${pnlJPY >= 0 ? '▲' : '▼'}${Math.abs(pnlJPY).toLocaleString('ja-JP')}円</span>（1USD=${rate}円）`;
       }).catch(() => {});
+  }
+
+  // ── 投資信託 ────────────────────────────────────────────────────
+
+  function renderFunds() {
+    const section = document.getElementById('funds-section');
+    if (!funds.length) {
+      section.innerHTML = '';
+      return;
+    }
+
+    let totalCost = 0;
+    const rows = funds.map(f => {
+      const cost = f.cost || Math.round(f.kuchi * f.avg_cost);
+      totalCost += cost;
+      return `
+        <div class="portfolio-row">
+          <div>
+            <span style="font-weight:600">${f.name}</span>
+            <span style="color:var(--text2);font-size:12px;margin-left:6px">${f.kuchi.toLocaleString('ja-JP')}口</span>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:14px;font-weight:600">${cost.toLocaleString('ja-JP')}円</div>
+            <div style="font-size:11px;color:var(--text2)">取得単価 ${f.avg_cost}円/口</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    section.innerHTML = `
+      <div class="portfolio-card">
+        ${rows}
+        <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);">
+          <span style="font-size:13px;color:var(--text2)">取得金額合計</span>
+          <span style="font-size:16px;font-weight:700">${totalCost.toLocaleString('ja-JP')}円</span>
+        </div>
+        <div style="padding:4px 16px 12px;font-size:11px;color:var(--text2)">※ 基準価額は毎日変動します。SBIで最新の評価額をご確認ください。</div>
+      </div>
+    `;
   }
 
   // ── ニュース ────────────────────────────────────────────────────
