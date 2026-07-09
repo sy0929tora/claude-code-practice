@@ -23,7 +23,7 @@ PORTFOLIO = [
     {"symbol": "MSFT",      "shares": 1,     "avg_cost": 376.34},
     {"symbol": "NVDA",      "shares": 1,     "avg_cost": 175.00},
     {"symbol": "IONQ",      "shares": 4,     "avg_cost": 28.58},
-    {"symbol": "0331418A.T","shares": 91239, "avg_cost": 4.3713},
+    {"symbol": "0331418A.T","shares": 180287, "avg_cost": 4.4310},
 ]
 
 # アラート閾値
