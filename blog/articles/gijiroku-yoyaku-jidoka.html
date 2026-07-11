@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="生成AIを使って議事録の整理や長文の要約作業を効率化する具体的な手順を、プロンプト例つきでやさしく解説します。">
+  <meta name="keywords" content="議事録,要約,AI自動化,ChatGPT,Claude,業務効率化">
+  <meta property="og:title" content="生成AIで議事録・要約作業を自動化する具体的手順 | AI活用ラボ">
+  <meta property="og:description" content="議事録整理や長文要約を生成AIで効率化する具体的な手順とプロンプト例を解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/blog/articles/gijiroku-yoyaku-jidoka.html">
+  <meta property="og:site_name" content="AI活用ラボ">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/blog/articles/gijiroku-yoyaku-jidoka.html">
+  <title>生成AIで議事録・要約作業を自動化する具体的手順 | AI活用ラボ</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "生成AIで議事録・要約作業を自動化する具体的手順",
+    "description": "議事録整理や長文要約を生成AIで効率化する具体的な手順とプロンプト例を解説します。",
+    "author": { "@type": "Organization", "name": "AI活用ラボ" },
+    "publisher": { "@type": "Organization", "name": "AI活用ラボ" },
+    "datePublished": "2026-07-11",
+    "inLanguage": "ja"
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="../index.html" class="logo">AI<span>活用</span>ラボ</a>
+      <nav class="site-nav">
+        <a href="../index.html">記事一覧</a>
+        <a href="../about.html">運営について</a>
+        <a href="../contact.html">お問い合わせ</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="article-header">
+    <div class="container">
+      <span class="tag">使い方ガイド</span>
+      <h1>生成AIで議事録・要約作業を自動化する具体的手順</h1>
+      <div class="meta">2026-07-11 公開 ／ 読了目安 6分</div>
+    </div>
+  </div>
+
+  <main class="article-body">
+    <p class="lead">
+      会議の文字起こしから議事録を作る作業や、長い資料を要約する作業は、生成AIが
+      得意とする分野の1つです。この記事では、実際にどのような手順で進めると
+      効率的かを、プロンプト例つきで具体的に解説します。
+    </p>
+
+    <h2>前提：AIに丸投げせず「素材」を整える</h2>
+    <p>
+      生成AIによる要約の精度は、元になるテキスト（文字起こしデータやメモ）の質に
+      大きく左右されます。録音の自動文字起こし機能などを使ってテキスト化した
+      うえで、それをAIに渡すのが基本的な流れです。
+    </p>
+
+    <h2>手順1：たたき台となる議事録を作らせる</h2>
+    <p>
+      文字起こしテキストをAIに渡し、次のように指示します。
+    </p>
+    <ul>
+      <li>「決定事項」「懸念点」「次のアクションと担当者」の3項目に分けて整理してほしい</li>
+      <li>発言者ごとの細かいニュアンスより、結論を優先してほしい</li>
+      <li>不明瞭な部分は無理に埋めず「要確認」と明記してほしい</li>
+    </ul>
+    <p>
+      「不明瞭な部分は無理に埋めない」という指示を入れておくことが重要です。これに
+      より、AIが実際には言われていない内容を作り出してしまうリスクを減らせます。
+    </p>
+
+    <h2>手順2：フォーマットを整えさせる</h2>
+    <p>
+      たたき台ができたら、「社内の議事録テンプレート（日付・参加者・決定事項・
+      次回までのアクション）に沿った形式に整えてほしい」といった形で、社内の
+      フォーマットに合わせて再整形させます。
+    </p>
+
+    <h2>手順3：人が事実確認をしてから共有する</h2>
+    <p>
+      AIが作成した議事録は、必ず人が目を通し、決定事項や数値に誤りがないかを
+      確認してから共有することが重要です。特に金額・日付・担当者名などの具体的な
+      情報は、AIが誤って生成してしまう可能性がある部分なので、重点的に確認します。
+    </p>
+
+    <h2>長文資料の要約にも応用できる</h2>
+    <p>
+      同じ考え方は、長いレポートや契約書などの下読みにも応用できます。「まず
+      3行で要点を教えてほしい」「次に、注意すべき条件だけを箇条書きにしてほしい」
+      というように、段階を分けて指示すると、必要な情報から効率よく把握できます。
+      ただし契約書のような重要文書については、AIの要約はあくまで理解の補助とし、
+      最終判断は必ず自分自身や専門家が行うようにしてください。
+    </p>
+
+    <h2>まとめ</h2>
+    <p>
+      議事録・要約作業は、素材を整える → たたき台を作らせる → フォーマットを
+      整えさせる → 人が事実確認する、という流れで進めると、AIの速さと人の
+      正確さの両方を活かせます。特に「不明瞭な部分は無理に埋めない」という
+      指示と、最終的な人によるチェックの2点は省略しないようにしましょう。
+    </p>
+  </main>
+
+  <div class="ad-slot"><!-- AD PLACEHOLDER: AdSense審査通過後に広告コードを挿入 -->広告スペース</div>
+
+  <div class="affiliate-box">
+    <h4>関連ツール</h4>
+    <a class="aff-link" href="#todo-affiliate-link" data-product="Claude公式サイト">Claude公式サイトを見る（提携リンク準備中）</a>
+    <p class="disclaimer">※ 本サイトはアフィリエイトリンクを含む場合があります。リンク先の内容は変更される可能性があるため、最新情報は各公式サイトでご確認ください。</p>
+  </div>
+
+  <div class="related">
+    <h4>あわせて読みたい</h4>
+    <a class="card" href="prompt-sekkei-chigai.html">
+      <span class="tag">使い方ガイド</span>
+      <h3>ChatGPT・Claude・Geminiのプロンプト設計の違いと使い分け</h3>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><a href="../about.html">運営について</a> ／ <a href="../privacy.html">プライバシーポリシー</a> ／ <a href="../contact.html">お問い合わせ</a></p>
+      <p>&copy; 2026 AI活用ラボ</p>
+    </div>
+  </footer>
+
+</body>
+</html>

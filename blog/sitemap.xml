@@ -6,6 +6,36 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://sy0929tora.github.io/claude-code-practice/blog/about.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://sy0929tora.github.io/claude-code-practice/blog/privacy.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://sy0929tora.github.io/claude-code-practice/blog/contact.html</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://sy0929tora.github.io/claude-code-practice/blog/articles/ai-agent-chatbot-chigai.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sy0929tora.github.io/claude-code-practice/blog/articles/gijiroku-yoyaku-jidoka.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://sy0929tora.github.io/claude-code-practice/blog/articles/prompt-sekkei-chigai.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://sy0929tora.github.io/claude-code-practice/blog/articles/claude-code-nyumon.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

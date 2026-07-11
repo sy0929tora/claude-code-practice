@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ChatGPT・Claude・Geminiでプロンプト（指示文）の書き方はどう違うのか。共通して使える基本原則と、AIごとの傾向の違いをやさしく解説します。">
+  <meta name="keywords" content="プロンプト,プロンプトエンジニアリング,ChatGPT,Claude,Gemini,指示の書き方">
+  <meta property="og:title" content="ChatGPT・Claude・Geminiのプロンプト設計の違いと使い分け | AI活用ラボ">
+  <meta property="og:description" content="生成AIへの指示文（プロンプト）の基本原則と、サービスごとの傾向の違いを解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/blog/articles/prompt-sekkei-chigai.html">
+  <meta property="og:site_name" content="AI活用ラボ">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/blog/articles/prompt-sekkei-chigai.html">
+  <title>ChatGPT・Claude・Geminiのプロンプト設計の違いと使い分け | AI活用ラボ</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "ChatGPT・Claude・Geminiのプロンプト設計の違いと使い分け",
+    "description": "生成AIへの指示文（プロンプト）の基本原則と、サービスごとの傾向の違いを解説します。",
+    "author": { "@type": "Organization", "name": "AI活用ラボ" },
+    "publisher": { "@type": "Organization", "name": "AI活用ラボ" },
+    "datePublished": "2026-07-11",
+    "inLanguage": "ja"
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="../index.html" class="logo">AI<span>活用</span>ラボ</a>
+      <nav class="site-nav">
+        <a href="../index.html">記事一覧</a>
+        <a href="../about.html">運営について</a>
+        <a href="../contact.html">お問い合わせ</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="article-header">
+    <div class="container">
+      <span class="tag">使い方ガイド</span>
+      <h1>ChatGPT・Claude・Geminiのプロンプト設計の違いと使い分け</h1>
+      <div class="meta">2026-07-11 公開 ／ 読了目安 6分</div>
+    </div>
+  </div>
+
+  <main class="article-body">
+    <p class="lead">
+      生成AIから期待通りの回答を引き出すための指示文は「プロンプト」と呼ばれます。
+      良いプロンプトの基本原則はどのAIでも共通していますが、サービスごとに
+      「効きやすい書き方の傾向」には違いがあります。この記事では、まず共通の基本原則を
+      整理し、そのうえでサービスごとの傾向の違いを解説します。
+    </p>
+
+    <h2>どのAIにも共通する、良いプロンプトの基本原則</h2>
+    <h3>1. 目的とゴールを明確にする</h3>
+    <p>
+      「いい感じにまとめて」ではなく、「誰に向けて」「何のために」「どういう形式で」
+      出力してほしいのかを具体的に伝えると、期待に近い回答が返ってきやすくなります。
+    </p>
+    <h3>2. 前提条件・制約を先に伝える</h3>
+    <p>
+      文字数の上限、使ってはいけない表現、参照してほしい情報など、守ってほしい
+      制約は最初にまとめて伝えるのが基本です。後から追加すると、前の指示との
+      矛盾が起きやすくなります。
+    </p>
+    <h3>3. 出力フォーマットを指定する</h3>
+    <p>
+      箇条書きにしてほしい、表にしてほしい、見出し付きの記事形式にしてほしい、
+      といった出力形式を指定すると、そのまま使える形で返ってきやすくなります。
+    </p>
+    <h3>4. 一度で完璧を求めず、対話で修正する</h3>
+    <p>
+      最初の回答が完全でなくても問題ありません。「もっと簡潔に」「この部分を
+      具体的に」といったフィードバックを重ねて、少しずつ理想の形に近づけていく
+      使い方が基本です。
+    </p>
+
+    <h2>サービスごとの傾向の違い</h2>
+    <p>
+      以下は絶対的なルールではなく、あくまで一般的に言われている傾向です。実際の
+      挙動はアップデートによって変化するため、目安として参考にしてください。
+    </p>
+    <table>
+      <tr><th>AI</th><th>プロンプト設計の傾向</th></tr>
+      <tr>
+        <td>ChatGPT</td>
+        <td>幅広い指示に柔軟に対応しやすく、雑談的な指示からでも要点をくみ取りやすいと
+          言われています。カジュアルな言い回しでも比較的意図を汲んでくれる傾向があります。</td>
+      </tr>
+      <tr>
+        <td>Claude</td>
+        <td>指示に忠実に従う傾向が強いとされ、条件や制約を細かく書き込むほど精度が
+          上がりやすいと言われています。長文の資料を読み込ませて要約・分析させる
+          用途との相性が良い傾向があります。</td>
+      </tr>
+      <tr>
+        <td>Gemini</td>
+        <td>Google検索や各種サービスとの連携を前提にした指示（最新情報の参照、
+          Googleドキュメントとの連携など）を含めた使い方と相性が良い傾向があります。</td>
+      </tr>
+    </table>
+
+    <h2>実践のコツ：まず「役割」を与える</h2>
+    <p>
+      「あなたは〇〇の専門家として回答してください」のように、AIに役割（ロール）を
+      与えると、その役割に沿ったトーンや視点で回答してくれやすくなります。これは
+      どのAIでも共通して使えるテクニックです。
+    </p>
+
+    <h2>まとめ</h2>
+    <p>
+      プロンプトの基本原則（目的の明確化・制約の提示・出力形式の指定・対話での修正）は
+      どのAIでも共通です。そのうえで、Claudeなら細かい条件を丁寧に書き込む、
+      ChatGPTならカジュアルな指示から始めてみる、Geminiなら他サービスとの連携を
+      意識する、といったサービスごとの傾向を踏まえると、より狙った結果を
+      引き出しやすくなります。
+    </p>
+  </main>
+
+  <div class="ad-slot"><!-- AD PLACEHOLDER: AdSense審査通過後に広告コードを挿入 -->広告スペース</div>
+
+  <div class="affiliate-box">
+    <h4>関連ツール</h4>
+    <a class="aff-link" href="#todo-affiliate-link" data-product="ChatGPT公式サイト">ChatGPT公式サイトを見る（提携リンク準備中）</a>
+    <a class="aff-link" href="#todo-affiliate-link" data-product="Claude公式サイト">Claude公式サイトを見る（提携リンク準備中）</a>
+    <p class="disclaimer">※ 本サイトはアフィリエイトリンクを含む場合があります。リンク先の内容は変更される可能性があるため、最新情報は各公式サイトでご確認ください。</p>
+  </div>
+
+  <div class="related">
+    <h4>あわせて読みたい</h4>
+    <a class="card" href="chatgpt-claude-gemini-hikaku.html">
+      <span class="tag">ツール比較・レビュー</span>
+      <h3>ChatGPT・Claude・Geminiを徹底比較｜目的別の選び方</h3>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><a href="../about.html">運営について</a> ／ <a href="../privacy.html">プライバシーポリシー</a> ／ <a href="../contact.html">お問い合わせ</a></p>
+      <p>&copy; 2026 AI活用ラボ</p>
+    </div>
+  </footer>
+
+</body>
+</html>

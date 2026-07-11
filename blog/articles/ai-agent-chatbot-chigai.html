@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="「AIエージェント」と「チャットボット」は何が違うのか。自律的に作業を進めるAIエージェントの仕組みと、活用のイメージをやさしく解説します。">
+  <meta name="keywords" content="AIエージェント,チャットボット,自律型AI,生成AI,自動化">
+  <meta property="og:title" content="AIエージェント（自律型AI）とチャットボットの違いをやさしく解説 | AI活用ラボ">
+  <meta property="og:description" content="AIエージェントとチャットボットの違いと、それぞれの向き不向きをやさしく解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/blog/articles/ai-agent-chatbot-chigai.html">
+  <meta property="og:site_name" content="AI活用ラボ">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/blog/articles/ai-agent-chatbot-chigai.html">
+  <title>AIエージェント（自律型AI）とチャットボットの違いをやさしく解説 | AI活用ラボ</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "AIエージェント（自律型AI）とチャットボットの違いをやさしく解説",
+    "description": "AIエージェントとチャットボットの違いと、それぞれの向き不向きをやさしく解説します。",
+    "author": { "@type": "Organization", "name": "AI活用ラボ" },
+    "publisher": { "@type": "Organization", "name": "AI活用ラボ" },
+    "datePublished": "2026-07-11",
+    "inLanguage": "ja"
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="../index.html" class="logo">AI<span>活用</span>ラボ</a>
+      <nav class="site-nav">
+        <a href="../index.html">記事一覧</a>
+        <a href="../about.html">運営について</a>
+        <a href="../contact.html">お問い合わせ</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="article-header">
+    <div class="container">
+      <span class="tag">自動化・AI駆動開発</span>
+      <h1>AIエージェント（自律型AI）とチャットボットの違いをやさしく解説</h1>
+      <div class="meta">2026-07-11 公開 ／ 読了目安 6分</div>
+    </div>
+  </div>
+
+  <main class="article-body">
+    <p class="lead">
+      最近よく耳にする「AIエージェント」という言葉。従来の「チャットボット」と
+      何が違うのか、ピンと来ていない方も多いのではないでしょうか。この記事では、
+      両者の違いを、具体的な動作イメージとともに解説します。
+    </p>
+
+    <h2>チャットボットは「1問1答」が基本</h2>
+    <p>
+      従来型のチャットボットは、ユーザーから質問や指示を受け取り、それに対して
+      1回answerを返す、というやり取りが基本です。よくある質問への自動応答や、
+      簡単な調べ物の相手として使われることが多いタイプです。
+    </p>
+
+    <h2>AIエージェントは「目的達成まで自分で動く」</h2>
+    <p>
+      一方でAIエージェントは、「〇〇を達成してほしい」という目的を伝えると、
+      その目的を達成するために必要な手順を自分で考え、複数のステップを
+      実行しながら作業を進めていく仕組みを持っています。たとえば、
+    </p>
+    <ul>
+      <li>必要な情報を自分で調べる</li>
+      <li>調べた内容をもとに文書を作成する</li>
+      <li>作成した内容を確認し、必要なら修正する</li>
+      <li>最終的な成果物を指定された場所に保存する</li>
+    </ul>
+    <p>
+      といった一連の作業を、都度人に細かく指示されなくても、最後までやり切ろうと
+      する点が大きな違いです。本サイトの運営自体も、この「AIエージェント」の
+      仕組みを使って、記事のトピック選定から執筆・サイト更新までを行っています。
+    </p>
+
+    <h2>比較表で見る違い</h2>
+    <table>
+      <tr><th></th><th>チャットボット</th><th>AIエージェント</th></tr>
+      <tr><td>基本動作</td><td>1回の質問に1回答える</td><td>目的達成まで複数ステップを自律的に実行</td></tr>
+      <tr><td>向いている用途</td><td>簡単な質問応答、FAQ対応</td><td>調査・作成・更新など複数工程を伴う作業</td></tr>
+      <tr><td>人の関与</td><td>毎回のやり取りに人が介在</td><td>最初に目的を伝えれば、あとはまとめて確認できる</td></tr>
+    </table>
+
+    <h2>AIエージェントを使ううえでの注意点</h2>
+    <p>
+      自律的に作業を進めてくれる分、人の目が届かないうちに意図しない操作（重要な
+      データの削除や、誤った内容の外部公開など）が行われてしまうリスクもあります。
+      そのため、AIエージェントに任せる作業は「間違っても影響が小さい範囲」から
+      始め、慣れてきたら段階的に任せる範囲を広げていくのが安全な使い方です。
+      重要な操作の前には確認を挟む設定にする、といった工夫も有効です。
+    </p>
+
+    <h2>まとめ</h2>
+    <p>
+      チャットボットが「都度やり取りする相手」だとすれば、AIエージェントは
+      「目的を伝えれば最後まで自分で作業を進めてくれる相手」というイメージです。
+      便利な分だけ、任せる範囲やリスクの見極めも重要になります。まずは小さな
+      作業から試してみて、感覚をつかんでいくとよいでしょう。
+    </p>
+  </main>
+
+  <div class="ad-slot"><!-- AD PLACEHOLDER: AdSense審査通過後に広告コードを挿入 -->広告スペース</div>
+
+  <div class="affiliate-box">
+    <h4>関連ツール</h4>
+    <a class="aff-link" href="#todo-affiliate-link" data-product="Claude公式サイト">Claude公式サイトを見る（提携リンク準備中）</a>
+    <p class="disclaimer">※ 本サイトはアフィリエイトリンクを含む場合があります。リンク先の内容は変更される可能性があるため、最新情報は各公式サイトでご確認ください。</p>
+  </div>
+
+  <div class="related">
+    <h4>あわせて読みたい</h4>
+    <a class="card" href="claude-code-nyumon.html">
+      <span class="tag">自動化・AI駆動開発</span>
+      <h3>Claude Codeとは？非エンジニアでもわかるAI自動化入門</h3>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p><a href="../about.html">運営について</a> ／ <a href="../privacy.html">プライバシーポリシー</a> ／ <a href="../contact.html">お問い合わせ</a></p>
+      <p>&copy; 2026 AI活用ラボ</p>
+    </div>
+  </footer>
+
+</body>
+</html>
