@@ -7,7 +7,7 @@
 ## 1. 会社概要
 
 - **社名（ブランド名）**: AI活用ラボ
-- **URL**: https://sy0929tora.github.io/claude-code-practice/blog/
+- **URL**: https://ailabo-inc.github.io/
 - **事業形態**: コンテンツ・メディア型（ブログ／SEO記事）
 - **収益モデル**: アフィリエイト広告 + Google AdSense（下記「6. 収益化」参照）
 - **運営体制**: 完全自動運用（Claude Codeが企画・執筆・校正・公開まで無人で実行）
@@ -53,8 +53,8 @@
 
 ## 6. 収益化
 
-- **Google AdSense**: `blog/css/style.css` の `.ad-slot` に配置枠のみ用意している。
-  実際の広告コードは **AdSense審査通過後に人間が** `blog/_ads/adsense.html` に
+- **Google AdSense**: `css/style.css` の `.ad-slot` に配置枠のみ用意している。
+  実際の広告コードは **AdSense審査通過後に人間が** `_ads/adsense.html` に
   埋め込む（現状はプレースホルダーのコメントのみ）。エージェントは広告コード自体を
   でっち上げて埋め込んではいけない。
 - **アフィリエイトリンク**: 各記事末尾の「関連ツール・書籍」ボックス（`.affiliate-box`）に
@@ -66,11 +66,11 @@
 ## 7. 公開ワークフロー（エージェントが毎回実行する手順）
 
 1. `TOPICS.md` を読み、未着手トピックを1つ選ぶ（優先度順）
-2. `blog/articles/` 内の既存記事を1本参照し、HTMLテンプレート構成（head, header, 記事
+2. `articles/` 内の既存記事を1本参照し、HTMLテンプレート構成（head, header, 記事
    本文, affiliate-box, footer）を踏襲して新しいスラッグで記事を書く
 3. 記事下部の関連記事リンクに、既存記事から関連性の高いものを1〜2本追加する
-4. `blog/index.html` の記事一覧に新記事のカードを追加する（先頭に挿入）
-5. `blog/sitemap.xml` に新記事のURLを追加する
+4. `index.html` の記事一覧に新記事のカードを追加する（先頭に挿入）
+5. `sitemap.xml` に新記事のURLを追加する
 6. `TOPICS.md` の該当トピックを「公開済み」に移動し、公開日を記録する
 7. 変更を1コミットにまとめ、コミットメッセージは `Add article: <記事タイトル>` とする
 8. `main` ブランチへ直接pushする（このブログはCIで自動デプロイされるため、pushが

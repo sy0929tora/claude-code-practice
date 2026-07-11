@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sy0929tora.github.io/claude-code-practice/sitemap.xml
+Sitemap: https://sy0929tora.github.io/claude-code-practice/blog/sitemap.xml
