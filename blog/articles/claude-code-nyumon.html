@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Anthropicが提供するCLIツール「Claude Code」とは何か。非エンジニアでも理解できるように、できること・自動化の考え方・始め方をやさしく解説します。">
+  <meta name="keywords" content="Claude Code,AI自動化,生成AI,自動化,非エンジニア">
+  <meta property="og:title" content="Claude Codeとは？非エンジニアでもわかるAI自動化入門 | AI活用ラボ">
+  <meta property="og:description" content="Claude Codeの基本と、日常業務の自動化にどう使えるかをやさしく解説します。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://sy0929tora.github.io/claude-code-practice/blog/articles/claude-code-nyumon.html">
+  <meta property="og:site_name" content="AI活用ラボ">
+  <link rel="canonical" href="https://sy0929tora.github.io/claude-code-practice/blog/articles/claude-code-nyumon.html">
+  <title>Claude Codeとは？非エンジニアでもわかるAI自動化入門 | AI活用ラボ</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Codeとは？非エンジニアでもわかるAI自動化入門",
+    "description": "Claude Codeの基本と、日常業務の自動化にどう使えるかをやさしく解説します。",
+    "author": { "@type": "Organization", "name": "AI活用ラボ" },
+    "publisher": { "@type": "Organization", "name": "AI活用ラボ" },
+    "datePublished": "2026-07-11",
+    "inLanguage": "ja"
+  }
+  </script>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <a href="../index.html" class="logo">AI<span>活用</span>ラボ</a>
+      <nav class="site-nav">
+        <a href="../index.html">記事一覧</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="article-header">
+    <div class="container">
+      <span class="tag">自動化・AI駆動開発</span>
+      <h1>Claude Codeとは？非エンジニアでもわかるAI自動化入門</h1>
+      <div class="meta">2026-07-11 公開 ／ 読了目安 7分</div>
+    </div>
+  </div>
+
+  <main class="article-body">
+    <p class="lead">
+      「Claude Code」は、Anthropic社が提供するAIアシスタント「Claude」をターミナル
+      （コマンドライン）から使えるようにしたツールです。名前に「Code」とついているため
+      エンジニア専用のイメージを持たれがちですが、実際にはファイルの読み書き・整理・
+      定型作業の自動化など、非エンジニアの業務にも応用できる考え方が詰まっています。
+      本記事ではその基本を、専門知識がなくても分かるように解説します。
+    </p>
+
+    <h2>Claude Codeは何ができるのか</h2>
+    <p>
+      一般的なチャットAIは「質問して回答をもらう」やり取りが中心ですが、Claude Codeは
+      それに加えて、指示に基づいて<strong>実際にファイルを作成・編集したり、決められた
+      手順を最後まで実行したりする</strong>ことができます。たとえば、
+    </p>
+    <ul>
+      <li>大量のテキストファイルを決まったルールで整理する</li>
+      <li>資料のフォーマットを一括で整える</li>
+      <li>定型文書のひな形から、条件に応じて内容を書き分ける</li>
+      <li>Webサイトの更新など、繰り返し発生する作業を自動化する</li>
+    </ul>
+    <p>
+      といった、「毎回自分の手でやっていた定型作業」を代わりにやらせる、という発想で
+      使うことができます。
+    </p>
+
+    <h2>「エージェント」という考え方</h2>
+    <p>
+      Claude Codeのようなツールは「AIエージェント」と呼ばれることがあります。これは、
+      1回の質問応答で終わるのではなく、<strong>目的を伝えると、必要な手順を自分で
+      考えながら複数のステップを実行し、最後まで作業をやり切る</strong>仕組みを指します。
+      本サイト「AI活用ラボ」自体も、この仕組みを使ってトピックの選定から記事執筆、
+      サイトの更新までを自動化する実験として運営されています。
+    </p>
+
+    <h2>非エンジニアが自動化を始める3ステップ</h2>
+    <h3>ステップ1：繰り返し作業を1つ書き出す</h3>
+    <p>
+      「毎週やっている単純作業」「毎回同じ手順で行っている確認作業」など、まずは
+      自動化の候補を1つ具体的に書き出します。いきなり複雑な業務全体を自動化しようと
+      せず、小さく始めるのがコツです。
+    </p>
+    <h3>ステップ2：手順を言葉で説明できるようにする</h3>
+    <p>
+      「何を見て」「何を判断して」「何を出力するか」を、他の人に説明するつもりで
+      言葉にしてみます。この説明がそのままAIへの指示（プロンプト）の土台になります。
+    </p>
+    <h3>ステップ3：小さく試して、結果を確認しながら調整する</h3>
+    <p>
+      最初から完璧な自動化を目指さず、一部だけAIに任せてみて、結果を見ながら
+      指示を調整していきます。AIエージェント系のツールは、うまくいかない場合に
+      指示を追加・修正することで精度を上げていく使い方が基本です。
+    </p>
+
+    <h2>導入のハードルと注意点</h2>
+    <p>
+      Claude Codeは本来ターミナル操作を前提としたツールのため、初期セットアップには
+      多少の慣れが必要です。また、AIに重要な作業を任せる際は、いきなり本番データや
+      公開情報を触らせるのではなく、コピーやテスト環境で結果を確認してから本番に
+      適用する、という慎重さも大切です。
+    </p>
+
+    <h2>まとめ</h2>
+    <p>
+      Claude Codeは「エンジニアだけのツール」ではなく、「繰り返し作業をAIに任せる」
+      という考え方を体現したツールです。いきなり大きな自動化を目指すのではなく、
+      日々の小さな繰り返し作業から自動化の発想を試してみると、活用のイメージが
+      つかみやすくなります。
+    </p>
+  </main>
+
+  <div class="ad-slot"><!-- AD PLACEHOLDER: AdSense審査通過後に広告コードを挿入 -->広告スペース</div>
+
+  <div class="affiliate-box">
+    <h4>関連ツール</h4>
+    <a class="aff-link" href="#todo-affiliate-link" data-product="Claude公式サイト">Claude公式サイトを見る（提携リンク準備中）</a>
+    <p class="disclaimer">※ 本サイトはアフィリエイトリンクを含む場合があります。リンク先の内容は変更される可能性があるため、最新情報は各公式サイトでご確認ください。</p>
+  </div>
+
+  <div class="related">
+    <h4>あわせて読みたい</h4>
+    <a class="card" href="chatgpt-claude-gemini-hikaku.html">
+      <span class="tag">ツール比較・レビュー</span>
+      <h3>ChatGPT・Claude・Geminiを徹底比較｜目的別の選び方</h3>
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2026 AI活用ラボ</p>
+    </div>
+  </footer>
+
+</body>
+</html>
