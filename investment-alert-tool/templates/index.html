@@ -712,41 +712,223 @@
 
   // ── 投資信託 ────────────────────────────────────────────────────
 
+  let fundResults = {};
+  const fundChartInstances = {};
+  const currentFundChartPeriod = {};
+
   function renderFunds() {
     const section = document.getElementById('funds-section');
-    if (!funds.length) {
-      section.innerHTML = '';
-      return;
+    if (!funds.length) { section.innerHTML = ''; return; }
+
+    // スケルトン表示
+    section.innerHTML = funds.map(f => `
+      <div class="card" id="fund-card-${f.code}">
+        <div class="card-header">
+          <div class="card-left">
+            <div class="symbol-badge" style="font-size:9px;line-height:1.4">投信</div>
+            <div>
+              <div class="stock-name">${f.name}</div>
+              <div class="stock-symbol">${f.kuchi.toLocaleString('ja-JP')}口</div>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="skeleton" style="width:90px;height:20px;margin-bottom:4px"></div>
+            <div class="skeleton" style="width:55px;height:14px"></div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // 各ファンドを非同期で取得
+    funds.forEach(f => loadFund(f.code));
+  }
+
+  async function loadFund(code) {
+    try {
+      const res = await fetch(`/api/fund-scan/${code}`);
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      fundResults[code] = data;
+      renderFundCard(data);
+    } catch (e) {
+      renderFundCardError(code, e.message);
     }
+  }
 
-    let totalCost = 0;
-    const rows = funds.map(f => {
-      const cost = f.cost || Math.round(f.kuchi * f.avg_cost);
-      totalCost += cost;
-      return `
-        <div class="portfolio-row">
+  function renderFundCard(d) {
+    const card = document.getElementById(`fund-card-${d.code}`);
+    if (!card) return;
+
+    const upDown = d.change_pct >= 0;
+    const arrow = upDown ? '▲' : '▼';
+    const changeClass = upDown ? 'up' : 'down';
+    const pnlClass = d.pnl >= 0 ? 'profit' : 'loss';
+    const pnlArrow = d.pnl >= 0 ? '▲' : '▼';
+    const evalPrice = Math.round(d.price / 10000 * d.kuchi);
+
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-left">
+          <div class="symbol-badge" style="font-size:9px;line-height:1.4">投信</div>
           <div>
-            <span style="font-weight:600">${f.name}</span>
-            <span style="color:var(--text2);font-size:12px;margin-left:6px">${f.kuchi.toLocaleString('ja-JP')}口</span>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:14px;font-weight:600">${cost.toLocaleString('ja-JP')}円</div>
-            <div style="font-size:11px;color:var(--text2)">取得単価 ${f.avg_cost}円/口</div>
+            <div class="stock-name">${d.name}</div>
+            <div class="stock-symbol">${d.kuchi.toLocaleString('ja-JP')}口</div>
           </div>
         </div>
-      `;
-    }).join('');
-
-    section.innerHTML = `
-      <div class="portfolio-card">
-        ${rows}
-        <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--border);">
-          <span style="font-size:13px;color:var(--text2)">取得金額合計</span>
-          <span style="font-size:16px;font-weight:700">${totalCost.toLocaleString('ja-JP')}円</span>
+        <div class="card-right">
+          <div class="price">${Number(d.price).toLocaleString('ja-JP')}円</div>
+          <div class="change ${changeClass}">${arrow} ${Math.abs(d.change_pct).toFixed(2)}%</div>
+          <div style="font-size:10px;color:var(--text2)">基準価額/10,000口</div>
         </div>
-        <div style="padding:4px 16px 12px;font-size:11px;color:var(--text2)">※ 基準価額は毎日変動します。SBIで最新の評価額をご確認ください。</div>
+      </div>
+      <div class="pnl-row">
+        <span class="pnl-label">💼 取得単価 ${Number(d.avg_cost).toLocaleString('ja-JP')}円　評価額 ${evalPrice.toLocaleString('ja-JP')}円</span>
+        <span class="pnl-value ${pnlClass}">${pnlArrow} ${Math.abs(d.pnl).toLocaleString('ja-JP',{maximumFractionDigits:0})}円 (${d.pnl_pct >= 0 ? '+' : ''}${d.pnl_pct}%)</span>
+      </div>
+      <div class="chart-toggle-row">
+        <button class="btn-chart" onclick="toggleFundChart('${d.code}')">📊 チャート</button>
+      </div>
+      <div class="chart-container" id="fund-chart-${d.code}">
+        <div class="chart-period-row" id="fund-periods-${d.code}">
+          <button class="btn-period active" data-period="3mo" onclick="changeFundChartPeriod('${d.code}','3mo')">3ヶ月</button>
+          <button class="btn-period" data-period="1y" onclick="changeFundChartPeriod('${d.code}','1y')">1年</button>
+          <button class="btn-period" data-period="3y" onclick="changeFundChartPeriod('${d.code}','3y')">3年</button>
+        </div>
+        <div id="fund-chart-loading-${d.code}" style="display:none;text-align:center;font-size:12px;color:var(--text2);padding:8px 0;">読み込み中...</div>
+        <canvas id="fund-canvas-${d.code}" height="160"></canvas>
       </div>
     `;
+  }
+
+  function renderFundCardError(code, message) {
+    const fund = funds.find(f => f.code === code);
+    const card = document.getElementById(`fund-card-${code}`);
+    if (!card) return;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-left">
+          <div class="symbol-badge" style="font-size:9px;line-height:1.4">投信</div>
+          <div>
+            <div class="stock-name">${fund ? fund.name : code}</div>
+            <div class="stock-symbol">${fund ? fund.kuchi.toLocaleString('ja-JP') : ''}口</div>
+          </div>
+        </div>
+        <div class="card-right"><span class="error-chip">⚠ 取得失敗</span></div>
+      </div>
+      <div style="padding:8px 16px 12px;font-size:12px;color:var(--text2)">
+        取得金額: ${fund ? fund.cost.toLocaleString('ja-JP') : ''}円（SBIで評価額をご確認ください）
+      </div>
+    `;
+  }
+
+  function toggleFundChart(code) {
+    const container = document.getElementById(`fund-chart-${code}`);
+    if (!container) return;
+    const isOpen = container.classList.toggle('open');
+    if (isOpen && !fundChartInstances[code]) {
+      renderFundChart(code, currentFundChartPeriod[code] || '3mo');
+    }
+  }
+
+  async function changeFundChartPeriod(code, period) {
+    currentFundChartPeriod[code] = period;
+    const row = document.getElementById(`fund-periods-${code}`);
+    if (row) row.querySelectorAll('.btn-period').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.period === period);
+    });
+    if (fundChartInstances[code]) {
+      fundChartInstances[code].destroy();
+      delete fundChartInstances[code];
+    }
+    await renderFundChart(code, period);
+  }
+
+  async function renderFundChart(code, period = '3mo') {
+    const canvas = document.getElementById(`fund-canvas-${code}`);
+    if (!canvas) return;
+
+    let chartData;
+    if (period === '3mo' && fundResults[code] && fundResults[code].chart) {
+      const d = fundResults[code];
+      chartData = { dates: d.chart.dates, closes: d.chart.closes, avg_cost: d.avg_cost };
+    } else {
+      const loadingEl = document.getElementById(`fund-chart-loading-${code}`);
+      if (loadingEl) loadingEl.style.display = 'block';
+      canvas.style.opacity = '0.3';
+      try {
+        const res = await fetch(`/api/fund-chart/${code}/${period}`);
+        const data = await res.json();
+        if (loadingEl) loadingEl.style.display = 'none';
+        canvas.style.opacity = '1';
+        if (data.error) return;
+        chartData = data.chart;
+      } catch (e) {
+        if (loadingEl) loadingEl.style.display = 'none';
+        canvas.style.opacity = '1';
+        return;
+      }
+    }
+
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+    const textColor = '#8e8e93';
+    const d = fundResults[code];
+    const isUp = d && d.change_pct >= 0;
+    const lineColor = isUp ? '#34c759' : '#ff3b30';
+    const fillColor = isUp ? 'rgba(52,199,89,0.12)' : 'rgba(255,59,48,0.12)';
+
+    const datasets = [{
+      label: '基準価額',
+      data: chartData.closes,
+      borderColor: lineColor,
+      backgroundColor: fillColor,
+      borderWidth: 2,
+      fill: true,
+      pointRadius: 0,
+      tension: 0.3,
+    }];
+
+    if (chartData.avg_cost) {
+      datasets.push({
+        label: '取得単価',
+        data: Array(chartData.dates.length).fill(chartData.avg_cost),
+        borderColor: 'rgba(142,142,147,0.6)',
+        borderWidth: 1,
+        borderDash: [4, 4],
+        pointRadius: 0,
+        fill: false,
+      });
+    }
+
+    fundChartInstances[code] = new Chart(canvas, {
+      type: 'line',
+      data: { labels: chartData.dates, datasets },
+      options: {
+        responsive: true,
+        animation: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            mode: 'index', intersect: false,
+            callbacks: {
+              label: ctx => `${ctx.dataset.label}: ${ctx.parsed.y?.toLocaleString('ja-JP',{maximumFractionDigits:0})}円`,
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, maxTicksLimit: 6, font: { size: 10 } },
+          },
+          y: {
+            grid: { color: gridColor },
+            ticks: { color: textColor, font: { size: 10 },
+              callback: v => v.toLocaleString('ja-JP',{maximumFractionDigits:0}) },
+            position: 'right',
+          }
+        }
+      }
+    });
   }
 
   // ── ニュース ────────────────────────────────────────────────────

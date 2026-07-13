@@ -16,18 +16,25 @@ WATCHLIST = [
 
 # 保有銘柄・ポートフォリオ（空リストでも可）
 PORTFOLIO = [
-    {"symbol": "9433.T", "shares": 100,    "avg_cost": 2653.0},
-    {"symbol": "9889.T", "shares": 100,    "avg_cost": 1178.0},
-    {"symbol": "VOO",    "shares": 4,      "avg_cost": 672.15},
-    {"symbol": "MSFT",   "shares": 1,      "avg_cost": 376.34},
-    {"symbol": "NVDA",   "shares": 1,      "avg_cost": 175.00},
-    {"symbol": "IONQ",   "shares": 4,      "avg_cost": 28.58},
+    {"symbol": "9433.T", "shares": 100, "avg_cost": 2653.0},
+    {"symbol": "9889.T", "shares": 100, "avg_cost": 1178.0},
+    {"symbol": "VOO",    "shares": 4,   "avg_cost": 672.15},
+    {"symbol": "MSFT",   "shares": 1,   "avg_cost": 376.34},
+    {"symbol": "NVDA",   "shares": 1,   "avg_cost": 175.00},
+    {"symbol": "IONQ",   "shares": 4,   "avg_cost": 28.58},
 ]
 
-# 投資信託リスト（yfinance非対応のため手動管理）
+# 投資信託リスト（Yahoo Finance Japan から基準価額を取得）
+# avg_cost: 取得単価（円/10,000口）
 # cost: 取得金額合計（円）
 FUNDS = [
-    {"name": "eMAXIS Slim S&P500", "kuchi": 180287, "avg_cost": 4.4310, "cost": 798833},
+    {
+        "code": "0331418A",
+        "name": "eMAXIS Slim S&P500",
+        "kuchi": 180287,
+        "avg_cost": 44310,
+        "cost": 798833,
+    },
 ]
 
 # アラート閾値

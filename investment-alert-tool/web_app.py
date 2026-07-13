@@ -14,6 +14,7 @@ import anthropic
 from analyzer import build_analysis_prompt
 from config import FUNDS, PORTFOLIO, WATCHLIST
 from fetcher import fetch_stock_data, fetch_ticker_info
+from fund_fetcher import fetch_fund_data
 from indicators import add_all_indicators
 from portfolio import Portfolio
 from signals import detect_signals, summarize_signals
@@ -51,8 +52,77 @@ def api_watchlist():
 
 @app.route("/api/funds")
 def api_funds():
-    """投資信託リストを返す（手動管理）"""
+    """投資信託リストを返す"""
     return {"funds": FUNDS}
+
+
+@app.route("/api/fund-scan/<code>")
+def api_fund_scan(code: str):
+    """投資信託1本の基準価額・損益・チャートデータを返す"""
+    code = code.upper()
+    fund = next((f for f in FUNDS if f["code"].upper() == code), None)
+    if not fund:
+        return {"error": "ファンドが見つかりません"}, 404
+
+    try:
+        df = fetch_fund_data(code)
+        if df.empty or len(df) < 2:
+            return {"error": "データ不足"}, 400
+
+        close = float(df["Close"].iloc[-1])
+        prev_close = float(df["Close"].iloc[-2])
+        change_pct = (close - prev_close) / prev_close * 100
+
+        avg_cost = fund["avg_cost"]   # 円/10,000口
+        kuchi = fund["kuchi"]
+        pnl = round((close - avg_cost) / 10000 * kuchi, 0)
+        pnl_pct = round((close - avg_cost) / avg_cost * 100, 1)
+
+        return {
+            "code": code,
+            "name": fund["name"],
+            "price": round(close, 0),
+            "change_pct": round(change_pct, 2),
+            "kuchi": kuchi,
+            "avg_cost": avg_cost,
+            "cost": fund.get("cost", round(avg_cost / 10000 * kuchi, 0)),
+            "pnl": pnl,
+            "pnl_pct": pnl_pct,
+            "chart": {
+                "dates": [d.strftime("%m/%d") for d in df.index[-60:]],
+                "closes": [round(float(v), 0) for v in df["Close"].iloc[-60:]],
+            },
+        }
+    except Exception as exc:
+        return {"error": str(exc)}, 500
+
+
+@app.route("/api/fund-chart/<code>/<period>")
+def api_fund_chart(code: str, period: str):
+    """投資信託チャートデータ（期間指定）"""
+    code = code.upper()
+    period_days = {"3mo": 90, "1y": 365, "3y": 1095}
+    if period not in period_days:
+        return {"error": "無効な期間"}, 400
+
+    fund = next((f for f in FUNDS if f["code"].upper() == code), {})
+    try:
+        df = fetch_fund_data(code, days=period_days[period])
+        if df.empty:
+            return {"error": "データ不足"}, 400
+
+        date_fmt = "%y/%m" if period == "3y" else "%m/%d"
+        return {
+            "code": code,
+            "period": period,
+            "chart": {
+                "dates": [d.strftime(date_fmt) for d in df.index],
+                "closes": [round(float(v), 0) for v in df["Close"]],
+                "avg_cost": fund.get("avg_cost"),
+            },
+        }
+    except Exception as exc:
+        return {"error": str(exc)}, 500
 
 
 @app.route("/api/fx")
