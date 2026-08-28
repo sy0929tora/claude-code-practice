@@ -1,0 +1,33 @@
+# bukken-pipeline: 探索条件・スコア定数
+#
+# ここを編集すればスコアリング全体の挙動が変わる。数式本体は src/score.py。
+
+# --- 探索条件（フィルタ用途。M1では参考値として保持、将来 run.py --strict 等で使用） ---
+budget_man: 80000          # 予算上限（万円）
+built_year_pref: 15        # 築年数の優先閾値（年）。これより新しいものを優先
+land_tsubo_floor: 18       # 広さ下限：土地（坪）
+bldg_sqm_floor: 85         # 広さ下限：建物（㎡）
+layout_min_rooms: 3        # 間取り下限（LDK数）
+commute_targets:
+  - name: 横浜
+    station: 横浜
+  - name: 高田馬場
+    station: 高田馬場
+
+# --- スコア定数（§6 数式と厳密一致させること） ---
+base_year: 2026            # 築年数の基準年
+sqm_to_tsubo: 0.3025       # ㎡→坪
+bldg_unit_price: 80        # 建物 新築単価（万/坪）
+bldg_lifespan: 25          # 建物 耐用年数（年）
+commute_cap_min: 45        # 通勤 片道上限（分）
+
+weights:
+  value: 22                # 割安点
+  asset: 20                 # 資産点
+  commute: 25                # 通勤点
+  size: 12                    # 広さ点
+  age: 11                      # 築浅点
+  station: 10                   # 駅点
+
+hazard_max_penalty: 20     # ハザード減点の最大値
+redflag_max_penalty: 20    # 赤信号（用途地域・接道等の懸念）減点の最大値
