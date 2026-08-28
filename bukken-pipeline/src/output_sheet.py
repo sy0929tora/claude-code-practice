@@ -1,10 +1,11 @@
-"""採点結果をローカル xlsx に順位付きで出力する。
+"""採点結果を出力する（ローカル xlsx / Google Sheets）。
 
-M5 で Google Sheets 出力に対応する際は、この関数と同じ列構成の
-DataFrame を作れば sheets 側の実装に流用できるようにしてある。
+xlsxとSheetsは `to_dataframe` の同じ列構成を共有しているので、出力先を
+増やす場合もこのDataFrameをそのまま書き込むだけでよい。
 """
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from typing import Optional
 
@@ -87,3 +88,56 @@ def write_xlsx(scored: list[ScoredCandidate], out_path: Path, sheet_name: str = 
             ws.column_dimensions[get_column_letter(col_idx)].width = min(max_len + 2, 40)
 
     return out_path
+
+
+def write_google_sheet(
+    scored: list[ScoredCandidate],
+    spreadsheet_id: Optional[str] = None,
+    sheet_name: str = "採点結果",
+) -> str:
+    """採点結果をGoogle Sheetsに書き込む（M5）。
+
+    .env の GOOGLE_SHEETS_SPREADSHEET_ID を使う（未設定なら新規スプレッドシートを作成する）。
+    既存シートの内容は毎回まるごと置き換える（冪等性を優先し、追記ではなく上書き）。
+    戻り値: スプレッドシートのURL。
+    """
+    from googleapiclient.discovery import build
+
+    from google_auth import get_credentials
+
+    spreadsheet_id = spreadsheet_id or os.environ.get("GOOGLE_SHEETS_SPREADSHEET_ID")
+    creds = get_credentials()
+    service = build("sheets", "v4", credentials=creds)
+
+    df = to_dataframe(scored)
+    values = [list(df.columns)] + df.astype(object).where(df.notna(), "").values.tolist()
+
+    if not spreadsheet_id:
+        created = (
+            service.spreadsheets()
+            .create(
+                body={
+                    "properties": {"title": "bukken-pipeline 採点結果"},
+                    "sheets": [{"properties": {"title": sheet_name}}],
+                }
+            )
+            .execute()
+        )
+        spreadsheet_id = created["spreadsheetId"]
+        print(
+            f"新規スプレッドシートを作成しました。.env の GOOGLE_SHEETS_SPREADSHEET_ID に "
+            f"'{spreadsheet_id}' を設定すると次回から同じシートを更新できます。"
+        )
+
+    # 既存内容を消してから書き込む（行数が減っても古い行が残らないように）。
+    service.spreadsheets().values().clear(
+        spreadsheetId=spreadsheet_id, range=sheet_name
+    ).execute()
+    service.spreadsheets().values().update(
+        spreadsheetId=spreadsheet_id,
+        range=f"{sheet_name}!A1",
+        valueInputOption="RAW",
+        body={"values": values},
+    ).execute()
+
+    return f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit"
