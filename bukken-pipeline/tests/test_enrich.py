@@ -153,23 +153,32 @@ def test_next_weekday_9am_epoch_skips_weekend():
 
 
 def test_fetch_commute_minutes_parses_duration():
-    fake_body = {
-        "status": "OK",
-        "routes": [{"legs": [{"duration": {"value": 2700}}]}],  # 45分
-    }
+    # Routes API (computeRoutes) は duration を "2700s" のような文字列で返す。
+    fake_body = {"routes": [{"duration": "2700s"}]}  # 45分
     resp = MagicMock()
     resp.json.return_value = fake_body
     resp.raise_for_status.return_value = None
-    with patch("enrich_commute.requests.get", return_value=resp), \
+    with patch("enrich_commute.requests.post", return_value=resp) as mock_post, \
          patch.dict("os.environ", {"GOOGLE_MAPS_API_KEY": "dummy"}):
         minutes = enrich_commute.fetch_commute_minutes(35.55, 139.65, "横浜駅")
     assert minutes == 45.0
+    # 新プロジェクトで有効化できないレガシーDirections APIではなく、Routes APIを叩くこと。
+    assert mock_post.call_args.args[0] == enrich_commute.COMPUTE_ROUTES_ENDPOINT
+    assert mock_post.call_args.kwargs["json"]["travelMode"] == "TRANSIT"
+    assert mock_post.call_args.kwargs["headers"]["X-Goog-Api-Key"] == "dummy"
 
 
 def test_fetch_commute_minutes_returns_none_on_no_route():
     resp = MagicMock()
-    resp.json.return_value = {"status": "ZERO_RESULTS", "routes": []}
+    resp.json.return_value = {"routes": []}
     resp.raise_for_status.return_value = None
-    with patch("enrich_commute.requests.get", return_value=resp), \
+    with patch("enrich_commute.requests.post", return_value=resp), \
          patch.dict("os.environ", {"GOOGLE_MAPS_API_KEY": "dummy"}):
         assert enrich_commute.fetch_commute_minutes(35.55, 139.65, "横浜駅") is None
+
+
+def test_parse_duration_seconds_handles_fractional_and_invalid():
+    assert enrich_commute._parse_duration_seconds("2700s") == 2700.0
+    assert enrich_commute._parse_duration_seconds("12.5s") == 12.5
+    assert enrich_commute._parse_duration_seconds("garbage") is None
+    assert enrich_commute._parse_duration_seconds(None) is None

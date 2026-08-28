@@ -5,7 +5,7 @@
   --gmail      Gmail保存検索メールから候補を取り込み、CSV候補とマージ（M4）
   --geocode    国土地理院で住所→緯度経度を補完（M2）
   --reinfolib  不動産情報ライブラリで相場更新・ハザード/用途地域を自動判定（M2、--geocode必須）
-  --commute    Google Directionsで横浜・高田馬場の通勤時間を実測（M3、--geocode必須）
+  --commute    Google Maps Routes APIで横浜・高田馬場の通勤時間を実測（M3、--geocode必須）
   --sheets     採点結果をGoogle Sheetsにも出力（M5）
   --notify     前回出力と比較し、新規の高得点候補をメール通知（M5）
   --all        上記の enrich/notify 系フラグをすべて有効化（xlsx出力は常に行う）
@@ -49,7 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--reinfolib", action="store_true", help="不動産情報ライブラリで相場・ハザード更新"
     )
-    parser.add_argument("--commute", action="store_true", help="Google Directionsで通勤実測")
+    parser.add_argument("--commute", action="store_true", help="Google Maps Routes APIで通勤実測")
     parser.add_argument("--sheets", action="store_true", help="Google Sheetsにも出力")
     parser.add_argument("--notify", action="store_true", help="新規高得点候補をメール通知")
     parser.add_argument(

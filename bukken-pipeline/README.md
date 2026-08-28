@@ -11,7 +11,7 @@
 
 - [x] **M1** 手動CSV入力 → 採点 → `output.xlsx`
 - [x] **M2** 国土地理院ジオコーディング + 不動産情報ライブラリ（相場・ハザード自動更新）
-- [x] **M3** Google Directions（横浜・高田馬場の実測通勤時間）
+- [x] **M3** Google Maps Routes API（横浜・高田馬場の実測通勤時間）
 - [x] **M4** Gmail API（保存検索メールからの自動intake、SUUMO・東急リバブル対応）
 - [x] **M5** Google Sheets出力 + メール通知 + 毎朝自動実行（GitHub Actions）
 
@@ -187,11 +187,24 @@ Excelトラッカーと**厳密に一致**させることを意図している�
 |---|---|---|
 | 取引価格・ハザード・用途地域 | 不動産情報ライブラリAPI（国交省） | https://www.reinfolib.mlit.go.jp/api/request/ （審査5営業日目安）。API仕様: https://www.reinfolib.mlit.go.jp/help/apiManual/ |
 | 住所→緯度経度 | 国土地理院 ジオコーディング | キー不要（`https://msearch.gsi.go.jp/address-search/AddressSearch`） |
-| 通勤時間（横浜・高田馬場） | Google Maps Directions API | https://console.cloud.google.com/apis/credentials （無料枠＋従量課金） |
+| 通勤時間（横浜・高田馬場） | Google Maps **Routes API**（`computeRoutes`） | https://console.cloud.google.com/apis/library/routes.googleapis.com で有効化。**旧Directions APIは2025年3月以降に作った新規プロジェクトでは有効化できないため使っていない**（下記「料金について」参照） |
 | 保存検索メールの取得・メール通知・Sheets出力 | Gmail API / Google Sheets API（共通OAuthクライアント） | https://console.cloud.google.com/apis/credentials （OAuth 2.0クライアントID・デスクトップアプリを1つ作成し使い回す） |
 
 取得したキー・トークンは `.env`（`.env.example`をコピー）に記入する。
 `.gitignore`で `.env` と `secrets/` 配下はコミット対象外。
+
+### 料金について
+
+| サービス | 料金 | 課金アカウント登録 |
+|---|---|---|
+| 不動産情報ライブラリ | 完全無料 | 不要 |
+| 国土地理院ジオコーディング | 完全無料 | 不要 |
+| Gmail API / Sheets API | 個人利用の範囲では無料 | 不要 |
+| Google Maps Routes API | Compute Routes・Essentials は**月10,000コールまで無料**、超過分は従量課金 | **必要**（有効化時にGoogle Cloudへ支払い方法の登録が要る） |
+
+このツールの呼び出し量（1回の実行で候補×2駅）なら、毎日自動実行しても月10,000コールには
+まず届かないため実質無料で使える見込みだが、有効化自体にはクレジットカード等の
+登録が必要。心配な場合はGoogle Cloud側で低額の予算アラートを設定しておくとよい。
 
 Gmail/Sheetsは初回実行時にブラウザでOAuth認可すると`secrets/gmail_token.json`に
 トークンが保存され、以降は自動更新される（scopeを追加した場合はこのファイルを
@@ -241,7 +254,7 @@ bukken-pipeline/
     intake_gmail.py                 # Gmail API → candidates（M4、SUUMO・東急リバブル対応）
     enrich_geocode.py                # 国土地理院 住所→緯度経度（M2）
     enrich_reinfolib.py               # 不動産情報ライブラリ 相場・ハザード・用途地域（M2）
-    enrich_commute.py                  # Google Directions 通勤実測（M3）
+    enrich_commute.py                  # Google Maps Routes API 通勤実測（M3）
     google_auth.py                      # Gmail/Sheets共通OAuthヘルパー
     score.py                              # スコアリング本体（M1）
     output_sheet.py                        # xlsx / Google Sheets出力（M1・M5）

@@ -11,7 +11,7 @@ name: bukken-pipeline daily
 #
 # 必要なリポジトリシークレット（Settings > Secrets and variables > Actions）:
 #   REINFOLIB_API_KEY               不動産情報ライブラリAPIキー
-#   GOOGLE_MAPS_API_KEY              Google Maps Directions APIキー
+#   GOOGLE_MAPS_API_KEY              Google Maps Routes APIキー（旧Directions APIではない）
 #   GMAIL_OAUTH_CLIENT_SECRET_JSON    GCPでダウンロードしたOAuthクライアントjsonの中身
 #   GMAIL_TOKEN_JSON                   ローカルで一度 python run.py --gmail を実行し
 #                                         認可した後にできる secrets/gmail_token.json の中身

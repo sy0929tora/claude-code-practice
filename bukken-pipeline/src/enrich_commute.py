@@ -1,8 +1,17 @@
-"""Google Maps Directions API による通勤時間の実測（M3）。
+"""Google Maps Routes API による通勤時間の実測（M3）。
 
-エンドポイント: GET https://maps.googleapis.com/maps/api/directions/json
-  params: mode=transit, arrival_time=<次の平日09:00のepoch秒(JST)>,
-          origin=<物件座標>, destination="横浜駅" / "高田馬場駅", key=<GOOGLE_MAPS_API_KEY>
+エンドポイント: POST https://routes.googleapis.com/directions/v2:computeRoutes
+  headers: X-Goog-Api-Key: <GOOGLE_MAPS_API_KEY>, X-Goog-FieldMask: routes.duration
+  body(JSON): origin.location.latLng, destination.address, travelMode="TRANSIT",
+              arrivalTime=<次の平日09:00 JSTのRFC3339(UTC)文字列>
+
+# 注意（重要）: 旧Directions API（GET .../maps/api/directions/json）は使っていない
+2025年3月1日以降に作成したGoogle Cloudプロジェクトでは、旧来の Directions API
+（レガシー）を新規に有効化できなくなっている（Googleが後継の Routes API に統合済み）。
+そのためこのモジュールは最初から Routes API (`computeRoutes`) で実装している。
+料金: Compute Routes - Essentials は月10,000コール無料（本ツールの呼び出し量なら
+実運用でも無料枠に収まる想定）。有効化にはGoogle Cloud側で課金アカウント
+（クレジットカード）の登録が必要（詳細はREADME参照）。
 
 物件ごとに横浜・高田馬場の2本を叩き、所要分を
 Candidate.commute_yokohama_min / commute_takadanobaba_min に格納する。
@@ -16,6 +25,7 @@ from __future__ import annotations
 import datetime
 import logging
 import os
+import re
 from typing import Optional
 from zoneinfo import ZoneInfo
 
@@ -23,8 +33,9 @@ import requests
 
 logger = logging.getLogger(__name__)
 
-DIRECTIONS_ENDPOINT = "https://maps.googleapis.com/maps/api/directions/json"
+COMPUTE_ROUTES_ENDPOINT = "https://routes.googleapis.com/directions/v2:computeRoutes"
 JST = ZoneInfo("Asia/Tokyo")
+DURATION_RE = re.compile(r"^(\d+(?:\.\d+)?)s$")
 
 # 目的駅は固定2拠点（§3）。曖昧さ回避のため都道府県名を付与している。
 DESTINATIONS = {
@@ -44,14 +55,26 @@ def next_weekday_9am_epoch(now: Optional[datetime.datetime] = None) -> int:
     return int(candidate.timestamp())
 
 
+def _rfc3339_utc(epoch: int) -> str:
+    """Routes APIが要求するRFC3339(UTC, "Z"終端)形式に変換する。"""
+    dt = datetime.datetime.fromtimestamp(epoch, tz=datetime.timezone.utc)
+    return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _api_key() -> str:
     key = os.environ.get("GOOGLE_MAPS_API_KEY")
     if not key:
         raise RuntimeError(
             "GOOGLE_MAPS_API_KEY が未設定です。.env に設定するか、"
-            "このenrichステージをスキップしてください（run.py --no-commute）。"
+            "このenrichステージをスキップしてください（run.pyで--commuteを付けない）。"
         )
     return key
+
+
+def _parse_duration_seconds(duration_str: str) -> Optional[float]:
+    """Routes APIのduration表現（例: "2700s"）を秒数に変換する。"""
+    m = DURATION_RE.match(duration_str or "")
+    return float(m.group(1)) if m else None
 
 
 def fetch_commute_minutes(
@@ -60,32 +83,36 @@ def fetch_commute_minutes(
 ) -> Optional[float]:
     """物件座標から destination までの平日09:00着 電車通勤の所要分を返す。取得不可ならNone。"""
     arrival_time = arrival_time or next_weekday_9am_epoch()
-    params = {
-        "origin": f"{lat},{lon}",
-        "destination": destination,
-        "mode": "transit",
-        "arrival_time": arrival_time,
-        "key": _api_key(),
-        "language": "ja",
-        "region": "jp",
+    body = {
+        "origin": {"location": {"latLng": {"latitude": lat, "longitude": lon}}},
+        "destination": {"address": destination},
+        "travelMode": "TRANSIT",
+        "arrivalTime": _rfc3339_utc(arrival_time),
+        "languageCode": "ja",
+        "regionCode": "JP",
+    }
+    headers = {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": _api_key(),
+        "X-Goog-FieldMask": "routes.duration",
     }
     try:
-        resp = requests.get(DIRECTIONS_ENDPOINT, params=params, timeout=timeout)
+        resp = requests.post(COMPUTE_ROUTES_ENDPOINT, json=body, headers=headers, timeout=timeout)
         resp.raise_for_status()
-        body = resp.json()
+        response_body = resp.json()
     except (requests.RequestException, ValueError) as e:
-        logger.warning("Directions API通信失敗（dest=%s）: %s", destination, e)
+        logger.warning("Routes API通信失敗（dest=%s）: %s", destination, e)
         return None
 
-    if body.get("status") != "OK" or not body.get("routes"):
-        logger.warning(
-            "Directions APIが経路を返しませんでした（dest=%s, status=%s）",
-            destination, body.get("status"),
-        )
+    routes = response_body.get("routes")
+    if not routes:
+        logger.warning("Routes APIが経路を返しませんでした（dest=%s）: %s", destination, response_body)
         return None
 
-    leg = body["routes"][0]["legs"][0]
-    duration_sec = leg["duration"]["value"]
+    duration_sec = _parse_duration_seconds(routes[0].get("duration"))
+    if duration_sec is None:
+        logger.warning("Routes APIのduration形式が想定外です（dest=%s）: %r", destination, routes[0].get("duration"))
+        return None
     return round(duration_sec / 60.0, 1)
 
 
@@ -110,4 +137,4 @@ def enrich_commute(candidates) -> None:
         if taka is not None:
             c.commute_takadanobaba_min = taka
         if yoko is not None or taka is not None:
-            c.commute_source = "google_directions"
+            c.commute_source = "google_routes"
